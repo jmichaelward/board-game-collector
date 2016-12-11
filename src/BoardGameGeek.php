@@ -20,7 +20,6 @@ class BoardGameGeek {
      *
      */
     private function hooks() {
-        add_filter( 'cron_schedules', [ $this, 'set_cron_schedule' ] );
         add_action( 'bgw_collection_update', [ new GamesUpdater, 'update_collection' ] );
     }
 
