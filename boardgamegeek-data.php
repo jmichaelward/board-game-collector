@@ -1,10 +1,12 @@
 <?php
 /**
  * Plugin Name: BoardGameGeek Data
- * Plugin URI: https://boardgamesweek.com
- * Description: Connects to the Board Games Geek API to retrieve and adapt data for use by the BGW API.
+ * Plugin URI: https://jmichaelward.com
+ * Description: Connects to the BoardGameGeek API to retrieve and adapt data for use by WordPress.
  * Author: J. Michael Ward
  * Author URI: https://jmichaelward.com
+ *
+ * @package BGW\BoardGameGeek
  */
 
 use BGW\BoardGameGeek\BoardGameGeek;
