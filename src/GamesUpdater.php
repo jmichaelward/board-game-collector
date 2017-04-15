@@ -52,20 +52,20 @@ class GamesUpdater {
 	 * Retrieve games data from the API.
 	 */
 	public function get_data() {
-		$data = get_transient( 'bgg_collection' );
+		$games = get_transient( 'bgg_collection' );
 
-		if ( ! $data ) {
+		if ( ! $games ) {
 			$data  = wp_remote_get( $this->endpoint ); // @codingStandardsIgnoreLine
-			$games = json_decode( wp_remote_retrieve_body( $data ) );
+			$games = json_decode( wp_remote_retrieve_body( $data ), true );
 
 			if ( ! $games ) {
 				$games = [];
 			}
 
-			set_transient( 'bgg_collection', $games, 5 * MINUTE_IN_SECONDS );
+			set_transient( 'bgg_collection', $games, Cron::INTERVAL_VALUE );
 		}
 
-		return $data;
+		return $games;
 	}
 
 	/**
@@ -75,6 +75,7 @@ class GamesUpdater {
 		// Load required WordPress functionality.
 		include_once ABSPATH . WPINC . '/pluggable.php';
 
+		// @TODO Authorization.
 		wp_set_auth_cookie( 1 );
 
 		if ( ! function_exists( 'media_handle_sideload' ) ) {
@@ -100,7 +101,7 @@ class GamesUpdater {
 	 * @return bool
 	 */
 	private function meets_requirements( $game ) {
-		return $game->owned && ! $game->isExpansion && ! $this->game_exists( $game ); // @codingStandardsIgnoreLine
+		return $game['owned'] && ! $game['isExpansion'] && ! $this->game_exists( $game ); // @codingStandardsIgnoreLine
 	}
 
 	/**
@@ -112,8 +113,8 @@ class GamesUpdater {
 	 */
 	private function game_exists( $game ) {
 		$args = [
-			'name'           => $game->gameId, // @codingStandardsIgnoreLine
-			'post_title'     => $game->name,
+			'name'           => $game['gameId'], // @codingStandardsIgnoreLine
+			'post_title'     => $game['name'],
 			'post_type'      => 'bgw_game',
 			'posts_per_page' => 1,
 			'post_status'    => 'publish',
@@ -130,15 +131,15 @@ class GamesUpdater {
 	private function insert_game( $game ) {
 		$args = [
 			'post_type'   => 'bgw_game',
-			'post_name'   => $game->gameId, // @codingStandardsIgnoreLine
-			'post_title'  => $game->name,
+			'post_name'   => $game['gameId'], // @codingStandardsIgnoreLine
+			'post_title'  => $game['name'],
 			'post_status' => 'publish',
 		];
 
 		$id = wp_insert_post( $args );
 
 		if ( $id ) {
-			$this->load_image( $id, $game->image );
+			$this->load_image( $id, $game['image'] );
 			wp_set_object_terms( $id, [ 'owned' ], 'bgw_game_status' );
 		}
 
@@ -155,7 +156,7 @@ class GamesUpdater {
 	 * TODO: We want to define ownership on a game so that it can be categorized on post insertion.
 	 */
 	private function define_ownership( $game ) {
-		if ( $game->owned ) {
+		if ( $game['owned'] ) {
 			return [
 				'bgw_game_status' => 'owned',
 			];
@@ -185,7 +186,7 @@ class GamesUpdater {
 
 		// Set variables for storage.
 		// fix file filename for query strings.
-		preg_match( '/[^\?]+\.(jpg|jpe|jpeg|gif|png)/i', $image_url, $matches );
+		preg_match( '/[^\?]+\.(jpg|jpeg|gif|png)/i', $image_url, $matches );
 		$file_array['name']     = basename( $matches[0] );
 		$file_array['tmp_name'] = $tmp;
 

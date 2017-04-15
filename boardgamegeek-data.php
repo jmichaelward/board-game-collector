@@ -14,4 +14,5 @@ use BGW\BoardGameGeek\BoardGameGeek;
 require_once plugin_dir_path( __FILE__ ) . 'src/BoardGameGeek.php';
 
 $plugin = new BoardGameGeek;
-$plugin->run();
+
+add_action( 'plugins_loaded', [ $plugin, 'run' ] );
