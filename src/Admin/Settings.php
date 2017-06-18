@@ -29,7 +29,7 @@ class Settings {
 			'bgg-username' => __( 'BoardGameGeek Username', 'bgc' ),
 		];
 
-		$this->data = get_option( 'bgg-settings' );
+		$this->data = get_option( 'bgc-settings' );
 	}
 
 	/**
@@ -47,11 +47,11 @@ class Settings {
 	 */
 	public function create_admin_page() {
 		add_submenu_page(
-			'edit.php?post_type=bgw_game',
+			'edit.php?post_type=bgc_game',
 			__( 'BGG Settings', 'bgc' ),
 			__( 'BGG Settings', 'bgc' ),
 			'manage_options',
-			'bgg-settings',
+			'bgc-settings',
 			[ $this, 'admin_callback' ]
 		);
 	}
@@ -61,10 +61,10 @@ class Settings {
 	 */
 	public function add_section() {
 		add_settings_section(
-			'bgg-settings',
+			'bgc-settings',
 			'BoardGameGeek API Settings',
 			null,
-			'bgg-settings'
+			'bgc-settings'
 		);
 	}
 
@@ -77,8 +77,8 @@ class Settings {
 				$id,
 				$name,
 				[ $this, 'render_text_input' ],
-				'bgg-settings',
-				'bgg-settings',
+				'bgc-settings',
+				'bgc-settings',
 				[
 					'id' => $id,
 				]
@@ -90,7 +90,7 @@ class Settings {
 	 * Register the settings.
 	 */
 	public function register() {
-		register_setting( 'bgg-settings', 'bgg-settings', [] );
+		register_setting( 'bgc-settings', 'bgc-settings', [] );
 	}
 
 	/**
@@ -100,8 +100,8 @@ class Settings {
 	 */
 	public function render_text_input( $args ) {
 		echo '<input type="text" id="' . esc_attr( $args['id'] )
-		     . '" name="bgg-settings[' . esc_attr( $args['id'] ) . ']" value="'
-		     . esc_attr( $this->data[ $args['id'] ] ) . '" />';
+			. '" name="bgc-settings[' . esc_attr( $args['id'] ) . ']" value="'
+			. esc_attr( $this->data[ $args['id'] ] ) . '" />';
 	}
 
 	/**

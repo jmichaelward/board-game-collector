@@ -174,7 +174,7 @@ class GamesUpdater {
 	 * Update the post meta and terms.
 	 *
 	 * @param GameDataInterface $game Interface for a game object.
-	 * @param \WP_Post          $game_post bgw_game post.
+	 * @param \WP_Post          $game_post bgc_game post.
 	 */
 	private function update_game( GameDataInterface $game, \WP_Post $game_post ) {
 		update_post_meta( $game_post->ID, 'bgc_game_meta', $game->get_data() );

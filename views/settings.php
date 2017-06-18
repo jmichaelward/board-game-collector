@@ -8,7 +8,7 @@
 ?>
 
 <form method="POST" action="options.php">
-	<?php settings_fields( 'bgg-settings' ); ?>
-	<?php do_settings_sections( 'bgg-settings' ); ?>
+	<?php settings_fields( 'bgc-settings' ); ?>
+	<?php do_settings_sections( 'bgc-settings' ); ?>
 	<?php submit_button(); ?>
 </form>
