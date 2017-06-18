@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: BoardGameCollector Data
+ * Plugin Name: Board Game Collector
  * Plugin URI: https://jmichaelward.com
- * Description: Connects to the BoardGameCollector API to retrieve and adapt data for use by WordPress.
+ * Description: Connects to the BoardGameGeek API to retrieve and adapt data for use by WordPress.
  * Author: J. Michael Ward
  * Author URI: https://jmichaelward.com
  *
