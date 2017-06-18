@@ -1,21 +1,21 @@
 <?php
-namespace JMichaelWard\BoardGameWeekly\Model\Games;
+namespace JMichaelWard\BoardGameCollector\Model\Games;
 
 /**
  * Class BGGGame
  *
- * @package JMichaelWard\BoardGameWeekly\Model\Games
+ * @package JMichaelWard\BoardGameCollector\Model\Games
  */
 class BGGGame implements GameDataInterface {
 	/**
-	 * Data returned from BoardGameWeekly API request.
+	 * Data returned from BoardGameCollector API request.
 	 *
 	 * @var array
 	 */
 	private $data;
 
 	/**
-	 * BoardGameWeekly ID for this game.
+	 * BoardGameCollector ID for this game.
 	 *
 	 * @var int
 	 */
@@ -61,7 +61,7 @@ class BGGGame implements GameDataInterface {
 	/**
 	 * BGGGame constructor.
 	 *
-	 * @param array $data Game data from BoardGameWeekly.
+	 * @param array $data Game data from BoardGameCollector.
 	 */
 	public function __construct( array $data ) {
 		if ( ! $data ) {
@@ -78,6 +78,8 @@ class BGGGame implements GameDataInterface {
 	}
 
 	/**
+	 * Get the full set of data from the game.
+	 *
 	 * @return array
 	 */
 	public function get_data() {
@@ -153,9 +155,9 @@ class BGGGame implements GameDataInterface {
 	 * @return array
 	 */
 	public function get_statuses() {
-		$statuses = array_filter( $this->status, function( $status ) {
-			return '1' === $status || 'wishlist' === $status;
-		} );
+		$statuses = array_filter( $this->status, function( $status, $key ) {
+			return ( in_array( $key, [ 'own', 'preordered', 'wanttoplay' ], true ) && '1' === $status ) || 'wishlist' === $key;
+		}, ARRAY_FILTER_USE_BOTH );
 
 		return array_keys( $statuses );
 	}

@@ -1,12 +1,14 @@
 <?php
-namespace JMichaelWard\BoardGameWeekly\Content\Taxonomy;
+namespace JMichaelWard\BoardGameCollector\Content\Taxonomy;
+
+use JMichaelWard\BoardGameCollector\WP\EventInterface;
 
 /**
  * Class GameStatusTaxonomy
  *
- * @package JMichaelWard\BoardGameWeekly\Content\Taxonomy
+ * @package JMichaelWard\BoardGameCollector\Content\Taxonomy
  */
-class GameStatusTaxonomy {
+class GameStatusTaxonomy implements EventInterface {
 	/**
 	 * Setup WordPress hooks.
 	 */
@@ -19,8 +21,8 @@ class GameStatusTaxonomy {
 	 */
 	public function register() {
 		register_taxonomy(
-			'bgw_game_status',
-			'bgw_game',
+			'bgc_game_status',
+			'bgc_game',
 			$this->args()
 		);
 	}
@@ -32,8 +34,8 @@ class GameStatusTaxonomy {
 	 */
 	public function labels() {
 		return [
-			'name'          => _x( 'Ownership', 'Game status label', 'bgw' ),
-			'singular_name' => _x( 'Ownership', 'Game status singular label', 'bgw' ),
+			'name'          => _x( 'Ownership', 'Game status label', 'bgc' ),
+			'singular_name' => _x( 'Ownership', 'Game status singular label', 'bgc' ),
 		];
 	}
 
@@ -44,7 +46,7 @@ class GameStatusTaxonomy {
 	 */
 	public function args() {
 		return [
-			'label'                 => _x( 'Statuses', 'Game status label', 'bgw' ),
+			'label'                 => _x( 'Statuses', 'Game status label', 'bgc' ),
 			'labels'                => $this->labels(),
 			'show_in_rest'          => true,
 			'hierarchical'          => true,

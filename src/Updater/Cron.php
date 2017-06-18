@@ -1,12 +1,12 @@
 <?php
-namespace JMichaelWard\BoardGameWeekly;
+namespace JMichaelWard\BoardGameCollector\Updater;
 
 /**
  * Establishes a cron task for periodically hitting the BGG API.
  *
  * Class Cron
  *
- * @package JMichaelWard\BoardGameWeekly
+ * @package JMichaelWard\BoardGameCollector
  */
 class Cron {
 	/**
@@ -46,7 +46,7 @@ class Cron {
 	public function hooks() {
 		// Setup the cron interval and the callback task.
 		add_filter( 'cron_schedules', [ $this, 'add_interval' ] ); // @codingStandardsIgnoreLine
-		add_action( 'bgw_collection_update', [ $this->updater, 'update_collection' ], 10, 1 );
+		add_action( 'bgc_collection_update', [ $this->updater, 'update_collection' ], 10, 1 );
 	}
 
 	/**
@@ -60,7 +60,7 @@ class Cron {
 		$schedules[ Cron::INTERVAL_NAME ] = [
 			'interval' => Cron::INTERVAL_VALUE,
 			'display'  => sprintf( // Translators: $1%s is the interval description.
-				esc_html_x( '$1%s', 'bgw' ),
+				esc_html_x( '$1%s', 'bgc' ),
 				Cron::INTERVAL_DESCRIPTION
 			),
 		];
@@ -72,8 +72,8 @@ class Cron {
 	 * Check to see if we need to update the games collection locally.
 	 */
 	public function maybe_schedule_cron() {
-		if ( ! wp_next_scheduled( 'bgw_collection_update' ) ) {
-			wp_schedule_event( time(), Cron::INTERVAL_NAME, 'bgw_collection_update' );
+		if ( ! wp_next_scheduled( 'bgc_collection_update' ) ) {
+			wp_schedule_event( time(), Cron::INTERVAL_NAME, 'bgc_collection_update' );
 		}
 	}
 }

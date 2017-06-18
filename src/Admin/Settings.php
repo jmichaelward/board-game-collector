@@ -1,10 +1,10 @@
 <?php
-namespace JMichaelWard\BoardGameWeekly;
+namespace JMichaelWard\BoardGameCollector\Admin;
 
 /**
  * Class Settings
  *
- * @package JMichaelWard\BoardGameWeekly
+ * @package JMichaelWard\BoardGameCollector
  */
 class Settings {
 	/**
@@ -26,7 +26,7 @@ class Settings {
 	 */
 	public function __construct() {
 		$this->fields = [
-			'bgg-username' => __( 'BoardGameWeekly Username', 'bgw' ),
+			'bgg-username' => __( 'BoardGameGeek Username', 'bgc' ),
 		];
 
 		$this->data = get_option( 'bgg-settings' );
@@ -48,8 +48,8 @@ class Settings {
 	public function create_admin_page() {
 		add_submenu_page(
 			'edit.php?post_type=bgw_game',
-			__( 'BGG Settings', 'bgw' ),
-			__( 'BGG Settings', 'bgw' ),
+			__( 'BGG Settings', 'bgc' ),
+			__( 'BGG Settings', 'bgc' ),
 			'manage_options',
 			'bgg-settings',
 			[ $this, 'admin_callback' ]
@@ -62,7 +62,7 @@ class Settings {
 	public function add_section() {
 		add_settings_section(
 			'bgg-settings',
-			'BoardGameWeekly API Settings',
+			'BoardGameGeek API Settings',
 			null,
 			'bgg-settings'
 		);

@@ -1,16 +1,16 @@
 <?php
 
-namespace JMichaelWard\BoardGameWeekly;
+namespace JMichaelWard\BoardGameCollector\Content;
 
-use JMichaelWard\BoardGameWeekly\Content\CPT as CPT;
-use JMichaelWard\BoardGameWeekly\Content\Taxonomy as Taxonomy;
+use JMichaelWard\BoardGameCollector\Content\CPT as CPT;
+use JMichaelWard\BoardGameCollector\Content\Taxonomy as Taxonomy;
 
 /**
- * Class Content
+ * Class Registrar
  *
- * @package JMichaelWard\BoardGameWeekly
+ * @package JMichaelWard\BoardGameCollector
  */
-class Content {
+class Registrar {
 	/**
 	 * Collection of post types.
 	 *
@@ -35,6 +35,7 @@ class Content {
 	public function __construct() {
 		$content = array_merge( $this->cpts, $this->taxonomies );
 
+		/* @var $content_type \JMichaelWard\BoardGameCollector\WP\EventInterface WordPress Event Interface. */
 		foreach ( $content as $class ) {
 			$content_type = new $class;
 			$content_type->hooks();

@@ -1,6 +1,6 @@
 {
-    "name": "jmichaelward/boardgamegeek-data",
-    "description": "A WordPress plugin to retrieve user collection data from the BoardGameGeek API.",
+    "name": "jmichaelward/board-game-collector",
+    "description": "A WordPress plugin to retrieve user game collections using the BoardGameGeek API.",
     "type": "wordpress-plugin",
     "license": "GPL-v2",
     "authors": [
@@ -13,7 +13,7 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "JMichaelWard\\BoardGameWeekly\\": "src/"
+            "JMichaelWard\\BoardGameCollector\\": "src/"
         }
     }
 }

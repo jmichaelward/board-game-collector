@@ -1,13 +1,14 @@
 <?php
-namespace JMichaelWard\BoardGameWeekly;
+namespace JMichaelWard\BoardGameCollector\Updater;
 
-use JMichaelWard\BoardGameWeekly\Model\Games\BGGGame;
-use JMichaelWard\BoardGameWeekly\Model\Games\GameDataInterface;
+use JMichaelWard\BoardGameCollector\Model\Games\BGGGame;
+use JMichaelWard\BoardGameCollector\Model\Games\GameDataInterface;
+use JMichaelWard\BoardGameCollector\Admin\Settings;
 
 /**
  * Class GamesUpdater
  *
- * @package JMichaelWard\BoardGameWeekly
+ * @package JMichaelWard\BoardGameCollector
  */
 class GamesUpdater {
 	/**
@@ -25,7 +26,7 @@ class GamesUpdater {
 	private $settings;
 
 	/**
-	 * BoardGameWeekly API endpoint.
+	 * BoardGameCollector API endpoint.
 	 *
 	 * @var string
 	 */
@@ -63,7 +64,7 @@ class GamesUpdater {
 		$xml = simplexml_load_string( $data );
 
 		if ( ! $xml )  {
-			error_log( 'Could not retrieve BoardGameWeekly data at ' . time() );
+			error_log( 'Could not retrieve BoardGameCollector data at ' . time() );
 		}
 
 		$json  = wp_json_encode( $xml );
@@ -135,7 +136,7 @@ class GamesUpdater {
 		$args = [
 			'name'           => $game->get_id(), // @codingStandardsIgnoreLine
 			'post_title'     => $game->get_name(),
-			'post_type'      => 'bgw_game',
+			'post_type'      => 'bgc_game',
 			'posts_per_page' => 1,
 			'post_status'    => 'publish',
 		];
@@ -150,7 +151,7 @@ class GamesUpdater {
 	 */
 	private function insert_game( GameDataInterface $game ) {
 		$args = [
-			'post_type'   => 'bgw_game',
+			'post_type'   => 'bgc_game',
 			'post_name'   => $game->get_id(), // @codingStandardsIgnoreLine
 			'post_title'  => $game->get_name(),
 			'post_status' => 'publish',
@@ -163,10 +164,10 @@ class GamesUpdater {
 		}
 
 		$this->load_image( $id, $game->get_image_url(), $game->get_name() );
-		wp_set_object_terms( $id, $game->get_statuses(), 'bgw_game_status' );
+		wp_set_object_terms( $id, $game->get_statuses(), 'bgc_game_status' );
 
 		// We'll save all the BGG meta data for reference.
-		update_post_meta( $id, 'bgw_game_meta', $game->get_data() );
+		update_post_meta( $id, 'bgc_game_meta', $game->get_data() );
 	}
 
 	/**
@@ -176,8 +177,8 @@ class GamesUpdater {
 	 * @param \WP_Post          $game_post bgw_game post.
 	 */
 	private function update_game( GameDataInterface $game, \WP_Post $game_post ) {
-		update_post_meta( $game_post->ID, 'bgw_game_meta', $game->get_data() );
-		wp_set_object_terms( $game_post->ID, $game->get_statuses(), 'bgw_game_status' );
+		update_post_meta( $game_post->ID, 'bgc_game_meta', $game->get_data() );
+		wp_set_object_terms( $game_post->ID, $game->get_statuses(), 'bgc_game_status' );
 	}
 
 	/**

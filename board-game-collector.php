@@ -1,17 +1,17 @@
 <?php
 /**
- * Plugin Name: BoardGameWeekly Data
+ * Plugin Name: BoardGameCollector Data
  * Plugin URI: https://jmichaelward.com
- * Description: Connects to the BoardGameWeekly API to retrieve and adapt data for use by WordPress.
+ * Description: Connects to the BoardGameCollector API to retrieve and adapt data for use by WordPress.
  * Author: J. Michael Ward
  * Author URI: https://jmichaelward.com
  *
- * @package JMichaelWard\BoardGameWeekly
+ * @package JMichaelWard\BoardGameCollector
  */
 
-namespace JMichaelWard\BoardGameWeekly;
+namespace JMichaelWard\BoardGameCollector;
 
-use JMichaelWard\BoardGameWeekly\Admin\Notifier;
+use JMichaelWard\BoardGameCollector\Admin\Notifier;
 
 $autoload = plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
 
@@ -24,5 +24,5 @@ if ( ! file_exists( $autoload ) ) {
 
 require_once $autoload;
 
-$plugin = new BoardGameWeekly();
+$plugin = new BoardGameCollector();
 $plugin->run();

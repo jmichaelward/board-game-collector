@@ -1,10 +1,10 @@
 <?php
-namespace JMichaelWard\BoardGameWeekly\Model\Games;
+namespace JMichaelWard\BoardGameCollector\Model\Games;
 
 /**
  * Interface GameDataInterface
  *
- * @package JMichaelWard\BoardGameWeekly\Model\Games
+ * @package JMichaelWard\BoardGameCollector\Model\Games
  */
 interface GameDataInterface {
 	/**

@@ -1,12 +1,14 @@
 <?php
-namespace JMichaelWard\BoardGameWeekly\Content\CPT;
+namespace JMichaelWard\BoardGameCollector\Content\CPT;
+
+use JMichaelWard\BoardGameCollector\WP\EventInterface;
 
 /**
  * Class Game
  *
- * @package JMichaelWard\BoardGameWeekly\Content\CPT;
+ * @package JMichaelWard\BoardGameCollector\Content\CPT;
  */
-class GamePostType implements PostTypeInterface {
+class GamePostType implements PostTypeInterface, EventInterface {
 	/**
 	 * Setup WordPress hooks.
 	 */
@@ -19,7 +21,7 @@ class GamePostType implements PostTypeInterface {
 	 * Register this post type.
 	 */
 	public function register() {
-		register_post_type( 'bgw_game', $this->args() );
+		register_post_type( 'bgc_game', $this->args() );
 	}
 
 	/**
@@ -29,20 +31,20 @@ class GamePostType implements PostTypeInterface {
 	 */
 	public function labels() {
 		return [
-			'name'               => _x( 'Games', 'post type general name', 'bgw' ),
-			'singular_name'      => _x( 'Game', 'post type singular name', 'bgw' ),
-			'menu_name'          => _x( 'Games', 'admin menu', 'bgw' ),
-			'name_admin_bar'     => _x( 'Game', 'add new on admin bar', 'bgw' ),
-			'add_new'            => _x( 'Add New', 'bgw_game', 'bgw' ),
-			'add_new_item'       => __( 'Add New Game', 'bgw' ),
-			'new_item'           => __( 'New Game', 'bgw' ),
-			'edit_item'          => __( 'Edit Game', 'bgw' ),
-			'view_item'          => __( 'View Game', 'bgw' ),
-			'all_items'          => __( 'All Games', 'bgw' ),
-			'search_items'       => __( 'Search Games', 'bgw' ),
-			'parent_item_colon'  => __( 'Parent Games:', 'bgw' ),
-			'not_found'          => __( 'No games found', 'bgw' ),
-			'not_found_in_trash' => __( 'No games found in Trash.', 'bgw' ),
+			'name'               => _x( 'Games', 'post type general name', 'bgc' ),
+			'singular_name'      => _x( 'Game', 'post type singular name', 'bgc' ),
+			'menu_name'          => _x( 'Games', 'admin menu', 'bgc' ),
+			'name_admin_bar'     => _x( 'Game', 'add new on admin bar', 'bgc' ),
+			'add_new'            => _x( 'Add New', 'bgc_game', 'bgc' ),
+			'add_new_item'       => __( 'Add New Game', 'bgc' ),
+			'new_item'           => __( 'New Game', 'bgc' ),
+			'edit_item'          => __( 'Edit Game', 'bgc' ),
+			'view_item'          => __( 'View Game', 'bgc' ),
+			'all_items'          => __( 'All Games', 'bgc' ),
+			'search_items'       => __( 'Search Games', 'bgc' ),
+			'parent_item_colon'  => __( 'Parent Games:', 'bgc' ),
+			'not_found'          => __( 'No games found', 'bgc' ),
+			'not_found_in_trash' => __( 'No games found in Trash.', 'bgc' ),
 		];
 	}
 
@@ -53,9 +55,9 @@ class GamePostType implements PostTypeInterface {
 	 */
 	public function args() {
 		return [
-			'label'                 => _x( 'Games', 'post type label', 'bgw' ),
+			'label'                 => _x( 'Games', 'post type label', 'bgc' ),
 			'labels'                => $this->labels(),
-			'description'           => __( 'A post type for a board games collection', 'bgw' ),
+			'description'           => __( 'A post type for a board games collection', 'bgc' ),
 			'public'                => false,
 			'publicly_queryable'    => false,
 			'show_ui'               => true,
@@ -77,6 +79,6 @@ class GamePostType implements PostTypeInterface {
 	 * Add theme support for this post type.
 	 */
 	public function add_theme_support() {
-		add_theme_support( 'post-thumbnails', [ 'bgw_game' ] );
+		add_theme_support( 'post-thumbnails', [ 'bgc_game' ] );
 	}
 }

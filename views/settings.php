@@ -1,8 +1,8 @@
 <?php
 /**
- * HTML markup for the BoardGameWeekly API plugin settings page.
+ * HTML markup for the Board Game Collector API plugin settings page.
  *
- * @package JMichaelWard\BoardGameWeekly
+ * @package JMichaelWard\BoardGameCollector
  */
 
 ?>
