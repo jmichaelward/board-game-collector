@@ -1,8 +1,8 @@
 <?php
 /**
- * HTML markup for the BoardGameGeek API plugin settings page.
+ * HTML markup for the BoardGameWeekly API plugin settings page.
  *
- * @package BGW\BoardGameGeek
+ * @package BGW\BoardGameWeekly
  */
 
 ?>

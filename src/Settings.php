@@ -1,10 +1,10 @@
 <?php
-namespace BGW\BoardGameGeek;
+namespace JMichaelWard\BoardGameWeekly;
 
 /**
  * Class Settings
  *
- * @package BGW\BoardGameGeek
+ * @package BGW\BoardGameWeekly
  */
 class Settings {
 	/**
@@ -26,7 +26,7 @@ class Settings {
 	 */
 	public function __construct() {
 		$this->fields = [
-			'bgg-username' => __( 'BoardGameGeek Username', 'bgw' ),
+			'bgg-username' => __( 'BoardGameWeekly Username', 'bgw' ),
 		];
 
 		$this->data = get_option( 'bgg-settings' );
@@ -62,7 +62,7 @@ class Settings {
 	public function add_section() {
 		add_settings_section(
 			'bgg-settings',
-			'BoardGameGeek API Settings',
+			'BoardGameWeekly API Settings',
 			null,
 			'bgg-settings'
 		);

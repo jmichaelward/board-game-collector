@@ -1,13 +1,13 @@
 <?php
-namespace BGW\BoardGameGeek;
+namespace JMichaelWard\BoardGameWeekly;
 
-use BGW\BoardGameGeek\Model\Games\BGGGame;
-use BGW\BoardGameGeek\Model\Games\GameDataInterface;
+use JMichaelWard\BoardGameWeekly\Model\Games\BGGGame;
+use JMichaelWard\BoardGameWeekly\Model\Games\GameDataInterface;
 
 /**
  * Class GamesUpdater
  *
- * @package BGW\BoardGameGeek
+ * @package BGW\BoardGameWeekly
  */
 class GamesUpdater {
 	/**
@@ -25,7 +25,7 @@ class GamesUpdater {
 	private $settings;
 
 	/**
-	 * BoardGameGeek API endpoint.
+	 * BoardGameWeekly API endpoint.
 	 *
 	 * @var string
 	 */
@@ -63,7 +63,7 @@ class GamesUpdater {
 		$xml = simplexml_load_string( $data );
 
 		if ( ! $xml )  {
-			error_log( 'Could not retrieve BoardGameGeek data at ' . time() );
+			error_log( 'Could not retrieve BoardGameWeekly data at ' . time() );
 		}
 
 		$json  = wp_json_encode( $xml );

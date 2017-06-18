@@ -13,7 +13,7 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "BGW\\BoardGameGeek\\": "src/"
+            "JMichaelWard\\BoardGameWeekly\\": "src/"
         }
     }
 }

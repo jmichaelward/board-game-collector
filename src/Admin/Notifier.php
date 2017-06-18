@@ -1,10 +1,10 @@
 <?php
-namespace BGW\BoardGameGeek\Admin;
+namespace JMichaelWard\BoardGameWeekly\Admin;
 
 /**
  * Class Notifier
  *
- * @package BGW\BoardGameGeek\Admin
+ * @package BGW\BoardGameWeekly\Admin
  */
 class Notifier {
 	/**
@@ -16,7 +16,7 @@ class Notifier {
 		}
 		?>
 		<div class="notice notice-error is-dismissible">
-			<p><?php esc_html_e( 'BoardGameGeek Data classes not found. Did you run composer install?', 'bgw' ); ?></p>
+			<p><?php esc_html_e( 'BoardGameWeekly Data classes not found. Did you run composer install?', 'bgw' ); ?></p>
 		</div>
 		<?php
 	}

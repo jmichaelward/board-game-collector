@@ -1,21 +1,21 @@
 <?php
-namespace BGW\BoardGameGeek\Model\Games;
+namespace JMichaelWard\BoardGameWeekly\Model\Games;
 
 /**
  * Class BGGGame
  *
- * @package BGW\BoardGameGeek\Model\Games
+ * @package BGW\BoardGameWeekly\Model\Games
  */
 class BGGGame implements GameDataInterface {
 	/**
-	 * Data returned from BoardGameGeek API request.
+	 * Data returned from BoardGameWeekly API request.
 	 *
 	 * @var array
 	 */
 	private $data;
 
 	/**
-	 * BoardGameGeek ID for this game.
+	 * BoardGameWeekly ID for this game.
 	 *
 	 * @var int
 	 */
@@ -61,7 +61,7 @@ class BGGGame implements GameDataInterface {
 	/**
 	 * BGGGame constructor.
 	 *
-	 * @param array $data Game data from BoardGameGeek.
+	 * @param array $data Game data from BoardGameWeekly.
 	 */
 	public function __construct( array $data ) {
 		if ( ! $data ) {

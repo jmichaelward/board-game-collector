@@ -1,18 +1,23 @@
 <?php
-namespace BGW\BoardGameGeek;
+namespace JMichaelWard\BoardGameWeekly;
 
 /**
- * Class BoardGameGeek
+ * Class BoardGameWeekly
  *
- * @package BGW\BoardGameGeek
+ * @package BGW\BoardGameWeekly
  */
-class BoardGameGeek {
+class BoardGameWeekly {
 	/**
 	 * Settings data.
 	 *
 	 * @var Settings
 	 */
 	private $settings;
+
+	/**
+	 * @var
+	 */
+	private $content;
 
 	/**
 	 * BGG Cron class.
@@ -22,10 +27,11 @@ class BoardGameGeek {
 	public $cron;
 
 	/**
-	 * BoardGameGeek constructor.
+	 * BoardGameWeekly constructor.
 	 */
 	public function __construct() {
 		$this->settings = new Settings();
+		$this->content  = new Content();
 		$this->cron     = new Cron( new GamesUpdater( $this->settings ) );
 	}
 

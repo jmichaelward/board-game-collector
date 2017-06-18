@@ -1,12 +1,12 @@
 <?php
-namespace BGW\BoardGameGeek;
+namespace JMichaelWard\BoardGameWeekly;
 
 /**
  * Establishes a cron task for periodically hitting the BGG API.
  *
  * Class Cron
  *
- * @package BGW\BoardGameGeek
+ * @package BGW\BoardGameWeekly
  */
 class Cron {
 	/**

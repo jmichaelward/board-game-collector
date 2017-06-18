@@ -1,10 +1,10 @@
 <?php
-namespace BGW\BoardGameGeek\Model\Games;
+namespace JMichaelWard\BoardGameWeekly\Model\Games;
 
 /**
  * Interface GameDataInterface
  *
- * @package BGW\BoardGameGeek\Model\Games
+ * @package BGW\BoardGameWeekly\Model\Games
  */
 interface GameDataInterface {
 	/**
