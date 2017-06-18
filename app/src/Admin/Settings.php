@@ -1,6 +1,8 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\Admin;
 
+use JMichaelWard\BoardGameCollector\BoardGameCollector;
+
 /**
  * Class Settings
  *
@@ -108,7 +110,7 @@ class Settings {
 	 * Get the view file for the settings form.
 	 */
 	public function admin_callback() {
-		include dirname( plugin_dir_path( __FILE__ ) ) . '/views/settings.php'; // @codingStandardsIgnoreLine
+		include BoardGameCollector::app_path() . '/views/settings.php'; // @codingStandardsIgnoreLine
 	}
 
 	/**

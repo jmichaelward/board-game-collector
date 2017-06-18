@@ -50,4 +50,11 @@ class BoardGameCollector {
 		$this->cron->hooks();
 		$this->cron->maybe_schedule_cron();
 	}
+
+	/**
+	 * @return string
+	 */
+	public static function app_path() {
+		return plugin_dir_path( dirname( __FILE__ ) );
+	}
 }
