@@ -4,7 +4,7 @@ namespace JMichaelWard\BoardGameWeekly;
 /**
  * Class Settings
  *
- * @package BGW\BoardGameWeekly
+ * @package JMichaelWard\BoardGameWeekly
  */
 class Settings {
 	/**

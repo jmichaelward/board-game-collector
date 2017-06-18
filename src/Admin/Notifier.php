@@ -4,7 +4,7 @@ namespace JMichaelWard\BoardGameWeekly\Admin;
 /**
  * Class Notifier
  *
- * @package BGW\BoardGameWeekly\Admin
+ * @package JMichaelWard\BoardGameWeekly\Admin
  */
 class Notifier {
 	/**

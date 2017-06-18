@@ -4,7 +4,7 @@ namespace JMichaelWard\BoardGameWeekly\Model\Games;
 /**
  * Interface GameDataInterface
  *
- * @package BGW\BoardGameWeekly\Model\Games
+ * @package JMichaelWard\BoardGameWeekly\Model\Games
  */
 interface GameDataInterface {
 	/**

@@ -6,7 +6,7 @@ namespace JMichaelWard\BoardGameWeekly;
  *
  * Class Cron
  *
- * @package BGW\BoardGameWeekly
+ * @package JMichaelWard\BoardGameWeekly
  */
 class Cron {
 	/**

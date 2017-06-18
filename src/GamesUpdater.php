@@ -7,7 +7,7 @@ use JMichaelWard\BoardGameWeekly\Model\Games\GameDataInterface;
 /**
  * Class GamesUpdater
  *
- * @package BGW\BoardGameWeekly
+ * @package JMichaelWard\BoardGameWeekly
  */
 class GamesUpdater {
 	/**

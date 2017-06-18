@@ -2,7 +2,7 @@
 /**
  * HTML markup for the BoardGameWeekly API plugin settings page.
  *
- * @package BGW\BoardGameWeekly
+ * @package JMichaelWard\BoardGameWeekly
  */
 
 ?>
