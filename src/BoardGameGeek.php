@@ -12,7 +12,7 @@ class BoardGameGeek {
 	 *
 	 * @var Settings
 	 */
-	public $settings;
+	private $settings;
 
 	/**
 	 * BGG Cron class.
@@ -25,10 +25,6 @@ class BoardGameGeek {
 	 * BoardGameGeek constructor.
 	 */
 	public function __construct() {
-		require_once plugin_dir_path( __FILE__ ) . 'GamesUpdater.php';
-		require_once plugin_dir_path( __FILE__ ) . 'Cron.php';
-		require_once plugin_dir_path( __FILE__ ) . 'Settings.php';
-
 		$this->settings = new Settings();
 		$this->cron     = new Cron( new GamesUpdater( $this->settings ) );
 	}
@@ -39,5 +35,6 @@ class BoardGameGeek {
 	public function run() {
 		$this->settings->hooks();
 		$this->cron->hooks();
+		$this->cron->maybe_schedule_cron();
 	}
 }

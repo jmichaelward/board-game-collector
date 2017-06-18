@@ -1,6 +1,9 @@
 <?php
 namespace BGW\BoardGameGeek;
 
+use BGW\BoardGameGeek\Model\Games\BGGGame;
+use BGW\BoardGameGeek\Model\Games\GameDataInterface;
+
 /**
  * Class GamesUpdater
  *
@@ -26,7 +29,7 @@ class GamesUpdater {
 	 *
 	 * @var string
 	 */
-	private $endpoint;
+	private $endpoint = 'https://www.boardgamegeek.com/xmlapi2';
 
 	/**
 	 * GamesUpdater constructor.
@@ -34,8 +37,6 @@ class GamesUpdater {
 	 * @param Settings $settings Plugin settings.
 	 */
 	public function __construct( Settings $settings ) {
-		require_once plugin_dir_path( __FILE__ ) . 'Settings.php';
-
 		$this->settings = $settings;
 	}
 
@@ -44,21 +45,48 @@ class GamesUpdater {
 	 */
 	private function hydrate() {
 		$data           = $this->settings->get_data();
-		$this->username = esc_attr( isset( $data['bgg-username'] ) ? $data['bgg-username'] : '' );
-		$this->endpoint = esc_url( 'https://bgg-json.azurewebsites.net/collection/' . $this->username );
+		$this->username = sanitize_title( $data['bgg-username'] ?? '' );
+	}
+
+	/**
+	 * @param $data
+	 *
+	 * @return array|false|string
+	 */
+	public function convert_xml_to_json( $data ) {
+		if ( ! $data ) {
+			return wp_json_encode( array() );
+		}
+
+		libxml_use_internal_errors( true );
+
+		$xml = simplexml_load_string( $data );
+
+		if ( ! $xml )  {
+			error_log( 'Could not retrieve BoardGameGeek data at ' . time() );
+		}
+
+		$json  = json_encode( $xml );
+		$games = json_decode( $json, true );
+
+		if ( ! isset( $games['item'] ) ) {
+			return array();
+		}
+
+		return $games['item'];
 	}
 
 	/**
 	 * Retrieve games data from the API.
 	 */
-	public function get_data() {
+	public function get_collection_data() {
 		$games = get_transient( 'bgg_collection' );
 
 		if ( ! $games ) {
-			$data  = wp_remote_get( $this->endpoint ); // @codingStandardsIgnoreLine
-			$games = json_decode( wp_remote_retrieve_body( $data ), true );
+			$data  = wp_remote_get( "{$this->endpoint}/collection?username={$this->username}" ); // @codingStandardsIgnoreLine
+			$games = $this->convert_xml_to_json( wp_remote_retrieve_body( $data ) );
 
-			if ( ! $games ) {
+			if ( ! isset( $games ) ) {
 				$games = [];
 			}
 
@@ -78,15 +106,11 @@ class GamesUpdater {
 		// @TODO Authorization.
 		wp_set_auth_cookie( 1 );
 
-		if ( ! function_exists( 'media_handle_sideload' ) ) {
-			include_once ABSPATH . '/wp-admin/includes/image.php';
-			include_once ABSPATH . '/wp-admin/includes/file.php';
-			include_once ABSPATH . '/wp-admin/includes/media.php';
-		}
-
 		$this->hydrate();
 
-		foreach ( $this->get_data() as $game ) {
+		foreach ( $this->get_collection_data() as $data ) {
+			$game = new BGGGame( $data );
+
 			if ( $this->meets_requirements( $game ) ) {
 				$this->insert_game( $game );
 			}
@@ -94,27 +118,27 @@ class GamesUpdater {
 	}
 
 	/**
-	 * Determine whether a Game meets the requirements to be added to WordPress.
+	 * Determine whether a game meets the requirements to be added to WordPress.
 	 *
-	 * @param \stdClass $game A single game object.
+	 * @param GameDataInterface $game Interface for a game object.
 	 *
 	 * @return bool
 	 */
-	private function meets_requirements( $game ) {
-		return $game['owned'] && ! $game['isExpansion'] && ! $this->game_exists( $game ); // @codingStandardsIgnoreLine
+	private function meets_requirements( GameDataInterface $game ) {
+		return $game->is_owned() && ! $this->game_exists( $game ); // @codingStandardsIgnoreLine
 	}
 
 	/**
 	 * Query WordPress to check whether the game is already in the database.
 	 *
-	 * @param \stdClass $game A game from the API response.
+	 * @param GameDataInterface $game Interface for a game object.
 	 *
 	 * @return bool
 	 */
-	private function game_exists( $game ) {
+	private function game_exists( GameDataInterface $game ) {
 		$args = [
-			'name'           => $game['gameId'], // @codingStandardsIgnoreLine
-			'post_title'     => $game['name'],
+			'name'           => $game->get_id(), // @codingStandardsIgnoreLine
+			'post_title'     => $game->get_name(),
 			'post_type'      => 'bgw_game',
 			'posts_per_page' => 1,
 			'post_status'    => 'publish',
@@ -126,20 +150,20 @@ class GamesUpdater {
 	/**
 	 * Insert a new Games post into WordPress.
 	 *
-	 * @param \stdClass $game A game object from the API.
+	 * @param GameDataInterface $game Interface for a game object.
 	 */
-	private function insert_game( $game ) {
+	private function insert_game( GameDataInterface $game ) {
 		$args = [
 			'post_type'   => 'bgw_game',
-			'post_name'   => $game['gameId'], // @codingStandardsIgnoreLine
-			'post_title'  => $game['name'],
+			'post_name'   => $game->get_id(), // @codingStandardsIgnoreLine
+			'post_title'  => $game->get_name(),
 			'post_status' => 'publish',
 		];
 
 		$id = wp_insert_post( $args );
 
 		if ( $id ) {
-			$this->load_image( $id, $game['image'] );
+			$this->load_image( $id, $game->get_image_url() );
 			wp_set_object_terms( $id, [ 'owned' ], 'bgw_game_status' );
 		}
 
@@ -150,13 +174,13 @@ class GamesUpdater {
 	/**
 	 * Define the ownership level of the game.
 	 *
-	 * @param \stdClass $game A game object returned by the API.
+	 * @param GameDataInterface $game Interface for a game object.
 	 *
 	 * @return array
 	 * TODO: We want to define ownership on a game so that it can be categorized on post insertion.
 	 */
-	private function define_ownership( $game ) {
-		if ( $game['owned'] ) {
+	private function define_ownership( GameDataInterface $game ) {
+		if ( $game->is_owned() ) {
 			return [
 				'bgw_game_status' => 'owned',
 			];
@@ -176,7 +200,13 @@ class GamesUpdater {
 	 * @return bool|int|object
 	 */
 	private function load_image( $id, $image_url ) {
-		$tmp = download_url( 'http:' . $image_url );
+		if ( ! function_exists( 'media_handle_sideload' ) ) {
+			include_once ABSPATH . '/wp-admin/includes/image.php';
+			include_once ABSPATH . '/wp-admin/includes/file.php';
+			include_once ABSPATH . '/wp-admin/includes/media.php';
+		}
+
+		$tmp = download_url( $image_url );
 
 		if ( is_wp_error( $tmp ) ) {
 			return false;

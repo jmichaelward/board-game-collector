@@ -46,12 +46,7 @@ class Cron {
 	public function hooks() {
 		// Setup the cron interval and the callback task.
 		add_filter( 'cron_schedules', [ $this, 'add_interval' ] ); // @codingStandardsIgnoreLine
-		add_action( 'bgw_collection_update', [ $this->updater, 'update_collection' ], 99, 1 );
-
-		// Check for cron schedule and set up a new one if it's not there.
-		if ( ! wp_next_scheduled( 'bgw_collection_update' ) ) {
-			wp_schedule_event( time(), Cron::INTERVAL_NAME, 'bgw_collection_update' );
-		}
+		add_action( 'bgw_collection_update', [ $this->updater, 'update_collection' ], 10, 1 );
 	}
 
 	/**
@@ -71,5 +66,14 @@ class Cron {
 		];
 
 		return $schedules;
+	}
+
+	/**
+	 * Check to see if we need to update the games collection locally.
+	 */
+	public function maybe_schedule_cron() {
+		if ( ! wp_next_scheduled( 'bgw_collection_update' ) ) {
+			wp_schedule_event( time(), Cron::INTERVAL_NAME, 'bgw_collection_update' );
+		}
 	}
 }

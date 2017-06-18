@@ -1,0 +1,19 @@
+{
+    "name": "jmichaelward/boardgamegeek-data",
+    "description": "A WordPress plugin to retrieve user collection data from the BoardGameGeek API.",
+    "type": "wordpress-plugin",
+    "license": "GPL-v2",
+    "authors": [
+        {
+            "name": "Jeremy Ward",
+            "email": "jeremy@jmichaelward.com",
+            "role": "Lead Developer"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "BGW\\BoardGameGeek\\": "src/"
+        }
+    }
+}
