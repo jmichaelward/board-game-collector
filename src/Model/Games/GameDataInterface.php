@@ -8,6 +8,12 @@ namespace BGW\BoardGameGeek\Model\Games;
  */
 interface GameDataInterface {
 	/**
+	 * Data from an API request.
+	 *
+	 * @return array
+	 */
+	public function get_data();
+	/**
 	 * ID of the game.
 	 *
 	 * @return int
@@ -55,4 +61,11 @@ interface GameDataInterface {
 	 * @return bool
 	 */
 	public function is_owned();
+
+	/**
+	 * Get the statuses of the game (e.g., owned, wishlist, and so on).
+	 *
+	 * @return array
+	 */
+	public function get_statuses();
 }

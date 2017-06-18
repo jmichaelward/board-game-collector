@@ -66,7 +66,7 @@ class GamesUpdater {
 			error_log( 'Could not retrieve BoardGameGeek data at ' . time() );
 		}
 
-		$json  = json_encode( $xml );
+		$json  = wp_json_encode( $xml );
 		$games = json_decode( $json, true );
 
 		if ( ! isset( $games['item'] ) ) {
@@ -110,22 +110,18 @@ class GamesUpdater {
 
 		foreach ( $this->get_collection_data() as $data ) {
 			$game = new BGGGame( $data );
+			$game_post = $this->game_exists( $game );
 
-			if ( $this->meets_requirements( $game ) ) {
+			if ( ! $game_post ) {
 				$this->insert_game( $game );
+
+				continue;
+			}
+
+			if ( is_array( $game_post ) && count( $game_post ) === 1 && is_a( $game_post[0], '\WP_Post' ) ) {
+				$this->update_game( $game, $game_post[0] );
 			}
 		}
-	}
-
-	/**
-	 * Determine whether a game meets the requirements to be added to WordPress.
-	 *
-	 * @param GameDataInterface $game Interface for a game object.
-	 *
-	 * @return bool
-	 */
-	private function meets_requirements( GameDataInterface $game ) {
-		return $game->is_owned() && ! $this->game_exists( $game ); // @codingStandardsIgnoreLine
 	}
 
 	/**
@@ -133,7 +129,7 @@ class GamesUpdater {
 	 *
 	 * @param GameDataInterface $game Interface for a game object.
 	 *
-	 * @return bool
+	 * @return \WP_Post
 	 */
 	private function game_exists( GameDataInterface $game ) {
 		$args = [
@@ -162,33 +158,26 @@ class GamesUpdater {
 
 		$id = wp_insert_post( $args );
 
-		if ( $id ) {
-			$this->load_image( $id, $game->get_image_url() );
-			wp_set_object_terms( $id, [ 'owned' ], 'bgw_game_status' );
+		if ( ! $id ) {
+			return;
 		}
 
+		$this->load_image( $id, $game->get_image_url(), $game->get_name() );
+		wp_set_object_terms( $id, $game->get_statuses(), 'bgw_game_status' );
+
 		// We'll save all the BGG meta data for reference.
-		update_post_meta( $id, 'bgw_game_meta', $game );
+		update_post_meta( $id, 'bgw_game_meta', $game->get_data() );
 	}
 
 	/**
-	 * Define the ownership level of the game.
+	 * Update the post meta and terms.
 	 *
 	 * @param GameDataInterface $game Interface for a game object.
-	 *
-	 * @return array
-	 * TODO: We want to define ownership on a game so that it can be categorized on post insertion.
+	 * @param \WP_Post          $game_post bgw_game post.
 	 */
-	private function define_ownership( GameDataInterface $game ) {
-		if ( $game->is_owned() ) {
-			return [
-				'bgw_game_status' => 'owned',
-			];
-		}
-
-		return [
-			'bgw_game_status' => 'wishlist',
-		];
+	private function update_game( GameDataInterface $game, \WP_Post $game_post ) {
+		update_post_meta( $game_post->ID, 'bgw_game_meta', $game->get_data() );
+		wp_set_object_terms( $game_post->ID, $game->get_statuses(), 'bgw_game_status' );
 	}
 
 	/**
@@ -196,10 +185,11 @@ class GamesUpdater {
 	 *
 	 * @param int    $id        Post ID to which to attach the image.
 	 * @param string $image_url URL of the image asset.
+	 * @param string $name      Name of the game.
 	 *
 	 * @return bool|int|object
 	 */
-	private function load_image( $id, $image_url ) {
+	private function load_image( $id, $image_url, $name ) {
 		if ( ! function_exists( 'media_handle_sideload' ) ) {
 			include_once ABSPATH . '/wp-admin/includes/image.php';
 			include_once ABSPATH . '/wp-admin/includes/file.php';
@@ -226,7 +216,13 @@ class GamesUpdater {
 			$file_array['tmp_name'] = '';
 		}
 
-		$img = media_handle_sideload( $file_array, $id, '' );
+		$img = media_handle_sideload(
+			$file_array, $id,
+			'',
+			[
+				'post_name' => $name,
+			]
+		);
 
 		// If error storing permanently, unlink.
 		if ( is_wp_error( $img ) ) {

@@ -8,6 +8,13 @@ namespace BGW\BoardGameGeek\Model\Games;
  */
 class BGGGame implements GameDataInterface {
 	/**
+	 * Data returned from BoardGameGeek API request.
+	 *
+	 * @var array
+	 */
+	private $data;
+
+	/**
 	 * BoardGameGeek ID for this game.
 	 *
 	 * @var int
@@ -61,12 +68,20 @@ class BGGGame implements GameDataInterface {
 			return;
 		}
 
+		$this->data        = $data;
 		$this->id          = $data['@attributes']['objectid'] ?? 0;
 		$this->name        = $data['name'] ?? '';
 		$this->image_url   = $data['image'] ?? '';
 		$this->status      = $data['status']['@attributes'] ?? [];
 		$this->player_info = $data['stats']['@attributes'] ?? [];
-		$this->rating = $data['rating']['@attributes']['value'] ?? 0;
+		$this->rating      = $data['rating']['@attributes']['value'] ?? 0;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function get_data() {
+		return $this->data;
 	}
 
 	/**
@@ -130,5 +145,18 @@ class BGGGame implements GameDataInterface {
 	 */
 	public function is_owned() {
 		return absint( $this->status['own'] ) === 1;
+	}
+
+	/**
+	 * Get the statuses for the games (e.g., owned, wishlist ).
+	 *
+	 * @return array
+	 */
+	public function get_statuses() {
+		$statuses = array_filter( $this->status, function( $status ) {
+			return '1' === $status || 'wishlist' === $status;
+		} );
+
+		return array_keys( $statuses );
 	}
 }
