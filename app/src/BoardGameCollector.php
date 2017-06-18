@@ -2,7 +2,8 @@
 namespace JMichaelWard\BoardGameCollector;
 
 use JMichaelWard\BoardGameCollector\Admin\Settings;
-use JMichaelWard\BoardGameCollector\Content\Registrar;
+use JMichaelWard\BoardGameCollector\Content\Registrar as Content;
+use JMichaelWard\BoardGameCollector\API\Registrar as API;
 use JMichaelWard\BoardGameCollector\Updater\Cron;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 
@@ -20,14 +21,21 @@ class BoardGameCollector {
 	private $settings;
 
 	/**
-	 * Wrapper class for registering content post types and taxonomies.
+	 * Service for registering content post types and taxonomies.
 	 *
 	 * @var Content
 	 */
 	private $content;
 
 	/**
-	 * BGG Cron class.
+	 * Service for setting up custom API routes.
+	 *
+	 * @var API
+	 */
+	private $api;
+
+	/**
+	 * Cron service.
 	 *
 	 * @var Cron
 	 */
@@ -38,7 +46,8 @@ class BoardGameCollector {
 	 */
 	public function __construct() {
 		$this->settings = new Settings();
-		$this->content  = new Registrar();
+		$this->content  = new Content();
+		$this->api      = new API();
 		$this->cron     = new Cron( new GamesUpdater( $this->settings ) );
 	}
 
@@ -46,12 +55,18 @@ class BoardGameCollector {
 	 * Kick things off.
 	 */
 	public function run() {
+		// Set up plugin events hooks.
 		$this->settings->hooks();
+		$this->api->hooks();
 		$this->cron->hooks();
+
+		// Check to see if it's time to run cron processes.
 		$this->cron->maybe_schedule_cron();
 	}
 
 	/**
+	 * Path to the application root.
+	 *
 	 * @return string
 	 */
 	public static function app_path() {
