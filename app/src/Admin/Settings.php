@@ -42,6 +42,7 @@ class Settings {
 		add_action( 'admin_init', [ $this, 'add_section' ] );
 		add_action( 'admin_init', [ $this, 'add_fields' ] );
 		add_action( 'admin_init', [ $this, 'register' ] );
+		add_action( 'admin_notices', [ $this, 'notify_missing_username' ] );
 	}
 
 	/**
@@ -120,5 +121,19 @@ class Settings {
 	 */
 	public function get_data() {
 		return $this->data;
+	}
+
+	/**
+	 * Render an admin notice only on the bgc_game screen if a BGG Username is not entered.
+	 */
+	public function notify_missing_username() {
+		$screen       = get_current_screen();
+		$has_username = isset( $this->data['bgg-username'] ) && ! empty( $this->data['bgg-username'] );
+
+		if ( 'bgc_game' !== $screen->post_type || $has_username ) {
+			return;
+		}
+
+		(new Notifier)->do_warning_settings_not_configured();
 	}
 }

@@ -20,4 +20,17 @@ class Notifier {
 		</div>
 		<?php
 	}
+
+	/**
+	 * Notify admin that they have not yet configured the plugin settings.
+	 */
+	public function do_warning_settings_not_configured() {
+		$message = 'A BoardGameGeek username has not yet been saved on the BGG Settings page. Your games collection '
+					. 'will not download until a valid username is entered.';
+		?>
+		<div class="notice notice-warning is-dismissible">
+			<p><?php echo esc_html( $message ); ?></p>
+		</div>
+		<?php
+	}
 }
