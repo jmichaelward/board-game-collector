@@ -52,23 +52,6 @@ class GamesUpdater {
 	}
 
 	/**
-	 * Retrieve games data from the API.
-	 */
-	public function get_games_data() {
-		$games = get_transient( 'bgg_collection' );
-
-		if ( ! $games ) {
-			$games = $this->api->get_collection( $this->username );
-			$games = $this->api->convert_xml_to_json( wp_remote_retrieve_body( $games ) );
-			$games = $games['item'] ?? [];
-
-			set_transient( 'bgg_collection', $games, Cron::INTERVAL_VALUE );
-		}
-
-		return $games;
-	}
-
-	/**
 	 * Convert data into WordPress content.
 	 */
 	public function update_collection() {
@@ -86,13 +69,7 @@ class GamesUpdater {
 
 		$this->hydrate();
 
-		$collection = $this->get_games_data();
-
-		if ( is_wp_error( $collection ) ) {
-			return;
-		}
-
-		array_filter( $collection, function( $item ) {
+		array_filter( $this->api->get_collection( $this->username ), function( $item ) {
 			$game = new BGGGame( $item );
 
 			if ( $game_post = $this->game_exists( $game ) ) {

@@ -1,6 +1,8 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\API;
 
+use JMichaelWard\BoardGameCollector\Updater\Cron;
+
 /**
  * Class BoardGameGeek
  *
@@ -22,7 +24,22 @@ class BoardGameGeek {
 	 * @return array|\WP_Error
 	 */
 	public function get_collection( $username ) {
-		return wp_remote_get( "{$this->base_path}/collection?username={$username}&stats=1" ); // @codingStandardsIgnoreLine
+		if ( $games = get_transient( 'bgg_collection' ) ) {
+			return $games;
+		}
+
+		$games = wp_remote_get( "{$this->base_path}/collection?username={$username}&stats=1" );
+
+		if ( is_wp_error( $games ) || '200' !== wp_remote_retrieve_response_code( $games ) ) {
+			return [];
+		}
+
+		$games = $this->convert_xml_to_json( wp_remote_retrieve_body( $games ) );
+		$games = $games['item'] ?? [];
+
+		set_transient( 'bgg_collection', $games, Cron::INTERVAL_VALUE );
+
+		return $games;
 	}
 
 	/**
