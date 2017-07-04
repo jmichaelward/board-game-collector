@@ -60,6 +60,7 @@ class GamesUpdater {
 		if ( ! $games ) {
 			$games = $this->api->get_collection( $this->username );
 			$games = $this->api->convert_xml_to_json( wp_remote_retrieve_body( $games ) );
+			$games = $games['item'] ?? [];
 
 			set_transient( 'bgg_collection', $games, Cron::INTERVAL_VALUE );
 		}
@@ -71,10 +72,10 @@ class GamesUpdater {
 	 * Convert data into WordPress content.
 	 */
 	public function update_collection() {
-		if ( DOING_CRON ) {
-			// Load required WordPress functionality.
-			include_once ABSPATH . WPINC . '/pluggable.php';
+		// Load required WordPress functionality.
+		include_once ABSPATH . WPINC . '/pluggable.php';
 
+		if ( DOING_CRON ) {
 			// @TODO Authorization.
 			wp_set_auth_cookie( 1 );
 		}
@@ -197,7 +198,7 @@ class GamesUpdater {
 
 		// If error storing temporarily, unlink.
 		if ( is_wp_error( $tmp ) ) {
-			@unlink( $file_array['tmp_name'] ); // TODO: Remove PHP error suppression.
+			@unlink( $file_array['tmp_name'] ); // @codingStandardsIgnoreLine TODO: Remove PHP error suppression.
 			$file_array['tmp_name'] = '';
 		}
 
@@ -211,7 +212,7 @@ class GamesUpdater {
 
 		// If error storing permanently, unlink.
 		if ( is_wp_error( $img ) ) {
-			@unlink( $file_array['tmp_name'] ); // TODO: Remove PHP error suppression.
+			@unlink( $file_array['tmp_name'] ); // @codingStandardsIgnoreLine TODO: Remove PHP error suppression.
 
 			return false;
 		}

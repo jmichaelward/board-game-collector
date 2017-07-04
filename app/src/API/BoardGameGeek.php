@@ -8,12 +8,16 @@ namespace JMichaelWard\BoardGameCollector\API;
  */
 class BoardGameGeek {
 	/**
+	 * Base path for the BoardGameGeek API.
+	 *
 	 * @var string
 	 */
 	private $base_path = 'https://www.boardgamegeek.com/xmlapi2';
 
 	/**
-	 * @param string $username
+	 * Attempt to retrieve a user's game collection from the API.
+	 *
+	 * @param string $username The user collection to retrieve.
 	 *
 	 * @return array|\WP_Error
 	 */
@@ -22,7 +26,9 @@ class BoardGameGeek {
 	}
 
 	/**
-	 * @param $data
+	 * Convert the BoardGameGeek API XML response to JSON.
+	 *
+	 * @param string $data XML data.
 	 *
 	 * @return array
 	 */
@@ -35,17 +41,12 @@ class BoardGameGeek {
 
 		$xml = simplexml_load_string( $data );
 
-		if ( ! $xml )  {
+		if ( ! $xml ) {
 			error_log( 'Could not retrieve BoardGameGeek data at ' . time() );
 		}
 
 		$json  = wp_json_encode( $xml );
-		$games = json_decode( $json, true );
 
-		if ( ! isset( $games['item'] ) ) {
-			return [];
-		}
-
-		return $games['item'];
+		return json_decode( $json, true );
 	}
 }
