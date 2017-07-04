@@ -1,6 +1,7 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\Updater;
 
+use JMichaelWard\BoardGameCollector\API\BoardGameGeek;
 use JMichaelWard\BoardGameCollector\Model\Games\BGGGame;
 use JMichaelWard\BoardGameCollector\Model\Games\GameDataInterface;
 use JMichaelWard\BoardGameCollector\Admin\Settings;
@@ -12,13 +13,6 @@ use JMichaelWard\BoardGameCollector\Admin\Settings;
  */
 class GamesUpdater {
 	/**
-	 * Username saved in plugin settings.
-	 *
-	 * @var string
-	 */
-	private $username;
-
-	/**
 	 * Plugin settings.
 	 *
 	 * @var Settings
@@ -26,11 +20,18 @@ class GamesUpdater {
 	private $settings;
 
 	/**
-	 * BoardGameCollector API endpoint.
+	 * BoardGameGeek API
+	 *
+	 * @var BoardGameGeek
+	 */
+	private $api;
+
+	/**
+	 * Username saved in plugin settings.
 	 *
 	 * @var string
 	 */
-	private $endpoint = 'https://www.boardgamegeek.com/xmlapi2';
+	private $username;
 
 	/**
 	 * GamesUpdater constructor.
@@ -38,6 +39,7 @@ class GamesUpdater {
 	 * @param Settings $settings Plugin settings.
 	 */
 	public function __construct( Settings $settings ) {
+		$this->api      = new BoardGameGeek();
 		$this->settings = $settings;
 	}
 
@@ -50,46 +52,14 @@ class GamesUpdater {
 	}
 
 	/**
-	 * @param $data
-	 *
-	 * @return array|false|string
-	 */
-	public function convert_xml_to_json( $data ) {
-		if ( ! $data ) {
-			return wp_json_encode( array() );
-		}
-
-		libxml_use_internal_errors( true );
-
-		$xml = simplexml_load_string( $data );
-
-		if ( ! $xml )  {
-			error_log( 'Could not retrieve BoardGameCollector data at ' . time() );
-		}
-
-		$json  = wp_json_encode( $xml );
-		$games = json_decode( $json, true );
-
-		if ( ! isset( $games['item'] ) ) {
-			return array();
-		}
-
-		return $games['item'];
-	}
-
-	/**
 	 * Retrieve games data from the API.
 	 */
-	public function get_collection_data() {
+	public function get_games_data() {
 		$games = get_transient( 'bgg_collection' );
 
 		if ( ! $games ) {
-			$data  = wp_remote_get( "{$this->endpoint}/collection?username={$this->username}" ); // @codingStandardsIgnoreLine
-			$games = $this->convert_xml_to_json( wp_remote_retrieve_body( $data ) );
-
-			if ( ! isset( $games ) ) {
-				$games = [];
-			}
+			$games = $this->api->get_collection( $this->username );
+			$games = $this->api->convert_xml_to_json( wp_remote_retrieve_body( $games ) );
 
 			set_transient( 'bgg_collection', $games, Cron::INTERVAL_VALUE );
 		}
@@ -101,28 +71,36 @@ class GamesUpdater {
 	 * Convert data into WordPress content.
 	 */
 	public function update_collection() {
-		// Load required WordPress functionality.
-		include_once ABSPATH . WPINC . '/pluggable.php';
+		if ( DOING_CRON ) {
+			// Load required WordPress functionality.
+			include_once ABSPATH . WPINC . '/pluggable.php';
 
-		// @TODO Authorization.
-		wp_set_auth_cookie( 1 );
+			// @TODO Authorization.
+			wp_set_auth_cookie( 1 );
+		}
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return;
+		}
 
 		$this->hydrate();
 
-		foreach ( $this->get_collection_data() as $data ) {
-			$game = new BGGGame( $data );
-			$game_post = $this->game_exists( $game );
+		$collection = $this->get_games_data();
 
-			if ( ! $game_post ) {
-				$this->insert_game( $game );
-
-				continue;
-			}
-
-			if ( is_array( $game_post ) && count( $game_post ) === 1 && is_a( $game_post[0], '\WP_Post' ) ) {
-				$this->update_game( $game, $game_post[0] );
-			}
+		if ( is_wp_error( $collection ) ) {
+			return;
 		}
+
+		array_filter( $collection, function( $item ) {
+			$game = new BGGGame( $item );
+
+			if ( $game_post = $this->game_exists( $game ) ) {
+				$this->update_game( $game, array_pop( $game_post ) );
+				return;
+			}
+
+			$this->insert_game( $game );
+		});
 	}
 
 	/**
@@ -130,18 +108,24 @@ class GamesUpdater {
 	 *
 	 * @param GameDataInterface $game Interface for a game object.
 	 *
-	 * @return \WP_Post
+	 * @return array
 	 */
 	private function game_exists( GameDataInterface $game ) {
 		$args = [
 			'name'           => $game->get_id(), // @codingStandardsIgnoreLine
 			'post_title'     => $game->get_name(),
 			'post_type'      => 'bgc_game',
+			'fields'         => 'ids',
 			'posts_per_page' => 1,
 			'post_status'    => 'publish',
 		];
 
-		return get_posts( $args ); // @codingStandardsIgnoreLine - prefer get_posts in this scenario.
+		$query = new \WP_Query( $args );
+		$posts = $query->get_posts();
+
+		wp_reset_postdata();
+
+		return $posts;
 	}
 
 	/**
@@ -173,12 +157,12 @@ class GamesUpdater {
 	/**
 	 * Update the post meta and terms.
 	 *
-	 * @param GameDataInterface $game Interface for a game object.
-	 * @param \WP_Post          $game_post bgc_game post.
+	 * @param GameDataInterface $game         Interface for a game object.
+	 * @param int               $game_post_id ID of the bgc_game post.
 	 */
-	private function update_game( GameDataInterface $game, \WP_Post $game_post ) {
-		update_post_meta( $game_post->ID, 'bgc_game_meta', $game->get_data() );
-		wp_set_object_terms( $game_post->ID, $game->get_statuses(), 'bgc_game_status' );
+	private function update_game( GameDataInterface $game, $game_post_id ) {
+		update_post_meta( $game_post_id, 'bgc_game_meta', $game->get_data() );
+		wp_set_object_terms( $game_post_id, $game->get_statuses(), 'bgc_game_status' );
 	}
 
 	/**
