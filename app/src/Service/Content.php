@@ -1,16 +1,17 @@
 <?php
-
-namespace JMichaelWard\BoardGameCollector\Content;
+namespace JMichaelWard\BoardGameCollector\Service;
 
 use JMichaelWard\BoardGameCollector\Content\CPT as CPT;
 use JMichaelWard\BoardGameCollector\Content\Taxonomy as Taxonomy;
+use JMichaelWard\BoardGameCollector\Hookable;
+use JMichaelWard\BoardGameCollector\Service;
 
 /**
- * Class Registrar
+ * Class Content
  *
  * @package JMichaelWard\BoardGameCollector
  */
-class Registrar {
+class Content implements Service {
 	/**
 	 * Collection of post types.
 	 *
@@ -30,12 +31,12 @@ class Registrar {
 	];
 
 	/**
-	 * Content constructor.
+	 *
 	 */
-	public function __construct() {
+	public function hooks() {
 		$content = array_merge( $this->cpts, $this->taxonomies );
 
-		/* @var $content_type \JMichaelWard\BoardGameCollector\WP\EventInterface WordPress Event Interface. */
+		/* @var $content_type Hookable */
 		foreach ( $content as $class ) {
 			$content_type = new $class;
 			$content_type->hooks();

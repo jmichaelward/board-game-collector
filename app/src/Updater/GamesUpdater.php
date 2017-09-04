@@ -4,7 +4,7 @@ namespace JMichaelWard\BoardGameCollector\Updater;
 use JMichaelWard\BoardGameCollector\API\BoardGameGeek;
 use JMichaelWard\BoardGameCollector\Model\Games\BGGGame;
 use JMichaelWard\BoardGameCollector\Model\Games\GameDataInterface;
-use JMichaelWard\BoardGameCollector\Admin\Settings;
+use JMichaelWard\BoardGameCollector\Service\Settings;
 
 /**
  * Class GamesUpdater

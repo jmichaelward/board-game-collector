@@ -1,14 +1,14 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\Content\CPT;
 
-use JMichaelWard\BoardGameCollector\WP\EventInterface;
+use JMichaelWard\BoardGameCollector\Hookable;
 
 /**
  * Class Game
  *
  * @package JMichaelWard\BoardGameCollector\Content\CPT;
  */
-class GamePostType implements PostTypeInterface, EventInterface {
+class GamePostType implements PostTypeInterface, Hookable {
 	/**
 	 * Setup WordPress hooks.
 	 */

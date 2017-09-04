@@ -1,5 +1,8 @@
 <?php
-namespace JMichaelWard\BoardGameCollector\Updater;
+namespace JMichaelWard\BoardGameCollector\Service;
+
+use JMichaelWard\BoardGameCollector\Service;
+use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 
 /**
  * Establishes a cron task for periodically hitting the BGG API.
@@ -8,7 +11,7 @@ namespace JMichaelWard\BoardGameCollector\Updater;
  *
  * @package JMichaelWard\BoardGameCollector
  */
-class Cron {
+class Cron implements Service {
 	/**
 	 * Name of the interval.
 	 */
@@ -34,7 +37,7 @@ class Cron {
 	/**
 	 * Cron constructor.
 	 *
-	 * @param GamesUpdater $updater BGG Updater.
+	 * @param GamesUpdater $updater Instance of the GamesUpdater.
 	 */
 	public function __construct( GamesUpdater $updater ) {
 		$this->updater = $updater;
@@ -71,7 +74,7 @@ class Cron {
 	/**
 	 * Check to see if we need to update the games collection locally.
 	 */
-	public function maybe_schedule_cron() {
+	public static function maybe_schedule_cron() {
 		if ( ! wp_next_scheduled( 'bgc_collection_update' ) ) {
 			wp_schedule_event( time(), Cron::INTERVAL_NAME, 'bgc_collection_update' );
 		}

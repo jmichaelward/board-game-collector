@@ -1,14 +1,15 @@
 <?php
-namespace JMichaelWard\BoardGameCollector\Admin;
+namespace JMichaelWard\BoardGameCollector\Service;
 
 use JMichaelWard\BoardGameCollector\BoardGameCollector;
+use JMichaelWard\BoardGameCollector\Service;
 
 /**
  * Class Settings
  *
  * @package JMichaelWard\BoardGameCollector
  */
-class Settings {
+class Settings implements Service {
 	/**
 	 * Form fields.
 	 *

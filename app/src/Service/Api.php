@@ -1,15 +1,15 @@
 <?php
-namespace JMichaelWard\BoardGameCollector\API;
+namespace JMichaelWard\BoardGameCollector\Service;
 
 use JMichaelWard\BoardGameCollector\API\Routes\Games;
-use JMichaelWard\BoardGameCollector\WP\EventInterface;
+use JMichaelWard\BoardGameCollector\Service;
 
 /**
- * Class Registrar
+ * Class Api
  *
  * @package JMichaelWard\BoardGameCollector\API
  */
-class Registrar implements EventInterface {
+class API implements Service {
 	/**
 	 * Collection of routes for this plugin.
 	 *

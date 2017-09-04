@@ -1,14 +1,14 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\Content\Taxonomy;
 
-use JMichaelWard\BoardGameCollector\WP\EventInterface;
+use JMichaelWard\BoardGameCollector\Hookable;
 
 /**
  * Class GameStatusTaxonomy
  *
  * @package JMichaelWard\BoardGameCollector\Content\Taxonomy
  */
-class GameStatusTaxonomy implements EventInterface {
+class GameStatusTaxonomy implements Hookable {
 	/**
 	 * Setup WordPress hooks.
 	 */

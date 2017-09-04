@@ -1,10 +1,10 @@
 <?php
 namespace JMichaelWard\BoardGameCollector;
 
-use JMichaelWard\BoardGameCollector\Admin\Settings;
-use JMichaelWard\BoardGameCollector\Content\Registrar as Content;
-use JMichaelWard\BoardGameCollector\API\Registrar as API;
-use JMichaelWard\BoardGameCollector\Updater\Cron;
+use JMichaelWard\BoardGameCollector\Service\Settings;
+use JMichaelWard\BoardGameCollector\Service\Content;
+use JMichaelWard\BoardGameCollector\Service\API;
+use JMichaelWard\BoardGameCollector\Service\Cron;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 
 /**
@@ -12,57 +12,13 @@ use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
  *
  * @package JMichaelWard\BoardGameCollector
  */
-class BoardGameCollector {
+class BoardGameCollector implements Hookable {
 	/**
-	 * Settings data.
+	 * Array of instantiated Service objects.
 	 *
-	 * @var Settings
+	 * @var array
 	 */
-	private $settings;
-
-	/**
-	 * Service for registering content post types and taxonomies.
-	 *
-	 * @var Content
-	 */
-	private $content;
-
-	/**
-	 * Service for setting up custom API routes.
-	 *
-	 * @var API
-	 */
-	private $api;
-
-	/**
-	 * Cron service.
-	 *
-	 * @var Cron
-	 */
-	public $cron;
-
-	/**
-	 * BoardGameCollector constructor.
-	 */
-	public function __construct() {
-		$this->settings = new Settings();
-		$this->content  = new Content();
-		$this->api      = new API();
-		$this->cron     = new Cron( new GamesUpdater( $this->settings ) );
-	}
-
-	/**
-	 * Kick things off.
-	 */
-	public function run() {
-		// Set up plugin events hooks.
-		$this->settings->hooks();
-		$this->api->hooks();
-		$this->cron->hooks();
-
-		// Check to see if it's time to run cron processes.
-		$this->cron->maybe_schedule_cron();
-	}
+	private $services;
 
 	/**
 	 * Path to the application root.
@@ -71,5 +27,64 @@ class BoardGameCollector {
 	 */
 	public static function app_path() {
 		return plugin_dir_path( dirname( __FILE__ ) );
+	}
+
+	/**
+	 * Implementation of Hookable method.
+	 */
+	public function hooks() {
+		add_action( 'plugins_loaded', [ $this, 'register_services' ] );
+	}
+
+	/**
+	 * Array of Service classes for this plugin.
+	 *
+	 * @return array
+	 */
+	public function get_services() {
+		return [
+			Settings::class,
+			API::class,
+			Content::class,
+			Cron::class,
+		];
+	}
+
+	/**
+	 * Create instantiated instances of Service objects.
+	 *
+	 * @param string $service The fully-qualified class namespace of the Service to instantiate.
+	 *
+	 * @return Service
+	 */
+	private function instantiate_services( $service ) {
+		if ( Cron::class === $service ) {
+			$this->services[ $service ] = new $service( new GamesUpdater( $this->services[ Settings::class ] ) );
+			return $this->services[ $service ];
+		}
+
+		$this->services[ $service ] = new $service;
+		return $this->services[ $service ];
+	}
+
+	/**
+	 * Call hooks methods on all registered Service objects.
+	 */
+	public function register_services() {
+		$services = array_map( [ $this, 'instantiate_services' ], $this->get_services() );
+
+		array_walk( $services, function( Service $service ) {
+			$service->hooks();
+		});
+	}
+
+	/**
+	 * Kick things off.
+	 */
+	public function run() {
+		// Check to see if it's time to run cron processes.
+		Cron::maybe_schedule_cron();
+
+		$this->hooks();
 	}
 }
