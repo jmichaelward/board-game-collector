@@ -25,4 +25,4 @@ if ( ! file_exists( $autoload ) ) {
 require_once $autoload;
 
 $plugin = new BoardGameCollector();
-$plugin->run();
+$plugin->hooks();

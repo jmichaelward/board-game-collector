@@ -25,7 +25,7 @@ class API implements Service {
 	public function hooks() {
 		/* @var \WP_REST_Controller $route REST route controller */
 		foreach ( $this->routes as $route ) {
-			add_action( 'rest_api_init', [ new $route, 'register_routes' ] );
+			add_action( 'rest_api_init', [ new $route, 'register_api_fields' ] );
 		}
 	}
 }

@@ -33,6 +33,9 @@ class BoardGameCollector implements Hookable {
 	 * Implementation of Hookable method.
 	 */
 	public function hooks() {
+		// Check to see if it's time to run cron processes.
+		Cron::maybe_schedule_cron();
+
 		add_action( 'plugins_loaded', [ $this, 'register_services' ] );
 	}
 
@@ -76,15 +79,5 @@ class BoardGameCollector implements Hookable {
 		array_walk( $services, function( Service $service ) {
 			$service->hooks();
 		});
-	}
-
-	/**
-	 * Kick things off.
-	 */
-	public function run() {
-		// Check to see if it's time to run cron processes.
-		Cron::maybe_schedule_cron();
-
-		$this->hooks();
 	}
 }

@@ -2,11 +2,11 @@
 namespace JMichaelWard\BoardGameCollector\Model\Games;
 
 /**
- * Interface GameDataInterface
+ * Interface GameData
  *
  * @package JMichaelWard\BoardGameCollector\Model\Games
  */
-interface GameDataInterface {
+interface GameData {
 	/**
 	 * Data from an API request.
 	 *

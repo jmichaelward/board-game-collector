@@ -6,7 +6,7 @@ namespace JMichaelWard\BoardGameCollector\Model\Games;
  *
  * @package JMichaelWard\BoardGameCollector\Model\Games
  */
-class BGGGame implements GameDataInterface {
+class BGGGame implements GameData {
 	/**
 	 * Data returned from BoardGameCollector API request.
 	 *

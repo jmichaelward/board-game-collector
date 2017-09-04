@@ -3,7 +3,7 @@ namespace JMichaelWard\BoardGameCollector\Updater;
 
 use JMichaelWard\BoardGameCollector\API\BoardGameGeek;
 use JMichaelWard\BoardGameCollector\Model\Games\BGGGame;
-use JMichaelWard\BoardGameCollector\Model\Games\GameDataInterface;
+use JMichaelWard\BoardGameCollector\Model\Games\GameData;
 use JMichaelWard\BoardGameCollector\Service\Settings;
 
 /**
@@ -84,11 +84,11 @@ class GamesUpdater {
 	/**
 	 * Query WordPress to check whether the game is already in the database.
 	 *
-	 * @param GameDataInterface $game Interface for a game object.
+	 * @param GameData $game Interface for a game object.
 	 *
 	 * @return array
 	 */
-	private function game_exists( GameDataInterface $game ) {
+	private function game_exists( GameData $game ) {
 		$args = [
 			'name'           => $game->get_id(), // @codingStandardsIgnoreLine
 			'post_title'     => $game->get_name(),
@@ -109,9 +109,9 @@ class GamesUpdater {
 	/**
 	 * Insert a new Games post into WordPress.
 	 *
-	 * @param GameDataInterface $game Interface for a game object.
+	 * @param GameData $game Interface for a game object.
 	 */
-	private function insert_game( GameDataInterface $game ) {
+	private function insert_game( GameData $game ) {
 		$args = [
 			'post_type'   => 'bgc_game',
 			'post_name'   => $game->get_id(), // @codingStandardsIgnoreLine
@@ -135,10 +135,10 @@ class GamesUpdater {
 	/**
 	 * Update the post meta and terms.
 	 *
-	 * @param GameDataInterface $game         Interface for a game object.
-	 * @param int               $game_post_id ID of the bgc_game post.
+	 * @param GameData $game         Interface for a game object.
+	 * @param int      $game_post_id ID of the bgc_game post.
 	 */
-	private function update_game( GameDataInterface $game, $game_post_id ) {
+	private function update_game( GameData $game, $game_post_id ) {
 		update_post_meta( $game_post_id, 'bgc_game_meta', $game->get_data() );
 		wp_set_object_terms( $game_post_id, $game->get_statuses(), 'bgc_game_status' );
 	}
