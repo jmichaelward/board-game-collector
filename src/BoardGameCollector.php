@@ -47,6 +47,7 @@ class BoardGameCollector {
 			Service\API::class,
 			Service\Content::class,
 			Service\Cron::class,
+			Service\Cli::class,
 		];
 	}
 
