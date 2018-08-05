@@ -1,17 +1,14 @@
 <?php
-
-
 namespace JMichaelWard\BoardGameCollector\Service;
 
+use JMichaelWard\BoardGameCollector\Command\BgcCommand;
 
-use JMichaelWard\BoardGameCollector\Command\BggCommand;
-
+/**
+ * Class Cli
+ *
+ * @package JMichaelWard\BoardGameCollector\Service
+ */
 class Cli extends Service {
-	/**
-	 * @var
-	 */
-	private $commands = [];
-
 	/**
 	 * Cli constructor.
 	 */
@@ -19,17 +16,6 @@ class Cli extends Service {
 		if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 			return;
 		}
-
-		$this->attach_commands();
-	}
-
-	/**
-	 * Attach commands that will be initialized to this class.
-	 */
-	private function attach_commands() {
-		$this->commands = [
-			BggCommand::class,
-		];
 	}
 
 	/**
@@ -45,10 +31,6 @@ class Cli extends Service {
 	 * @throws \Exception
 	 */
 	public function register_commands() {
-		foreach ( $this->commands as $command_class ) {
-			$command = new $command_class();
-
-			\WP_CLI::add_command( $command::get_name(), $command_class );
-		}
+		\WP_CLI::add_command( 'bgc', BgcCommand::class );
 	}
 }
