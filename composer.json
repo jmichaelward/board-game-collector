@@ -11,6 +11,9 @@
         }
     ],
     "require": {},
+    "require-dev": {
+        "wp-cli/wp-cli": "^1.5.1"
+    },
     "autoload": {
         "psr-4": {
             "JMichaelWard\\BoardGameCollector\\": "src/"

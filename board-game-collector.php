@@ -30,4 +30,4 @@ if ( ! is_readable( $autoload ) ) {
 require_once $autoload;
 
 $plugin = new BoardGameCollector();
-$plugin->hooks();
+$plugin->run();

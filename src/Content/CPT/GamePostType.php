@@ -12,7 +12,7 @@ class GamePostType implements PostTypeInterface, Hookable {
 	/**
 	 * Setup WordPress hooks.
 	 */
-	public function hooks() {
+	public function register_hooks() {
 		add_action( 'init', [ $this, 'register' ] );
 		add_action( 'init', [ $this, 'add_theme_support' ] );
 	}

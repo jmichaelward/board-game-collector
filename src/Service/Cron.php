@@ -1,7 +1,6 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\Service;
 
-use JMichaelWard\BoardGameCollector\Service;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 
 /**
@@ -11,7 +10,7 @@ use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
  *
  * @package JMichaelWard\BoardGameCollector
  */
-class Cron implements Service {
+class Cron extends Service {
 	/**
 	 * Name of the interval.
 	 */
@@ -46,7 +45,7 @@ class Cron implements Service {
 	/**
 	 * Cron hooks.
 	 */
-	public function hooks() {
+	public function register_hooks() {
 		// Setup the cron interval and the callback task.
 		add_filter( 'cron_schedules', [ $this, 'add_interval' ] ); // @codingStandardsIgnoreLine
 		add_action( 'bgc_collection_update', [ $this->updater, 'update_collection' ], 10, 1 );

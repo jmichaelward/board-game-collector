@@ -2,14 +2,13 @@
 namespace JMichaelWard\BoardGameCollector\Service;
 
 use JMichaelWard\BoardGameCollector\API\Routes\Games;
-use JMichaelWard\BoardGameCollector\Service;
 
 /**
  * Class Api
  *
  * @package JMichaelWard\BoardGameCollector\API
  */
-class API implements Service {
+class API extends Service {
 	/**
 	 * Collection of routes for this plugin.
 	 *
@@ -22,7 +21,7 @@ class API implements Service {
 	/**
 	 * Register WordPress hooks.
 	 */
-	public function hooks() {
+	public function register_hooks() {
 		/* @var \WP_REST_Controller $route REST route controller */
 		foreach ( $this->routes as $route ) {
 			add_action( 'rest_api_init', [ new $route, 'register_api_fields' ] );

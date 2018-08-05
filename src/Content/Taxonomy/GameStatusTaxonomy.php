@@ -12,7 +12,7 @@ class GameStatusTaxonomy implements Hookable {
 	/**
 	 * Setup WordPress hooks.
 	 */
-	public function hooks() {
+	public function register_hooks() {
 		add_action( 'init', [ $this, 'register' ] );
 	}
 

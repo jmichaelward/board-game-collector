@@ -2,14 +2,13 @@
 namespace JMichaelWard\BoardGameCollector\Service;
 
 use JMichaelWard\BoardGameCollector\BoardGameCollector;
-use JMichaelWard\BoardGameCollector\Service;
 
 /**
  * Class Settings
  *
  * @package JMichaelWard\BoardGameCollector
  */
-class Settings implements Service {
+class Settings extends Service {
 	/**
 	 * Form fields.
 	 *
@@ -38,7 +37,7 @@ class Settings implements Service {
 	/**
 	 * Settings page hooks.
 	 */
-	public function hooks() {
+	public function register_hooks() {
 		add_action( 'admin_menu', [ $this, 'create_admin_page' ] );
 		add_action( 'admin_init', [ $this, 'add_section' ] );
 		add_action( 'admin_init', [ $this, 'add_fields' ] );

@@ -1,10 +1,7 @@
 <?php
 namespace JMichaelWard\BoardGameCollector;
 
-use JMichaelWard\BoardGameCollector\Service\Settings;
-use JMichaelWard\BoardGameCollector\Service\Content;
-use JMichaelWard\BoardGameCollector\Service\API;
-use JMichaelWard\BoardGameCollector\Service\Cron;
+use JMichaelWard\BoardGameCollector\Service as Service;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 
 /**
@@ -12,7 +9,7 @@ use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
  *
  * @package JMichaelWard\BoardGameCollector
  */
-class BoardGameCollector implements Hookable {
+class BoardGameCollector {
 	/**
 	 * Array of instantiated Service objects.
 	 *
@@ -30,13 +27,13 @@ class BoardGameCollector implements Hookable {
 	}
 
 	/**
-	 * Implementation of Hookable method.
+	 * Set up the plugin and run.
 	 */
-	public function hooks() {
+	public function run() {
 		// Check to see if it's time to run cron processes.
-		Cron::maybe_schedule_cron();
+		Service\Cron::maybe_schedule_cron();
 
-		add_action( 'plugins_loaded', [ $this, 'register_services' ] );
+		$this->register_services();
 	}
 
 	/**
@@ -46,10 +43,10 @@ class BoardGameCollector implements Hookable {
 	 */
 	public function get_services() {
 		return [
-			Settings::class,
-			API::class,
-			Content::class,
-			Cron::class,
+			Service\Settings::class,
+			Service\API::class,
+			Service\Content::class,
+			Service\Cron::class,
 		];
 	}
 
@@ -61,12 +58,13 @@ class BoardGameCollector implements Hookable {
 	 * @return Service
 	 */
 	private function instantiate_services( $service ) {
-		if ( Cron::class === $service ) {
-			$this->services[ $service ] = new $service( new GamesUpdater( $this->services[ Settings::class ] ) );
+		if ( Service\Cron::class === $service ) {
+			$this->services[ $service ] = new $service( new GamesUpdater( $this->services[ Service\Settings::class ] ) );
 			return $this->services[ $service ];
 		}
 
-		$this->services[ $service ] = new $service;
+		$this->services[ $service ] = new $service();
+
 		return $this->services[ $service ];
 	}
 
@@ -76,8 +74,8 @@ class BoardGameCollector implements Hookable {
 	public function register_services() {
 		$services = array_map( [ $this, 'instantiate_services' ], $this->get_services() );
 
-		array_walk( $services, function( Service $service ) {
-			$service->hooks();
+		array_walk( $services, function( Service\Service $service ) {
+			$service->register_hooks();
 		});
 	}
 }
