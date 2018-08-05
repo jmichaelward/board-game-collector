@@ -26,7 +26,7 @@ class BoardGameCollector implements Hookable {
 	 * @return string
 	 */
 	public static function app_path() {
-		return plugin_dir_path( dirname( __FILE__ ) );
+		return dirname( plugin_dir_path( __FILE__ ) ) . '/app/';
 	}
 
 	/**

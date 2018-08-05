@@ -15,10 +15,15 @@ use JMichaelWard\BoardGameCollector\Admin\Notifier;
 
 $autoload = plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
 
-if ( ! file_exists( $autoload ) ) {
+if ( ! is_readable( $autoload ) ) {
 	require_once plugin_dir_path( __FILE__ ) . 'src/Admin/Notifier.php';
 
 	add_action( 'admin_notices', [ new Notifier(), 'do_error_message_missing_autoloader' ] );
+
+	// Deactivate the plugin.
+	add_action( 'admin_init', function() {
+		deactivate_plugins( __FILE__ );
+	});
 	return;
 }
 
