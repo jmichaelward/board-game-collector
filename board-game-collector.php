@@ -9,20 +9,27 @@
  * @package JMichaelWard\BoardGameCollector
  */
 
-namespace JMichaelWard\BoardGameCollector;
-
-use JMichaelWard\BoardGameCollector\Admin\Notifier;
-
 $autoload = plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
 
-if ( ! file_exists( $autoload ) ) {
-	require_once plugin_dir_path( __FILE__ ) . 'src/Admin/Notifier.php';
+if ( is_readable( $autoload ) ) {
+	require_once $autoload;
+}
 
-	add_action( 'admin_notices', [ new Notifier(), 'do_error_message_missing_autoloader' ] );
+if ( ! class_exists( 'JMichaelWard\\BoardGameCollector\\BoardGameCollector' ) ) {
+	include plugin_dir_path( __FILE__ ) . '/app/src/Admin/Notifier.php';
+
+	add_action( 'admin_notices', [
+		new JMichaelWard\BoardGameCollector\Admin\Notifier(),
+		'do_error_message_missing_autoloader',
+	] );
+
+	// Deactivate the plugin.
+	add_action( 'admin_init', function() {
+		deactivate_plugins( __FILE__ );
+	});
+
 	return;
 }
 
-require_once $autoload;
-
-$plugin = new BoardGameCollector();
+$plugin = new \JMichaelWard\BoardGameCollector\BoardGameCollector();
 $plugin->run();
