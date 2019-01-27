@@ -19,19 +19,10 @@ class Cli extends Service {
 	];
 
 	/**
-	 * Cli constructor.
-	 */
-	public function __construct() {
-		if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
-			return;
-		}
-	}
-
-	/**
 	 * Initialize this service with WordPress.
 	 */
 	public function register_hooks() {
-		add_action( 'init', [ $this, 'register_commands' ] );
+		add_action( 'cli_init', [ $this, 'register_commands' ] );
 	}
 
 	/**
