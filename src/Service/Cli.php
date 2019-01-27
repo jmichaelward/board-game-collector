@@ -10,9 +10,13 @@ use JMichaelWard\BoardGameCollector\Command\BgcCommand;
  */
 class Cli extends Service {
 	/**
-	 * @var
+	 * Set of Cli commands registered to this plugin.
+	 *
+	 * @var array
 	 */
-	private $commands = [];
+	private $commands = [
+		'bgc' => BgcCommand::class,
+	];
 
 	/**
 	 * Cli constructor.
@@ -21,17 +25,6 @@ class Cli extends Service {
 		if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 			return;
 		}
-
-		$this->attach_commands();
-	}
-
-	/**
-	 * Attach commands that will be initialized to this class.
-	 */
-	private function attach_commands() {
-		$this->commands = [
-			'bgc' => BgcCommand::class,
-		];
 	}
 
 	/**
@@ -44,11 +37,15 @@ class Cli extends Service {
 	/**
 	 * Register this plugin's set of custom commands.
 	 *
-	 * @throws \Exception
+	 * @throws \Exception If the command could not be added.
 	 */
 	public function register_commands() {
 		foreach ( $this->commands as $command_name => $command_class ) {
-			\WP_CLI::add_command( $command_name, $command_class );
+			try {
+				\WP_CLI::add_command( $command_name, $command_class );
+			} catch ( \Exception $e ) {
+				\WP_CLI::error( $e->getMessage() );
+			}
 		}
 	}
 }
