@@ -9,5 +9,10 @@ use JMichaelWard\BoardGameCollector\Hookable;
  * @package JMichaelWard\BoardGameCollector\Service
  */
 abstract class Service implements Hookable {
-
+	/**
+	 * Register the service.
+	 */
+	public function register() {
+		$this->register_hooks();
+	}
 }

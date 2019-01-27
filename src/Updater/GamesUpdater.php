@@ -36,10 +36,11 @@ class GamesUpdater {
 	/**
 	 * GamesUpdater constructor.
 	 *
-	 * @param Settings $settings Plugin settings.
+	 * @param BoardGameGeek $api      Instance of our BoardGameGeek API model.
+	 * @param Settings      $settings Plugin settings.
 	 */
-	public function __construct( Settings $settings ) {
-		$this->api      = new BoardGameGeek();
+	public function __construct( BoardGameGeek $api, Settings $settings ) {
+		$this->api      = $api;
 		$this->settings = $settings;
 	}
 
@@ -63,13 +64,15 @@ class GamesUpdater {
 			wp_set_auth_cookie( 1 );
 		}
 
-		if ( ! current_user_can( 'edit_posts' ) ) {
+		if ( ! WP_CLI && ! current_user_can( 'edit_posts' ) ) {
 			return;
 		}
 
 		$this->hydrate();
 
-		array_filter( $this->api->get_collection( $this->username ), function( $item ) {
+		$games = $this->api->get_collection( $this->username );
+
+		array_filter( $games, function( $item ) {
 			$game = new BGGGame( $item );
 
 			if ( $game_post = $this->game_exists( $game ) ) {

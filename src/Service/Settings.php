@@ -24,9 +24,13 @@ class Settings extends Service {
 	private $data;
 
 	/**
-	 * Settings constructor.
+	 * Register this service.
 	 */
-	public function __construct() {
+	public function register() {
+		parent::register();
+
+		register_setting( 'bgc-settings', 'bgc-settings', [] );
+
 		$this->fields = [
 			'bgg-username' => __( 'BoardGameGeek Username', 'bgc' ),
 		];
@@ -90,13 +94,6 @@ class Settings extends Service {
 	}
 
 	/**
-	 * Register the settings.
-	 */
-	public function register() {
-		register_setting( 'bgc-settings', 'bgc-settings', [] );
-	}
-
-	/**
 	 * Render a text input field.
 	 *
 	 * @param array $args Fields.
@@ -120,7 +117,7 @@ class Settings extends Service {
 	 * @return array
 	 */
 	public function get_data() {
-		return $this->data;
+		return $this->data ?? get_option( 'bgc-settings' );
 	}
 
 	/**

@@ -1,6 +1,7 @@
 <?php
 namespace JMichaelWard\BoardGameCollector;
 
+use JMichaelWard\BoardGameCollector\API\BoardGameGeek;
 use JMichaelWard\BoardGameCollector\Service as Service;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 
@@ -60,7 +61,13 @@ class BoardGameCollector {
 	 */
 	private function instantiate_services( $service ) {
 		if ( Service\Cron::class === $service ) {
-			$this->services[ $service ] = new $service( new GamesUpdater( $this->services[ Service\Settings::class ] ) );
+			$this->services[ $service ] = new $service(
+				new GamesUpdater(
+					new BoardGameGeek(),
+					$this->services[ Service\Settings::class ]
+				)
+			);
+
 			return $this->services[ $service ];
 		}
 
@@ -76,7 +83,7 @@ class BoardGameCollector {
 		$services = array_map( [ $this, 'instantiate_services' ], $this->get_services() );
 
 		array_walk( $services, function( Service\Service $service ) {
-			$service->register_hooks();
+			$service->register();
 		});
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\API;
 
-use JMichaelWard\BoardGameCollector\Updater\Cron;
+use JMichaelWard\BoardGameCollector\Service\Cron;
 
 /**
  * Class BoardGameGeek
@@ -30,7 +30,7 @@ class BoardGameGeek {
 
 		$games = wp_remote_get( "{$this->base_path}/collection?username={$username}&stats=1" );
 
-		if ( is_wp_error( $games ) || '200' !== wp_remote_retrieve_response_code( $games ) ) {
+		if ( is_wp_error( $games ) || 200 !== wp_remote_retrieve_response_code( $games ) ) {
 			return [];
 		}
 
