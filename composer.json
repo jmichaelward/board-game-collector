@@ -2,7 +2,7 @@
     "name": "jmichaelward/board-game-collector",
     "description": "A WordPress plugin to retrieve user game collections using the BoardGameGeek API.",
     "type": "wordpress-plugin",
-    "license": "GPL-v2",
+    "license": "GPL-2.0-or-later",
     "authors": [
         {
             "name": "Jeremy Ward",
@@ -22,5 +22,8 @@
         "psr-4": {
             "JMichaelWard\\BoardGameCollector\\": "src/"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.3"
     }
 }
