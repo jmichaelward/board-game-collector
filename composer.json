@@ -10,9 +10,13 @@
             "role": "Lead Developer"
         }
     ],
-    "require": {},
+    "require": {
+        "php": "^7"
+    },
     "require-dev": {
-        "wp-cli/wp-cli": "^1.5.1"
+        "wp-cli/db-command": "^2",
+        "wp-cli/entity-command": "^2",
+        "wp-cli/media-command": "^2"
     },
     "autoload": {
         "psr-4": {
