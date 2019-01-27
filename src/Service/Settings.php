@@ -2,6 +2,7 @@
 namespace JMichaelWard\BoardGameCollector\Service;
 
 use JMichaelWard\BoardGameCollector\BoardGameCollector;
+use JMichaelWard\BoardGameCollector\Admin\Notifier;
 
 /**
  * Class Settings
@@ -131,6 +132,6 @@ class Settings extends Service {
 			return;
 		}
 
-		(new Notifier)->do_warning_settings_not_configured();
+		( new Notifier() )->do_warning_settings_not_configured();
 	}
 }
