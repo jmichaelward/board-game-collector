@@ -37,6 +37,17 @@ class BoardGameCollector {
 		$this->register_services();
 	}
 
+    /**
+     * Call hooks methods on all registered Service objects.
+     */
+    private function register_services() {
+        $services = array_map( [ $this, 'instantiate_services' ], $this->get_services() );
+
+        array_walk( $services, function( Service\Service $service ) {
+            $service->register();
+        });
+    }
+
 	/**
 	 * Array of Service classes for this plugin.
 	 *
@@ -74,16 +85,5 @@ class BoardGameCollector {
 		$this->services[ $service ] = new $service();
 
 		return $this->services[ $service ];
-	}
-
-	/**
-	 * Call hooks methods on all registered Service objects.
-	 */
-	public function register_services() {
-		$services = array_map( [ $this, 'instantiate_services' ], $this->get_services() );
-
-		array_walk( $services, function( Service\Service $service ) {
-			$service->register();
-		});
 	}
 }
