@@ -41,7 +41,7 @@ class BoardGameCollector {
 	 * Call hooks methods on all registered Service objects.
 	 */
 	private function register_services() {
-		$services = array_map( [ $this, 'instantiate_services' ], $this->get_services() );
+		$services = array_map( [ $this, 'instantiate_service' ], $this->get_services() );
 
 		array_walk( $services, function ( Service\Service $service ) {
 			$service->register();
@@ -70,7 +70,7 @@ class BoardGameCollector {
 	 *
 	 * @return Service
 	 */
-	private function instantiate_services( $service ) {
+	private function instantiate_service( $service ) {
 		if ( Service\Cron::class === $service ) {
 			$this->services[ $service ] = new $service(
 				new GamesUpdater(
