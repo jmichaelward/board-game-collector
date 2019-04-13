@@ -97,6 +97,7 @@ class BoardGameCollector extends Plugin {
 	 */
 	protected function register_service( Service $service ) {
 		if ( in_array( FilePathDependent::class, class_uses( $service ), true ) ) {
+			/* @var $service \WebDevStudios\OopsWP\Utility\FilePathDependent Path-dependent service. */
 			$service->set_file_path( $this->file_path );
 		}
 
