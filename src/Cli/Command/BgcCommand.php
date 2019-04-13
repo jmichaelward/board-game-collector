@@ -26,9 +26,16 @@ class BgcCommand extends \WP_CLI_Command {
 
 	/**
 	 * BgcCommand constructor.
+	 *
+	 * @param GamesUpdater $updater The GamesUpdater instance.
+	 *
+	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @since  2019-04-13
 	 */
-	public function __construct() {
-		$this->updater = new GamesUpdater( new BoardGameGeek(), new Settings() );
+	public function __construct( GamesUpdater $updater ) {
+		parent::__construct();
+
+		$this->updater = $updater;
 	}
 
 	/**
