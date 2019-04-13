@@ -60,6 +60,7 @@ class BoardGameCollector extends Plugin {
 	 */
 	public function run() {
 		parent::run();
+
 		// Check to see if it's time to run cron processes.
 		CronService::maybe_schedule_cron();
 	}
