@@ -155,17 +155,21 @@ class BGGGame implements GameData {
 	 * @return array
 	 */
 	public function get_statuses() {
-		$statuses = array_filter( $this->status, function( $status, $key ) {
-			if ( in_array( $key, [ 'own', 'preordered', 'wanttoplay' ], true ) && '1' === $status ) {
-				return true;
-			}
+		$statuses = array_filter(
+			$this->status,
+			function( $status, $key ) {
+				if ( in_array( $key, [ 'own', 'preordered', 'wanttoplay' ], true ) && '1' === $status ) {
+					return true;
+				}
 
-			if ( 'wishlist' === $key && '0' !== $status ) {
-				return true;
-			}
+				if ( 'wishlist' === $key && '0' !== $status ) {
+					return true;
+				}
 
-			return false;
-		}, ARRAY_FILTER_USE_BOTH );
+				return false;
+			},
+			ARRAY_FILTER_USE_BOTH
+		);
 
 		return array_keys( $statuses );
 	}
