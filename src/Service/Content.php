@@ -3,7 +3,7 @@ namespace JMichaelWard\BoardGameCollector\Service;
 
 use JMichaelWard\BoardGameCollector\Content\CPT as CPT;
 use JMichaelWard\BoardGameCollector\Content\Taxonomy as Taxonomy;
-use JMichaelWard\BoardGameCollector\Hookable;
+use WebDevStudios\OopsWP\Structure\Service;
 
 /**
  * Class Content

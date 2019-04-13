@@ -1,7 +1,7 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\Content\Taxonomy;
 
-use JMichaelWard\BoardGameCollector\Hookable;
+use WebDevStudios\OopsWP\Utility\Hookable;
 
 /**
  * Class GameStatusTaxonomy

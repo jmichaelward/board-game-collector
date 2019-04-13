@@ -2,6 +2,7 @@
 namespace JMichaelWard\BoardGameCollector\Service;
 
 use JMichaelWard\BoardGameCollector\Command\BgcCommand;
+use WebDevStudios\OopsWP\Structure\Service;
 
 /**
  * Class Cli

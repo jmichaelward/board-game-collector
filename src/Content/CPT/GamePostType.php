@@ -1,7 +1,7 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\Content\CPT;
 
-use JMichaelWard\BoardGameCollector\Hookable;
+use WebDevStudios\OopsWP\Utility\Hookable;
 
 /**
  * Class Game

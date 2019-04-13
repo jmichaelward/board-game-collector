@@ -2,6 +2,7 @@
 namespace JMichaelWard\BoardGameCollector\Service;
 
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
+use WebDevStudios\OopsWP\Structure\Service;
 
 /**
  * Establishes a cron task for periodically hitting the BGG API.

@@ -3,6 +3,7 @@ namespace JMichaelWard\BoardGameCollector\Service;
 
 use JMichaelWard\BoardGameCollector\BoardGameCollector;
 use JMichaelWard\BoardGameCollector\Admin\Notifier;
+use WebDevStudios\OopsWP\Structure\Service;
 
 /**
  * Class Settings

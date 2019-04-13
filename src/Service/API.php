@@ -2,6 +2,7 @@
 namespace JMichaelWard\BoardGameCollector\Service;
 
 use JMichaelWard\BoardGameCollector\API\Routes\Games;
+use WebDevStudios\OopsWP\Structure\Service;
 
 /**
  * Class Api
