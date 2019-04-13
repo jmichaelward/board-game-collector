@@ -1,7 +1,7 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\Api;
 
-use JMichaelWard\BoardGameCollector\API\Routes\Games;
+use JMichaelWard\BoardGameCollector\Api\Routes\Games;
 use WebDevStudios\OopsWP\Structure\Service;
 
 /**

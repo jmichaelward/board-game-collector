@@ -1,5 +1,5 @@
 <?php
-namespace JMichaelWard\BoardGameCollector\API\Routes;
+namespace JMichaelWard\BoardGameCollector\Api\Routes;
 
 /**
  * Class Games

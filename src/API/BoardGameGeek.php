@@ -1,5 +1,5 @@
 <?php
-namespace JMichaelWard\BoardGameCollector\API;
+namespace JMichaelWard\BoardGameCollector\Api;
 
 use JMichaelWard\BoardGameCollector\Cron\CronService;
 
