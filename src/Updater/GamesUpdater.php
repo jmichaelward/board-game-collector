@@ -2,7 +2,7 @@
 namespace JMichaelWard\BoardGameCollector\Updater;
 
 use JMichaelWard\BoardGameCollector\API\BoardGameGeek;
-use JMichaelWard\BoardGameCollector\Model\Games\BGGGame;
+use JMichaelWard\BoardGameCollector\Model\Games\BGGGameAdapter;
 use JMichaelWard\BoardGameCollector\Model\Games\GameData;
 use JMichaelWard\BoardGameCollector\Admin\Settings;
 
@@ -82,10 +82,10 @@ class GamesUpdater {
 	 * @since  2019-04-13
 	 */
 	private function save_game_data( array $data ) {
-		$game      = new BGGGame( $data );
-		$game_post = $this->game_exists( $game );
+		$game    = ( new BGGGameAdapter( $data ) )->get_game();
+		$game_id = $this->game_exists( $game );
 
-		$game_post ? $this->update_game( $game, array_pop( $game_post ) ) : $this->insert_game( $game );
+		$game_id ? $this->update_game( $game, array_pop( $game_id ) ) : $this->insert_game( $game );
 	}
 
 	/**
@@ -96,17 +96,17 @@ class GamesUpdater {
 	 * @return array
 	 */
 	private function game_exists( GameData $game ) {
-		$args = [
-			'name'           => $game->get_id(), // @codingStandardsIgnoreLine
-			'post_title'     => $game->get_name(),
-			'post_type'      => 'bgc_game',
-			'fields'         => 'ids',
-			'posts_per_page' => 1,
-			'post_status'    => 'publish',
-		];
+		$args = array_merge(
+			[
+				'post_type'      => 'bgc_game',
+				'fields'         => 'ids',
+				'posts_per_page' => 1,
+				'post_status'    => 'publish',
+			],
+			$game->get_unique_identifiers()
+		);
 
-		$query = new \WP_Query( $args );
-		$posts = $query->get_posts();
+		$posts = ( new \WP_Query( $args ) )->get_posts();
 
 		wp_reset_postdata();
 
@@ -122,7 +122,7 @@ class GamesUpdater {
 		$id = wp_insert_post(
 			[
 				'post_type'   => 'bgc_game',
-				'post_name'   => $game->get_id(),
+				'post_name'   => sanitize_title( $game->get_name() ),
 				'post_title'  => $game->get_name(),
 				'post_status' => 'publish',
 			]
@@ -136,7 +136,8 @@ class GamesUpdater {
 		wp_set_object_terms( $id, $game->get_statuses(), 'bgc_game_status' );
 
 		// We'll save all the BGG meta data for reference.
-		update_post_meta( $id, 'bgc_game_meta', $game->get_data() );
+		update_post_meta( $id, 'bgc_game_id', $game->get_bgg_id() );
+		update_post_meta( $id, 'bgc_game_meta', $game );
 	}
 
 	/**
@@ -146,7 +147,7 @@ class GamesUpdater {
 	 * @param int      $game_post_id ID of the bgc_game post.
 	 */
 	private function update_game( GameData $game, $game_post_id ) {
-		update_post_meta( $game_post_id, 'bgc_game_meta', $game->get_data() );
+		update_post_meta( $game_post_id, 'bgc_game_meta', $game );
 		wp_set_object_terms( $game_post_id, $game->get_statuses(), 'bgc_game_status' );
 	}
 
