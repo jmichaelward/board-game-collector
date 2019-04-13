@@ -70,18 +70,22 @@ class GamesUpdater {
 
 		$this->hydrate();
 
-		$games = $this->api->get_collection( $this->username );
+		array_filter( $this->api->get_collection( $this->username ), [ $this, 'save_game_data' ] );
+	}
 
-		array_filter( $games, function( $item ) {
-			$game = new BGGGame( $item );
+	/**
+	 * Save game data to WordPress.
+	 *
+	 * @param array $data Array data for a given game.
+	 *
+	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @since  2019-04-13
+	 */
+	private function save_game_data( array $data ) {
+		$game      = new BGGGame( $data );
+		$game_post = $this->game_exists( $game );
 
-			if ( $game_post = $this->game_exists( $game ) ) {
-				$this->update_game( $game, array_pop( $game_post ) );
-				return;
-			}
-
-			$this->insert_game( $game );
-		});
+		$game_post ? $this->update_game( $game, array_pop( $game_post ) ) : $this->insert_game( $game );
 	}
 
 	/**
@@ -115,14 +119,14 @@ class GamesUpdater {
 	 * @param GameData $game Interface for a game object.
 	 */
 	private function insert_game( GameData $game ) {
-		$args = [
-			'post_type'   => 'bgc_game',
-			'post_name'   => $game->get_id(), // @codingStandardsIgnoreLine
-			'post_title'  => $game->get_name(),
-			'post_status' => 'publish',
-		];
-
-		$id = wp_insert_post( $args );
+		$id = wp_insert_post(
+			[
+				'post_type'   => 'bgc_game',
+				'post_name'   => $game->get_id(),
+				'post_title'  => $game->get_name(),
+				'post_status' => 'publish',
+			]
+		);
 
 		if ( ! $id ) {
 			return;
@@ -153,9 +157,9 @@ class GamesUpdater {
 	 * @param string $image_url URL of the image asset.
 	 * @param string $name      Name of the game.
 	 *
-	 * @return bool|int|object
+	 * @return bool
 	 */
-	private function load_image( $id, $image_url, $name ) {
+	private function load_image( $id, $image_url, $name ) : bool {
 		if ( ! function_exists( 'media_handle_sideload' ) ) {
 			include_once ABSPATH . '/wp-admin/includes/image.php';
 			include_once ABSPATH . '/wp-admin/includes/file.php';
@@ -182,13 +186,7 @@ class GamesUpdater {
 			$file_array['tmp_name'] = '';
 		}
 
-		$img = media_handle_sideload(
-			$file_array, $id,
-			'',
-			[
-				'post_name' => $name,
-			]
-		);
+		$img = media_handle_sideload( $file_array, $id, '', [ 'post_name' => $name ] );
 
 		// If error storing permanently, unlink.
 		if ( is_wp_error( $img ) ) {
