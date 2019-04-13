@@ -23,7 +23,7 @@ class BoardGameGeek {
 	 *
 	 * @return array|\WP_Error
 	 */
-	public function get_collection( string $username ) {
+	public function get_collection( string $username ) : array {
 		return get_transient( 'bgg_collection' ) ?: $this->get_games_from_api( $username );
 	}
 
@@ -57,7 +57,7 @@ class BoardGameGeek {
 	 *
 	 * @return array
 	 */
-	private function convert_xml_to_json( $data ) {
+	private function convert_xml_to_json( $data ) : array {
 		if ( ! $data ) {
 			return [];
 		}
