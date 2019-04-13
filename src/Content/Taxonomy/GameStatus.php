@@ -42,12 +42,13 @@ class GameStatus extends Taxonomy {
 	 */
 	public function get_args() : array {
 		return [
+			'hierarchical'          => true,
 			'label'                 => _x( 'Statuses', 'Game status label', 'bgc' ),
 			'labels'                => $this->get_labels(),
-			'show_in_rest'          => true,
-			'hierarchical'          => true,
 			'rest_base'             => 'ownership',
 			'rest_controller_class' => 'WP_REST_Terms_Controller',
+			'show_admin_column'     => true,
+			'show_in_rest'          => true,
 		];
 	}
 }
