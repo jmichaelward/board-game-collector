@@ -60,11 +60,11 @@ class CronService extends Service {
 	 * @return array
 	 */
 	public function add_interval( $schedules ) {
-		$schedules[ CronService::INTERVAL_NAME ] = [
-			'interval' => CronService::INTERVAL_VALUE,
+		$schedules[ self::INTERVAL_NAME ] = [
+			'interval' => self::INTERVAL_VALUE,
 			'display'  => sprintf( // Translators: $1%s is the interval description.
 				esc_html_x( '$1%s', 'bgc' ),
-				CronService::INTERVAL_DESCRIPTION
+				self::INTERVAL_DESCRIPTION
 			),
 		];
 
@@ -76,7 +76,7 @@ class CronService extends Service {
 	 */
 	public static function maybe_schedule_cron() {
 		if ( ! wp_next_scheduled( 'bgc_collection_update' ) ) {
-			wp_schedule_event( time(), CronService::INTERVAL_NAME, 'bgc_collection_update' );
+			wp_schedule_event( time(), self::INTERVAL_NAME, 'bgc_collection_update' );
 		}
 	}
 }
