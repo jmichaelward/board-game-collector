@@ -8,17 +8,11 @@ namespace JMichaelWard\BoardGameCollector\Model\Games;
  */
 interface GameData {
 	/**
-	 * Data from an API request.
-	 *
-	 * @return array
-	 */
-	public function get_data();
-	/**
 	 * ID of the game.
 	 *
 	 * @return int
 	 */
-	public function get_id();
+	public function get_bgg_id();
 
 	/**
 	 * Box title of the game.
@@ -49,13 +43,6 @@ interface GameData {
 	public function get_max_players();
 
 	/**
-	 * The user's numeric rating of the game.
-	 *
-	 * @return int
-	 */
-	public function get_user_rating();
-
-	/**
 	 * Whether the game is owned by the user.
 	 *
 	 * @return bool
@@ -68,4 +55,13 @@ interface GameData {
 	 * @return array
 	 */
 	public function get_statuses();
+
+	/**
+	 * Get the unique identifers for the game for use by WP_Query.
+	 *
+	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @since  2019-04-13
+	 * @return mixed
+	 */
+	public function get_unique_identifiers();
 }
