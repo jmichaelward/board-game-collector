@@ -63,7 +63,7 @@ class BoardGameGeek {
 	 *
 	 * @return array
 	 */
-	public function convert_xml_to_json( $data ) {
+	private function convert_xml_to_json( $data ) {
 		if ( ! $data ) {
 			return [];
 		}
