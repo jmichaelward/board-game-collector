@@ -24,13 +24,7 @@ class BoardGameGeek {
 	 * @return array|\WP_Error
 	 */
 	public function get_collection( string $username ) {
-		$games = get_transient( 'bgg_collection' );
-
-		if ( $games ) {
-			return $games;
-		}
-
-		return $this->get_games_from_api( $username );
+		return get_transient( 'bgg_collection' ) ?: $this->get_games_from_api( $username );
 	}
 
 	/**
