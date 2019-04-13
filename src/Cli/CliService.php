@@ -1,15 +1,15 @@
 <?php
-namespace JMichaelWard\BoardGameCollector\Service;
+namespace JMichaelWard\BoardGameCollector\Cli;
 
-use JMichaelWard\BoardGameCollector\Command\BgcCommand;
+use JMichaelWard\BoardGameCollector\Cli\Command\BgcCommand;
 use WebDevStudios\OopsWP\Structure\Service;
 
 /**
- * Class Cli
+ * Class CliService
  *
  * @package JMichaelWard\BoardGameCollector\Service
  */
-class Cli extends Service {
+class CliService extends Service {
 	/**
 	 * Set of Cli commands registered to this plugin.
 	 *

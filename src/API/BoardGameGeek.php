@@ -1,7 +1,7 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\API;
 
-use JMichaelWard\BoardGameCollector\Service\Cron;
+use JMichaelWard\BoardGameCollector\Cron\CronService;
 
 /**
  * Class BoardGameGeek
@@ -37,7 +37,7 @@ class BoardGameGeek {
 		$games = $this->convert_xml_to_json( wp_remote_retrieve_body( $games ) );
 		$games = $games['item'] ?? [];
 
-		set_transient( 'bgg_collection', $games, Cron::INTERVAL_VALUE );
+		set_transient( 'bgg_collection', $games, CronService::INTERVAL_VALUE );
 
 		return $games;
 	}

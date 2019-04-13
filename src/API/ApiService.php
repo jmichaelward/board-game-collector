@@ -1,15 +1,15 @@
 <?php
-namespace JMichaelWard\BoardGameCollector\Service;
+namespace JMichaelWard\BoardGameCollector\Api;
 
 use JMichaelWard\BoardGameCollector\API\Routes\Games;
 use WebDevStudios\OopsWP\Structure\Service;
 
 /**
- * Class Api
+ * Class ApiService
  *
  * @package JMichaelWard\BoardGameCollector\API
  */
-class API extends Service {
+class ApiService extends Service {
 	/**
 	 * Collection of routes for this plugin.
 	 *

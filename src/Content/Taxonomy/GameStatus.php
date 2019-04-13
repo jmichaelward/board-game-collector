@@ -1,14 +1,14 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\Content\Taxonomy;
 
-use WebDevStudios\OopsWP\Utility\Hookable;
+use WebDevStudios\OopsWP\Structure\Content\Taxonomy;
 
 /**
- * Class GameStatusTaxonomy
+ * Class GameStatus
  *
  * @package JMichaelWard\BoardGameCollector\Content\Taxonomy
  */
-class GameStatusTaxonomy implements Hookable {
+class GameStatus extends Taxonomy {
 	/**
 	 * Setup WordPress hooks.
 	 */
@@ -20,11 +20,7 @@ class GameStatusTaxonomy implements Hookable {
 	 * Register the taxonomy.
 	 */
 	public function register() {
-		register_taxonomy(
-			'bgc_game_status',
-			'bgc_game',
-			$this->args()
-		);
+		register_taxonomy( 'bgc_game_status', 'bgc_game', $this->get_args() );
 	}
 
 	/**
@@ -32,7 +28,7 @@ class GameStatusTaxonomy implements Hookable {
 	 *
 	 * @return array
 	 */
-	public function labels() {
+	public function get_labels() : array {
 		return [
 			'name'          => _x( 'Ownership', 'Game status label', 'bgc' ),
 			'singular_name' => _x( 'Ownership', 'Game status singular label', 'bgc' ),
@@ -44,10 +40,10 @@ class GameStatusTaxonomy implements Hookable {
 	 *
 	 * @return array
 	 */
-	public function args() {
+	public function get_args() : array {
 		return [
 			'label'                 => _x( 'Statuses', 'Game status label', 'bgc' ),
-			'labels'                => $this->labels(),
+			'labels'                => $this->get_labels(),
 			'show_in_rest'          => true,
 			'hierarchical'          => true,
 			'rest_base'             => 'ownership',

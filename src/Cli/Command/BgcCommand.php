@@ -1,8 +1,8 @@
 <?php
-namespace JMichaelWard\BoardGameCollector\Command;
+namespace JMichaelWard\BoardGameCollector\Cli\Command;
 
+use JMichaelWard\BoardGameCollector\Admin\Settings;
 use JMichaelWard\BoardGameCollector\API\BoardGameGeek;
-use JMichaelWard\BoardGameCollector\Service\Settings;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 
 /**

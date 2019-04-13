@@ -1,5 +1,5 @@
 <?php
-namespace JMichaelWard\BoardGameCollector\Service;
+namespace JMichaelWard\BoardGameCollector\Cron;
 
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 use WebDevStudios\OopsWP\Structure\Service;
@@ -7,11 +7,11 @@ use WebDevStudios\OopsWP\Structure\Service;
 /**
  * Establishes a cron task for periodically hitting the BGG API.
  *
- * Class Cron
+ * Class CronService
  *
  * @package JMichaelWard\BoardGameCollector
  */
-class Cron extends Service {
+class CronService extends Service {
 	/**
 	 * Name of the interval.
 	 */
@@ -60,11 +60,11 @@ class Cron extends Service {
 	 * @return array
 	 */
 	public function add_interval( $schedules ) {
-		$schedules[ Cron::INTERVAL_NAME ] = [
-			'interval' => Cron::INTERVAL_VALUE,
+		$schedules[ CronService::INTERVAL_NAME ] = [
+			'interval' => CronService::INTERVAL_VALUE,
 			'display'  => sprintf( // Translators: $1%s is the interval description.
 				esc_html_x( '$1%s', 'bgc' ),
-				Cron::INTERVAL_DESCRIPTION
+				CronService::INTERVAL_DESCRIPTION
 			),
 		];
 
@@ -76,7 +76,7 @@ class Cron extends Service {
 	 */
 	public static function maybe_schedule_cron() {
 		if ( ! wp_next_scheduled( 'bgc_collection_update' ) ) {
-			wp_schedule_event( time(), Cron::INTERVAL_NAME, 'bgc_collection_update' );
+			wp_schedule_event( time(), CronService::INTERVAL_NAME, 'bgc_collection_update' );
 		}
 	}
 }

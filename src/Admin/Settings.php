@@ -1,9 +1,8 @@
 <?php
-namespace JMichaelWard\BoardGameCollector\Service;
+namespace JMichaelWard\BoardGameCollector\Admin;
 
-use JMichaelWard\BoardGameCollector\BoardGameCollector;
-use JMichaelWard\BoardGameCollector\Admin\Notifier;
 use WebDevStudios\OopsWP\Structure\Service;
+use WebDevStudios\OopsWP\Utility\FilePathDependent;
 
 /**
  * Class Settings
@@ -11,6 +10,8 @@ use WebDevStudios\OopsWP\Structure\Service;
  * @package JMichaelWard\BoardGameCollector
  */
 class Settings extends Service {
+	use FilePathDependent;
+
 	/**
 	 * Form fields.
 	 *
@@ -28,8 +29,8 @@ class Settings extends Service {
 	/**
 	 * Register this service.
 	 */
-	public function register() {
-		parent::register();
+	public function run() {
+		parent::run();
 
 		register_setting( 'bgc-settings', 'bgc-settings', [] );
 
@@ -47,7 +48,7 @@ class Settings extends Service {
 		add_action( 'admin_menu', [ $this, 'create_admin_page' ] );
 		add_action( 'admin_init', [ $this, 'add_section' ] );
 		add_action( 'admin_init', [ $this, 'add_fields' ] );
-		add_action( 'admin_init', [ $this, 'register' ] );
+		add_action( 'admin_init', [ $this, 'run' ] );
 		add_action( 'admin_notices', [ $this, 'notify_missing_username' ] );
 	}
 
@@ -110,7 +111,7 @@ class Settings extends Service {
 	 * Get the view file for the settings form.
 	 */
 	public function admin_callback() {
-		include BoardGameCollector::app_path() . '/views/settings.php'; // @codingStandardsIgnoreLine
+		include $this->file_path . 'app/views/settings.php'; // @codingStandardsIgnoreLine
 	}
 
 	/**
