@@ -23,23 +23,37 @@ class BoardGameGeek {
 	 *
 	 * @return array|\WP_Error
 	 */
-	public function get_collection( $username ) {
-		if ( $games = get_transient( 'bgg_collection' ) ) {
+	public function get_collection( string $username ) {
+		$games = get_transient( 'bgg_collection' );
+
+		if ( $games ) {
 			return $games;
 		}
 
-		$games = wp_remote_get( "{$this->base_path}/collection?username={$username}&stats=1" );
+		return $this->get_games_from_api( $username );
+	}
 
-		if ( is_wp_error( $games ) || 200 !== wp_remote_retrieve_response_code( $games ) ) {
+	/**
+	 * Get games from the BoardGameGeek API.
+	 *
+	 * @param string $username The username to query against.
+	 *
+	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @since  2019-04-12
+	 * @return array
+	 */
+	private function get_games_from_api( string $username ) : array {
+		$response = wp_remote_get( "{$this->base_path}/collection?username={$username}&stats=1" );
+
+		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
 			return [];
 		}
 
-		$games = $this->convert_xml_to_json( wp_remote_retrieve_body( $games ) );
-		$games = $games['item'] ?? [];
+		$games = $this->convert_xml_to_json( wp_remote_retrieve_body( $response ) );
 
 		set_transient( 'bgg_collection', $games, CronService::INTERVAL_VALUE );
 
-		return $games;
+		return $games['item'] ?? [];
 	}
 
 	/**
