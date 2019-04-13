@@ -30,6 +30,7 @@ class BgcCommand extends \WP_CLI_Command {
 	public function __construct() {
 		$this->updater = new GamesUpdater( new BoardGameGeek(), new Settings() );
 	}
+
 	/**
 	 * Update the Games post type with data from BoardGameGeek.
 	 */
