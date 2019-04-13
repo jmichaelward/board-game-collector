@@ -45,9 +45,13 @@ class BoardGameGeek {
 
 		$games = $this->convert_xml_to_json( wp_remote_retrieve_body( $response ) );
 
-		set_transient( 'bgg_collection', $games, CronService::INTERVAL_VALUE );
+		if ( ! isset( $games['item'] ) ) {
+			return [];
+		}
 
-		return $games['item'] ?? [];
+		set_transient( 'bgg_collection', $games['item'] ?? [], CronService::INTERVAL_VALUE );
+
+		return $games['item'];
 	}
 
 	/**
