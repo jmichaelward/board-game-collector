@@ -8,18 +8,11 @@ namespace JMichaelWard\BoardGameCollector\Model\Games;
  */
 class BGGGame implements GameData {
 	/**
-	 * Data returned from BoardGameCollector API request.
-	 *
-	 * @var array
-	 */
-	private $data;
-
-	/**
 	 * BoardGameCollector ID for this game.
 	 *
 	 * @var int
 	 */
-	private $id;
+	private $bgg_id;
 
 	/**
 	 * Box title of the game.
@@ -27,6 +20,14 @@ class BGGGame implements GameData {
 	 * @var string
 	 */
 	private $name;
+
+	/**
+	 * Year the game was published.
+	 *
+	 * @var string
+	 * @since 2019-04-13
+	 */
+	private $year_published;
 
 	/**
 	 * URL to an image of the box art.
@@ -49,41 +50,45 @@ class BGGGame implements GameData {
 	 *
 	 * @var array
 	 */
-	private $player_info;
+	private $play_attributes;
 
 	/**
-	 * User rating for the game.
+	 * Game rankings.
 	 *
-	 * @var int
+	 * @var array
 	 */
-	private $rating;
+	private $rankings;
 
 	/**
 	 * BGGGame constructor.
 	 *
-	 * @param array $data Game data from BoardGameCollector.
-	 */
-	public function __construct( array $data ) {
-		if ( ! $data ) {
-			return;
-		}
-
-		$this->data        = $data;
-		$this->id          = $data['@attributes']['objectid'] ?? 0;
-		$this->name        = $data['name'] ?? '';
-		$this->image_url   = $data['image'] ?? '';
-		$this->status      = $data['status']['@attributes'] ?? [];
-		$this->player_info = $data['stats']['@attributes'] ?? [];
-		$this->rating      = $data['rating']['@attributes']['value'] ?? 0;
-	}
-
-	/**
-	 * Get the full set of data from the game.
+	 * @param int    $bgg_id          The ID of the game from BoardGameGeek.
+	 * @param string $name            The name of the game.
+	 * @param string $year_published  The year the game was published.
+	 * @param string $image_url       A URL to an image of the box art.
+	 * @param array  $play_attributes Attributes related to the game such as number of players and playtime.
+	 * @param array  $rankings        The game's rankings on BoardGameGeek.
+	 * @param array  $status          The player's ownership status for the game.
 	 *
-	 * @return array
+	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @since  2019-04-13
 	 */
-	public function get_data() {
-		return $this->data;
+	public function __construct(
+		int $bgg_id,
+		string $name,
+		string $year_published = '',
+		string $image_url = '',
+		array $play_attributes = [],
+		array $rankings = [],
+		array $status = []
+	) {
+		$this->bgg_id          = $bgg_id;
+		$this->name            = $name;
+		$this->year_published  = $year_published;
+		$this->image_url       = $image_url;
+		$this->play_attributes = $play_attributes;
+		$this->rankings        = $rankings;
+		$this->status          = $status;
 	}
 
 	/**
@@ -91,8 +96,8 @@ class BGGGame implements GameData {
 	 *
 	 * @return int
 	 */
-	public function get_id() {
-		return absint( $this->id );
+	public function get_bgg_id() {
+		return absint( $this->bgg_id );
 	}
 
 	/**
@@ -119,7 +124,7 @@ class BGGGame implements GameData {
 	 * @return int
 	 */
 	public function get_min_players() {
-		return absint( $this->player_info['minplayers'] );
+		return absint( $this->play_attributes['minplayers'] );
 	}
 
 	/**
@@ -128,16 +133,7 @@ class BGGGame implements GameData {
 	 * @return int
 	 */
 	public function get_max_players() {
-		return absint( $this->player_info['maxplayers'] );
-	}
-
-	/**
-	 * The user's numeric rating of the game.
-	 *
-	 * @return int
-	 */
-	public function get_user_rating() {
-		return 'N/A' !== $this->rating ? absint( $this->rating ) : 0;
+		return absint( $this->play_attributes['maxplayers'] );
 	}
 
 	/**
@@ -146,7 +142,7 @@ class BGGGame implements GameData {
 	 * @return bool
 	 */
 	public function is_owned() {
-		return absint( $this->status['own'] ) === 1;
+		return 1 === absint( $this->status['own'] );
 	}
 
 	/**
@@ -172,5 +168,26 @@ class BGGGame implements GameData {
 		);
 
 		return array_keys( $statuses );
+	}
+
+	/**
+	 * Data that uniquely identifies this game in WordPress.
+	 *
+	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @since  2019-04-13
+	 * @return array
+	 */
+	public function get_unique_identifiers() : array {
+		return [
+			'name'       => sanitize_title( $this->name ),
+			'post_title' => $this->name,
+			'meta_query' => [ // @codingStandardsIgnoreLine
+				[
+					'key'     => 'bgc_game_id',
+					'value'   => $this->bgg_id,
+					'compare' => '=',
+				],
+			],
+		];
 	}
 }
