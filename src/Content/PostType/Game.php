@@ -1,14 +1,15 @@
 <?php
-namespace JMichaelWard\BoardGameCollector\Content\CPT;
+namespace JMichaelWard\BoardGameCollector\Content\PostType;
 
 use WebDevStudios\OopsWP\Structure\Content\PostType;
 
 /**
  * Class Game
  *
- * @package JMichaelWard\BoardGameCollector\Content\CPT;
+ * @author Jeremy Ward <jeremy@jmichaelward.com>
+ * @package JMichaelWard\BoardGameCollector\Content\PostType;
  */
-class GamePostType extends PostType {
+class Game extends PostType {
 	/**
 	 * Register this post type.
 	 */

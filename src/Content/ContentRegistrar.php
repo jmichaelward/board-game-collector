@@ -9,8 +9,8 @@
 
 namespace JMichaelWard\BoardGameCollector\Content;
 
-use JMichaelWard\BoardGameCollector\Content\CPT\GamePostType;
-use JMichaelWard\BoardGameCollector\Content\Taxonomy\GameStatus;
+use JMichaelWard\BoardGameCollector\Content\PostType as PostType;
+use JMichaelWard\BoardGameCollector\Content\Taxonomy as Taxonomy;
 use WebDevStudios\OopsWP\Structure\Content\ContentTypeInterface;
 use WebDevStudios\OopsWP\Structure\Service;
 
@@ -29,7 +29,7 @@ class ContentRegistrar extends Service {
 	 * @since 2019-04-12
 	 */
 	private $post_types = [
-		GamePostType::class,
+		PostType\Game::class,
 	];
 
 	/**
@@ -39,7 +39,7 @@ class ContentRegistrar extends Service {
 	 * @since 2019-04-12
 	 */
 	private $taxonomies = [
-		GameStatus::class,
+		Taxonomy\GameStatus::class,
 	];
 
 	/**
