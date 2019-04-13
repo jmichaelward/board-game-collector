@@ -73,11 +73,9 @@ class BoardGameGeek {
 		$xml = simplexml_load_string( $data );
 
 		if ( ! $xml ) {
-			error_log( 'Could not retrieve BoardGameGeek data at ' . time() );
+			return [];
 		}
 
-		$json  = wp_json_encode( $xml );
-
-		return json_decode( $json, true );
+		return json_decode( wp_json_encode( $xml ), true );
 	}
 }
