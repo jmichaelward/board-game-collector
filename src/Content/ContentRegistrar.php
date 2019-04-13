@@ -51,6 +51,7 @@ class ContentRegistrar extends Service {
 	public function register_hooks() {
 		add_action( 'init', [ $this, 'register_post_types' ] );
 		add_action( 'init', [ $this, 'register_taxonomies' ] );
+		add_action( 'init', [ $this, 'add_featured_image_support' ] );
 	}
 
 	/**
@@ -77,6 +78,16 @@ class ContentRegistrar extends Service {
 			$taxonomy = new $taxonomy_class();
 			$this->register_content_type( $taxonomy );
 		}
+	}
+
+	/**
+	 * Add featured-image support.
+	 *
+	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @since  2019-04-12
+	 */
+	public function add_featured_image_support() {
+		add_theme_support( 'post-thumbnails' );
 	}
 
 	/**
