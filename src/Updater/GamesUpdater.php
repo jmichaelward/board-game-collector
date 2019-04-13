@@ -59,7 +59,7 @@ class GamesUpdater {
 		// Load required WordPress functionality.
 		include_once ABSPATH . WPINC . '/pluggable.php';
 
-		if ( DOING_CRON ) {
+		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
 			// @TODO Authorization.
 			wp_set_auth_cookie( 1 );
 		}
