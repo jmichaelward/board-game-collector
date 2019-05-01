@@ -92,6 +92,17 @@ class BGGGame implements GameData {
 	}
 
 	/**
+	 * Get the object data as an array.
+	 *
+	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @since  2019-05-01
+	 * @return array
+	 */
+	public function get_data() : array {
+		return get_object_vars( $this );
+	}
+
+	/**
 	 * ID of the game.
 	 *
 	 * @return int
