@@ -55,6 +55,10 @@ class Game extends PostType {
 				'slug' => 'games',
 			],
 			'capability_type'       => 'post',
+			'capabilities'          => [
+				'create_posts' => 'do_not_allow',
+			],
+			'map_meta_cap'          => true,
 			'has_archive'           => true,
 			'hierarchical'          => false,
 			'supports'              => [ 'title', 'editor', 'thumbnail' ],
