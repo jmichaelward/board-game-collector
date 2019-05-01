@@ -11,11 +11,12 @@ use WebDevStudios\OopsWP\Structure\Content\PostType;
  */
 class Game extends PostType {
 	/**
-	 * Register this post type.
+	 * The slug for this post type.
+	 *
+	 * @var string
+	 * @since 2019-05-01
 	 */
-	public function register() {
-		register_post_type( 'bgc_game', $this->get_args() );
-	}
+	protected $slug = 'bgc_game';
 
 	/**
 	 * Labels for this post type.
