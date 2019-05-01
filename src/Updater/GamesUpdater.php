@@ -70,7 +70,13 @@ class GamesUpdater {
 
 		$this->hydrate();
 
-		array_filter( $this->api->get_collection( $this->username ), [ $this, 'save_game_data' ] );
+		$games = $this->api->get_collection( $this->username );
+
+		do_action( 'bgc_setup_progress_bar', count( $games ) );
+
+		array_filter( $games, [ $this, 'save_game_data' ] );
+
+		do_action( 'bgc_finish_progress_bar' );
 	}
 
 	/**
@@ -86,6 +92,8 @@ class GamesUpdater {
 		$game_id = $this->game_exists( $game );
 
 		$game_id ? $this->update_game( $game, array_pop( $game_id ) ) : $this->insert_game( $game );
+
+		do_action( 'bgc_tick_progress_bar' );
 	}
 
 	/**

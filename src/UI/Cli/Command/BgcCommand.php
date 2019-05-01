@@ -1,8 +1,15 @@
 <?php
-namespace JMichaelWard\BoardGameCollector\Cli\Command;
+/**
+ * Main command for the plugin.
+ *
+ * @author Jeremy Ward <jeremy@jmichaelward.com>
+ * @package JMichaelWard\BoardGameCollector\UI\Cli\Command
+ * @since 2019-05-01
+ */
 
-use JMichaelWard\BoardGameCollector\Admin\Settings;
-use JMichaelWard\BoardGameCollector\API\BoardGameGeek;
+namespace JMichaelWard\BoardGameCollector\UI\Cli\Command;
+
+use JMichaelWard\BoardGameCollector\UI\Cli\ProgressBar;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 
 /**
@@ -16,13 +23,21 @@ use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
  *
  * @when after_wp_config_load
  */
-class BgcCommand extends \WP_CLI_Command {
+class BgcCommand {
 	/**
 	 * Instance of GamesUpdater class.
 	 *
 	 * @var GamesUpdater
 	 */
 	private $updater;
+
+	/**
+	 * The progress bar.
+	 *
+	 * @var ProgressBar
+	 * @since 2019-05-01
+	 */
+	private $progress_bar;
 
 	/**
 	 * BgcCommand constructor.
@@ -33,8 +48,6 @@ class BgcCommand extends \WP_CLI_Command {
 	 * @since  2019-04-13
 	 */
 	public function __construct( GamesUpdater $updater ) {
-		parent::__construct();
-
 		$this->updater = $updater;
 	}
 
@@ -42,6 +55,9 @@ class BgcCommand extends \WP_CLI_Command {
 	 * Update the Games post type with data from BoardGameGeek.
 	 */
 	public function update() {
+		$this->progress_bar = new ProgressBar();
+		$this->progress_bar->run();
+
 		$this->updater->update_collection();
 	}
 }

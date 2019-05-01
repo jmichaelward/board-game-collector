@@ -6,7 +6,7 @@ use WebDevStudios\OopsWP\Structure\Plugin\Plugin;
 use WebDevStudios\OopsWP\Structure\Service;
 use JMichaelWard\BoardGameCollector\Content\ContentRegistrar;
 use JMichaelWard\BoardGameCollector\Api\ApiService;
-use JMichaelWard\BoardGameCollector\Cli\CliService;
+use JMichaelWard\BoardGameCollector\UI\Cli\CliService;
 use JMichaelWard\BoardGameCollector\Cron\CronService;
 use JMichaelWard\BoardGameCollector\Admin\Settings;
 use WebDevStudios\OopsWP\Utility\FilePathDependent;

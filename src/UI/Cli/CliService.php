@@ -1,8 +1,8 @@
 <?php
-namespace JMichaelWard\BoardGameCollector\Cli;
+namespace JMichaelWard\BoardGameCollector\UI\Cli;
 
 use Auryn\Injector;
-use JMichaelWard\BoardGameCollector\Cli\Command\BgcCommand;
+use JMichaelWard\BoardGameCollector\UI\Cli\Command\BgcCommand;
 use WebDevStudios\OopsWP\Structure\Service;
 
 /**
