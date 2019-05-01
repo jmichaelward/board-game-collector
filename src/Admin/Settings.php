@@ -1,6 +1,7 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\Admin;
 
+use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsPage;
 use WebDevStudios\OopsWP\Structure\Service;
 use WebDevStudios\OopsWP\Utility\FilePathDependent;
 use WebDevStudios\OopsWP\Utility\Registerable;
@@ -22,11 +23,12 @@ class Settings extends Service implements Registerable {
 	private $slug = 'bgc-settings';
 
 	/**
-	 * Form fields.
+	 * The settings menu class.
 	 *
-	 * @var array
+	 * @var SettingsPage
+	 * @since 2019-05-01
 	 */
-	private $fields = [];
+	private $page = SettingsPage::class;
 
 	/**
 	 * Settings data.
@@ -39,11 +41,25 @@ class Settings extends Service implements Registerable {
 	 * Settings page hooks.
 	 */
 	public function register_hooks() {
+		add_action( 'admin_menu', [ $this->page, 'register' ] );
 		add_action( 'admin_init', [ $this, 'register' ] );
-		add_action( 'admin_menu', [ $this, 'create_admin_page' ] );
-		add_action( 'admin_init', [ $this, 'add_section' ] );
-		add_action( 'admin_init', [ $this, 'add_fields' ] );
 		add_action( 'admin_notices', [ $this, 'notify_missing_username' ] );
+	}
+
+	/**
+	 * Run the service.
+	 *
+	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @since  2019-05-01
+	 * @return void
+	 */
+	public function run() {
+		$this->data = $this->get_data();
+		$this->page = new $this->page( $this->slug, $this->data );
+
+		$this->page->set_file_path( $this->file_path );
+
+		parent::run();
 	}
 
 	/**
@@ -54,74 +70,9 @@ class Settings extends Service implements Registerable {
 	 * @return void
 	 */
 	public function register() {
-		$this->data   = get_option( $this->slug );
-		$this->fields = [
-			'bgg-username' => __( 'BoardGameGeek Username', 'bgc' ),
-		];
-
 		register_setting( $this->slug, $this->slug, [] );
-	}
 
-	/**
-	 * Menu page construction.
-	 */
-	public function create_admin_page() {
-		add_submenu_page(
-			'edit.php?post_type=bgc_game',
-			__( 'BGG Settings', 'bgc' ),
-			__( 'BGG Settings', 'bgc' ),
-			'manage_options',
-			$this->slug,
-			[ $this, 'admin_callback' ]
-		);
-	}
-
-	/**
-	 * Register the settings section.
-	 */
-	public function add_section() {
-		add_settings_section(
-			$this->slug,
-			'BoardGameGeek API Settings',
-			null,
-			$this->slug
-		);
-	}
-
-	/**
-	 * Register settings fields.
-	 */
-	public function add_fields() {
-		foreach ( $this->fields as $id => $name ) {
-			add_settings_field(
-				$id,
-				$name,
-				[ $this, 'render_text_input' ],
-				$this->slug,
-				$this->slug,
-				[
-					'id' => $id,
-				]
-			);
-		}
-	}
-
-	/**
-	 * Render a text input field.
-	 *
-	 * @param array $args Fields.
-	 */
-	public function render_text_input( $args ) {
-		echo '<input type="text" id="' . esc_attr( $args['id'] )
-			. '" name="bgc-settings[' . esc_attr( $args['id'] ) . ']" value="'
-			. esc_attr( $this->data[ $args['id'] ] ) . '" />';
-	}
-
-	/**
-	 * Get the view file for the settings form.
-	 */
-	public function admin_callback() {
-		include $this->file_path . 'app/views/settings.php'; // @codingStandardsIgnoreLine
+		$this->page->setup();
 	}
 
 	/**
@@ -132,6 +83,7 @@ class Settings extends Service implements Registerable {
 	public function get_data() {
 		return $this->data ?? get_option( $this->slug );
 	}
+
 
 	/**
 	 * Render an admin notice only on the bgc_game screen if a BGG Username is not entered.
