@@ -3,13 +3,14 @@ namespace JMichaelWard\BoardGameCollector\Admin;
 
 use WebDevStudios\OopsWP\Structure\Service;
 use WebDevStudios\OopsWP\Utility\FilePathDependent;
+use WebDevStudios\OopsWP\Utility\Registerable;
 
 /**
  * Class Settings
  *
  * @package JMichaelWard\BoardGameCollector
  */
-class Settings extends Service {
+class Settings extends Service implements Registerable {
 	use FilePathDependent;
 
 	/**
@@ -27,29 +28,30 @@ class Settings extends Service {
 	private $data;
 
 	/**
-	 * Register this service.
+	 * Settings page hooks.
 	 */
-	public function run() {
-		parent::run();
+	public function register_hooks() {
+		add_action( 'admin_init', [ $this, 'register' ] );
+		add_action( 'admin_menu', [ $this, 'create_admin_page' ] );
+		add_action( 'admin_init', [ $this, 'add_section' ] );
+		add_action( 'admin_init', [ $this, 'add_fields' ] );
+		add_action( 'admin_notices', [ $this, 'notify_missing_username' ] );
+	}
 
-		register_setting( 'bgc-settings', 'bgc-settings', [] );
-
+	/**
+	 * Register the settings with WordPress.
+	 *
+	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @since  2019-05-01
+	 * @return void
+	 */
+	public function register() {
 		$this->fields = [
 			'bgg-username' => __( 'BoardGameGeek Username', 'bgc' ),
 		];
 
 		$this->data = get_option( 'bgc-settings' );
-	}
-
-	/**
-	 * Settings page hooks.
-	 */
-	public function register_hooks() {
-		add_action( 'admin_menu', [ $this, 'create_admin_page' ] );
-		add_action( 'admin_init', [ $this, 'add_section' ] );
-		add_action( 'admin_init', [ $this, 'add_fields' ] );
-		add_action( 'admin_init', [ $this, 'run' ] );
-		add_action( 'admin_notices', [ $this, 'notify_missing_username' ] );
+		register_setting( 'bgc-settings', 'bgc-settings', [] );
 	}
 
 	/**
