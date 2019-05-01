@@ -14,6 +14,14 @@ class Settings extends Service implements Registerable {
 	use FilePathDependent;
 
 	/**
+	 * Slug for the settings page.
+	 *
+	 * @var string
+	 * @since 2019-05-01
+	 */
+	private $slug = 'bgc-settings';
+
+	/**
 	 * Form fields.
 	 *
 	 * @var array
@@ -46,12 +54,12 @@ class Settings extends Service implements Registerable {
 	 * @return void
 	 */
 	public function register() {
+		$this->data   = get_option( $this->slug );
 		$this->fields = [
 			'bgg-username' => __( 'BoardGameGeek Username', 'bgc' ),
 		];
 
-		$this->data = get_option( 'bgc-settings' );
-		register_setting( 'bgc-settings', 'bgc-settings', [] );
+		register_setting( $this->slug, $this->slug, [] );
 	}
 
 	/**
@@ -63,7 +71,7 @@ class Settings extends Service implements Registerable {
 			__( 'BGG Settings', 'bgc' ),
 			__( 'BGG Settings', 'bgc' ),
 			'manage_options',
-			'bgc-settings',
+			$this->slug,
 			[ $this, 'admin_callback' ]
 		);
 	}
@@ -73,10 +81,10 @@ class Settings extends Service implements Registerable {
 	 */
 	public function add_section() {
 		add_settings_section(
-			'bgc-settings',
+			$this->slug,
 			'BoardGameGeek API Settings',
 			null,
-			'bgc-settings'
+			$this->slug
 		);
 	}
 
@@ -89,8 +97,8 @@ class Settings extends Service implements Registerable {
 				$id,
 				$name,
 				[ $this, 'render_text_input' ],
-				'bgc-settings',
-				'bgc-settings',
+				$this->slug,
+				$this->slug,
 				[
 					'id' => $id,
 				]
@@ -122,7 +130,7 @@ class Settings extends Service implements Registerable {
 	 * @return array
 	 */
 	public function get_data() {
-		return $this->data ?? get_option( 'bgc-settings' );
+		return $this->data ?? get_option( $this->slug );
 	}
 
 	/**
