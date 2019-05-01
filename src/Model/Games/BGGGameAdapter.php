@@ -194,7 +194,13 @@ class BGGGameAdapter {
 	 * @return array
 	 */
 	private function parse_rankings() : array {
-		return $this->data['stats']['rating']['ranks']['rank'] ?? [];
+		$rankings = [];
+
+		foreach ( $this->data['stats']['rating']['ranks']['rank'] as $ranking ) {
+			$rankings[] = $ranking['@attributes'];
+		}
+
+		return $rankings;
 	}
 
 	/**
