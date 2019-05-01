@@ -49,9 +49,7 @@ class Game extends PostType {
 	public function get_args() : array {
 		return [
 			'label'                 => _x( 'Games', 'post type label', 'bgc' ),
-			'labels'                => $this->get_labels(),
 			'description'           => __( 'A post type for a board games collection', 'bgc' ),
-			'public'                => true,
 			'rewrite'               => [
 				'slug' => 'games',
 			],
