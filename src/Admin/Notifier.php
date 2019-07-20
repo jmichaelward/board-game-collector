@@ -8,15 +8,33 @@ namespace JMichaelWard\BoardGameCollector\Admin;
  */
 class Notifier {
 	/**
-	 * Notify admin that the composer install command has not been run for this plugin.
+	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @since  2019-07-20
+	 * @return void
 	 */
-	public function do_error_message_missing_autoloader() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
-		?>
+	public function do_error_notice( string $message ) {
+		add_action( 'bgc_error_notify', [ $this, 'display_error_notice' ], 10, 1 );
+
+		add_action(
+			'admin_notices',
+			function() use ( $message ) {
+				do_action( 'bgc_error_notify', $message );
+			}
+		);
+	}
+
+	/**
+	 * Display an error notice in the admin.
+	 *
+	 * @param string $message The error message to display.
+	 *
+	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @since  2019-07-20
+	 * @return void
+	 */
+	public function display_error_notice( $message ) { ?>
 		<div class="notice notice-error is-dismissible">
-			<p><?php esc_html_e( 'BoardGameCollector Data classes not found. Did you run composer install?', 'bgc' ); ?></p>
+			<p><?php echo esc_html( $message ); ?></p>
 		</div>
 		<?php
 	}

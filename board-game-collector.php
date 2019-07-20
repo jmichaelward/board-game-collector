@@ -13,6 +13,7 @@ namespace JMichaelWard\BoardGameCollector;
 
 use Auryn\Injector;
 use JMichaelWard\BoardGameCollector\Admin\Notifier;
+use Throwable;
 
 $plugin_path = plugin_dir_path( __FILE__ );
 $autoload    = $plugin_path . 'vendor/autoload.php';
@@ -21,21 +22,20 @@ if ( is_readable( $autoload ) ) {
 	require_once $autoload;
 }
 
-if ( ! class_exists( BoardGameCollector::class ) ) {
+try {
+	add_action( 'plugins_loaded', [ new BoardGameCollector( $plugin_path, new Injector() ), 'run' ] );
+} catch ( Throwable $e ) {
 	require_once $plugin_path . 'src/Admin/Notifier.php';
 
-	add_action( 'admin_notices', [ new Notifier(), 'do_error_message_missing_autoloader' ] );
+	( new Notifier() )->do_error_notice(
+		'Could not locate BoardGameCollector class. Did you remember to run composer install?'
+	);
 
 	// Deactivate the plugin.
 	add_action(
 		'admin_init',
-		function() {
+		function () {
 			deactivate_plugins( __FILE__ );
 		}
 	);
-
-	return;
 }
-
-$plugin = new BoardGameCollector( $plugin_path, new Injector() );
-$plugin->run();
