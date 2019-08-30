@@ -5,6 +5,7 @@
  * Description: Connects to the BoardGameGeek API to retrieve and adapt data for use by WordPress.
  * Author: J. Michael Ward
  * Author URI: https://jmichaelward.com
+ * Version: 0.1.0
  *
  * @package JMichaelWard\BoardGameCollector
  */
