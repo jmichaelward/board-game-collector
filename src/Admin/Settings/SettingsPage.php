@@ -19,16 +19,8 @@ use WebDevStudios\OopsWP\Utility\Renderable;
  * @since   2019-05-01
  * @package JMichaelWard\BoardGameCollector\Admin\Settings
  */
-class SettingsPage implements Renderable {
+class SettingsPage implements SettingsFields, Renderable {
 	use FilePathDependent;
-
-	/**
-	 * The slug for the settings page.
-	 *
-	 * @var string
-	 * @since 2019-05-01
-	 */
-	private $slug;
 
 	/**
 	 * The Settings data.
@@ -53,8 +45,7 @@ class SettingsPage implements Renderable {
 	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
 	 * @since  2019-05-01
 	 */
-	public function __construct( string $slug, array $data ) {
-		$this->slug = $slug;
+	public function __construct( array $data ) {
 		$this->data = $data;
 	}
 
@@ -67,7 +58,7 @@ class SettingsPage implements Renderable {
 	 */
 	public function register() {
 		$this->fields = [
-			'bgg-username' => __( 'BoardGameGeek Username', 'bgc' ),
+			self::USERNAME_KEY => __( 'BoardGameGeek Username', 'bgc' ),
 		];
 
 		add_submenu_page(
@@ -75,9 +66,11 @@ class SettingsPage implements Renderable {
 			__( 'BGG Settings', 'bgc' ),
 			__( 'BGG Settings', 'bgc' ),
 			'manage_options',
-			$this->slug,
+			self::SETTINGS_KEY,
 			[ $this, 'render' ]
 		);
+
+		register_setting( self::SETTINGS_KEY, self::SETTINGS_KEY, [] );
 	}
 
 	/**
@@ -103,15 +96,19 @@ class SettingsPage implements Renderable {
 		include $this->file_path . 'app/views/settings.php';
 	}
 
+	public function load() {
+		$this->setup();
+	}
+
 	/**
 	 * Register the settings section.
 	 */
 	public function add_section() {
 		add_settings_section(
-			$this->slug,
+			self::SETTINGS_KEY,
 			__( 'BoardGameGeek API Settings', 'bgc' ),
 			null,
-			$this->slug
+			self::SETTINGS_KEY
 		);
 	}
 
@@ -124,8 +121,8 @@ class SettingsPage implements Renderable {
 				$id,
 				$name,
 				[ $this, 'render_text_input' ],
-				$this->slug,
-				$this->slug,
+				self::SETTINGS_KEY,
+				self::SETTINGS_KEY,
 				[
 					'id' => $id,
 				]

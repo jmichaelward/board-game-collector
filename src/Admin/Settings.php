@@ -1,26 +1,18 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\Admin;
 
+use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsFields;
 use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsPage;
 use WebDevStudios\OopsWP\Structure\Service;
 use WebDevStudios\OopsWP\Utility\FilePathDependent;
-use WebDevStudios\OopsWP\Utility\Registerable;
 
 /**
  * Class Settings
  *
  * @package JMichaelWard\BoardGameCollector
  */
-class Settings extends Service implements Registerable {
+class Settings extends Service implements SettingsFields {
 	use FilePathDependent;
-
-	/**
-	 * Slug for the settings page.
-	 *
-	 * @var string
-	 * @since 2019-05-01
-	 */
-	private $slug = 'bgc-settings';
 
 	/**
 	 * The settings menu class.
@@ -28,7 +20,9 @@ class Settings extends Service implements Registerable {
 	 * @var SettingsPage
 	 * @since 2019-05-01
 	 */
-	private $page = SettingsPage::class;
+	private $pages = [
+		SettingsPage::class,
+	];
 
 	/**
 	 * Settings data.
@@ -41,38 +35,75 @@ class Settings extends Service implements Registerable {
 	 * Settings page hooks.
 	 */
 	public function register_hooks() {
-		add_action( 'admin_menu', [ $this->page, 'register' ] );
-		add_action( 'admin_init', [ $this, 'register' ] );
+		add_action( 'admin_menu', [ $this, 'init_settings' ] );
+		add_action( 'admin_init', [ $this, 'setup_settings_pages' ] );
+		add_action( 'admin_menu', [ $this, 'register_settings_pages' ] );
 		add_action( 'admin_notices', [ $this, 'notify_missing_username' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
 	}
 
 	/**
-	 * Run the service.
+	 * Initialize settings pages.
+	 *
+	 * @TODO This is a re-use of the service instantiation in the main plugin class. Consider generalizing.
 	 *
 	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
-	 * @since  2019-05-01
-	 * @return void
+	 * @since  2019-09-02
 	 */
-	public function run() {
+	public function init_settings() {
 		$this->data = $this->get_data();
-		$this->page = new $this->page( $this->slug, $this->data );
 
-		$this->page->set_file_path( $this->file_path );
+		$pages = array_map(
+			function ( $page_classname ) {
+				return [
+					'namespace' => $page_classname,
+					'object'    => new $page_classname( $this->data ),
+				];
+			},
+			$this->pages
+		);
 
-		parent::run();
+		$this->pages = array_column( $pages, 'object', 'namespace' );
 	}
 
 	/**
-	 * Register the settings with WordPress.
+	 * Register this plugin's settings pages.
 	 *
 	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
-	 * @since  2019-05-01
+	 * @since  2019-09-02
 	 * @return void
 	 */
-	public function register() {
-		register_setting( $this->slug, $this->slug, [] );
+	public function register_settings_pages() {
+		$this->data = $this->get_data();
 
-		$this->page->setup();
+		foreach ( $this->pages as $page ) {
+			$page->set_file_path( $this->file_path );
+			$page->register();
+		}
+	}
+
+	/**
+	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @since  2019-09-02
+	 * @return void
+	 */
+	public function setup_settings_pages() {
+		foreach ( $this->pages as $page ) {
+			$page->setup();
+		}
+	}
+
+	/**
+	 * Enqueue the plugin assets.
+	 *
+	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @since  2019-08-30
+	 * @return void
+	 */
+	public function enqueue_assets() {
+		$js = plugins_url( 'app/assets/dist/js/index.js', $this->file_path . 'board-game-collector.php' );
+
+		wp_enqueue_script( 'bgc-settings-js', $js, [ 'wp-element' ], false, true );
 	}
 
 	/**
@@ -81,7 +112,7 @@ class Settings extends Service implements Registerable {
 	 * @return array
 	 */
 	public function get_data() {
-		return $this->data ?? get_option( $this->slug );
+		return $this->data ?? get_option( self::SETTINGS_KEY );
 	}
 
 
@@ -89,13 +120,23 @@ class Settings extends Service implements Registerable {
 	 * Render an admin notice only on the bgc_game screen if a BGG Username is not entered.
 	 */
 	public function notify_missing_username() {
-		$screen       = get_current_screen();
-		$has_username = isset( $this->data['bgg-username'] ) && ! empty( $this->data['bgg-username'] );
+		$screen = get_current_screen();
 
-		if ( 'bgc_game' !== $screen->post_type || $has_username ) {
+		if ( 'bgc_game' !== $screen->post_type || $this->has_username() ) {
 			return;
 		}
 
 		( new Notifier() )->do_warning_settings_not_configured();
+	}
+
+	/**
+	 * Check whether the username field is entered.
+	 *
+	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @since  2019-09-02
+	 * @return bool
+	 */
+	private function has_username() {
+		return isset( $this->data[ self::USERNAME_KEY ] ) && ! empty( $this->data[ self::USERNAME_KEY ] );
 	}
 }

@@ -1,22 +1,29 @@
 <?php
 namespace JMichaelWard\BoardGameCollector;
 
+use Auryn\ConfigException;
 use Auryn\Injector;
 use WebDevStudios\OopsWP\Structure\Plugin\Plugin;
-use WebDevStudios\OopsWP\Structure\Service;
 use JMichaelWard\BoardGameCollector\Content\ContentRegistrar;
 use JMichaelWard\BoardGameCollector\Api\ApiService;
 use JMichaelWard\BoardGameCollector\UI\Cli\CliService;
 use JMichaelWard\BoardGameCollector\Cron\CronService;
 use JMichaelWard\BoardGameCollector\Admin\Settings;
-use WebDevStudios\OopsWP\Utility\FilePathDependent;
 
 /**
  * Class BoardGameCollector
  *
  * @package JMichaelWard\BoardGameCollector
  */
-class BoardGameCollector extends Plugin {
+final class BoardGameCollector extends Plugin {
+	/**
+	 * The plugin bootstrap file.
+	 *
+	 * @var string
+	 * @since 2019-09-02
+	 */
+	private $plugin_file;
+
 	/**
 	 * Auryn\Injector instance.
 	 *
@@ -24,20 +31,6 @@ class BoardGameCollector extends Plugin {
 	 * @since 2019-04-12
 	 */
 	private $injector;
-
-	/**
-	 * BoardGameCollector constructor.
-	 *
-	 * @param string   $file_path Path to the root of this plugin.
-	 * @param Injector $injector  Auryn\Injector instance.
-	 *
-	 * @author Jeremy Ward <jeremy@jmichaelward.com>
-	 * @since  2019-04-12
-	 */
-	public function __construct( string $file_path, Injector $injector ) {
-		$this->file_path = $file_path;
-		$this->injector  = $injector;
-	}
 
 	/**
 	 * Array of instantiated Service objects.

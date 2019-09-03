@@ -10,6 +10,11 @@ use JMichaelWard\BoardGameCollector\Cron\CronService;
  */
 class BoardGameGeek {
 	/**
+	 * The name of the collection transient key.
+	 */
+	const COLLECTION_TRANSIENT_KEY = 'bgg_collection';
+
+	/**
 	 * Base path for the BoardGameGeek API.
 	 *
 	 * @var string

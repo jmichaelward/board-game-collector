@@ -1,4 +1,7 @@
 <?php
+/**
+ *
+ */
 namespace JMichaelWard\BoardGameCollector\Api\Routes;
 
 use JMichaelWard\BoardGameCollector\Model\Games\BGGGame;
@@ -11,7 +14,7 @@ use WebDevStudios\OopsWP\Utility\Registerable;
  *
  * @package BGW\API\Endpoints
  */
-class Games implements Registerable {
+class Games extends RestRoute implements Registerable {
 	/**
 	 * Register data fields to return in the standard Games response.
 	 */
