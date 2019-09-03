@@ -53,25 +53,43 @@ class BoardGameCollector extends Plugin {
 	];
 
 	/**
+	 * BoardGameCollector constructor.
+	 *
+	 * @param string   $file     Plugin bootstrap file.
+	 * @param Injector $injector Auryn\Injector instance.
+	 *
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
+	 * @since  2019-04-12
+	 */
+	public function __construct( string $file, Injector $injector ) {
+		$this->plugin_file = $file;
+		$this->injector    = $injector;
+	}
+
+	/**
 	 * Kick off the plugin functionality!
 	 *
 	 * @throws ConfigException If misconfigured.
 	 * @since 1.0.0
 	 */
 	public function run() {
-		parent::run();
+		$this->file_path = plugin_dir_path( $this->plugin_file );
 
 		// Check to see if it's time to run cron processes.
 		CronService::maybe_schedule_cron();
+
+		parent::run();
 	}
 
 	/**
-	 * Register framework services.
+	 * Register plugins services.
 	 *
-	 * @author Jeremy Ward <jeremy@jmichaelward.com>
+	 * This method overrides the one defined in OOPS-WP so we can use the Auryn DI container to create our objects.
+	 *
+	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
 	 * @since  2019-02-21
 	 */
-	protected function register_services() {
+	protected function init_services() {
 		$objects = array_map(
 			function ( $object_classname ) {
 				return [
@@ -82,25 +100,6 @@ class BoardGameCollector extends Plugin {
 			$this->services
 		);
 
-		$this->services = array_column( $objects, 'object', 'namespace' );
-
-		array_walk( $this->services, [ $this, 'register_service' ] );
-	}
-
-	/**
-	 * Register a single framework service.
-	 *
-	 * @param Service $service Service class.
-	 *
-	 * @author Jeremy Ward <jeremy@jmichaelward.com>
-	 * @since  2019-02-21
-	 */
-	protected function register_service( Service $service ) {
-		if ( in_array( FilePathDependent::class, class_uses( $service ), true ) ) {
-			/* @var $service \WebDevStudios\OopsWP\Utility\FilePathDependent Path-dependent service. */
-			$service->set_file_path( $this->file_path );
-		}
-
-		$service->run();
+		return array_column( $objects, 'object', 'namespace' );
 	}
 }
