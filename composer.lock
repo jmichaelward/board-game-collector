@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "236344bd97409ce7aaacb1ab87de0ee0",
+    "content-hash": "908fa7c496875346afd1626129b4e8aa",
     "packages": [
         {
             "name": "composer/installers",
@@ -161,21 +161,21 @@
             "authors": [
                 {
                     "name": "Dan Ackroyd",
+                    "role": "Developer",
                     "email": "Danack@basereality.com",
-                    "homepage": "http://www.basereality.com",
-                    "role": "Developer"
+                    "homepage": "http://www.basereality.com"
                 },
                 {
                     "name": "Levi Morrison",
+                    "role": "Developer",
                     "email": "levim@php.net",
-                    "homepage": "http://morrisonlevi.github.com/",
-                    "role": "Developer"
+                    "homepage": "http://morrisonlevi.github.com/"
                 },
                 {
                     "name": "Daniel Lowrey",
+                    "role": "Creator / Main Developer",
                     "email": "rdlowrey@gmail.com",
-                    "homepage": "https://github.com/rdlowrey",
-                    "role": "Creator / Main Developer"
+                    "homepage": "https://github.com/rdlowrey"
                 }
             ],
             "description": "Auryn is a dependency injector for bootstrapping object-oriented PHP applications.",
@@ -189,16 +189,16 @@
         },
         {
             "name": "webdevstudios/oops-wp",
-            "version": "0.2.0",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WebDevStudios/oops-wp.git",
-                "reference": "bda6b19e002748b0ff1344ad5aee5f2685f78a4f"
+                "reference": "780dce74d0afe81500eba4aee7fe0bda8445d3db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WebDevStudios/oops-wp/zipball/bda6b19e002748b0ff1344ad5aee5f2685f78a4f",
-                "reference": "bda6b19e002748b0ff1344ad5aee5f2685f78a4f",
+                "url": "https://api.github.com/repos/WebDevStudios/oops-wp/zipball/780dce74d0afe81500eba4aee7fe0bda8445d3db",
+                "reference": "780dce74d0afe81500eba4aee7fe0bda8445d3db",
                 "shasum": ""
             },
             "require": {
@@ -217,12 +217,12 @@
             "authors": [
                 {
                     "name": "Jeremy Ward",
-                    "email": "jeremy@jmichaelward.com",
+                    "email": "jeremy.ward@webdevstudios.com",
                     "role": "Senior Backend Engineer"
                 }
             ],
             "description": "A collection of interfaces and class structures to promote object-oriented programming practices in WordPress.",
-            "time": "2019-04-01T22:18:00+00:00"
+            "time": "2019-09-03T00:45:21+00:00"
         }
     ],
     "packages-dev": [
@@ -414,18 +414,18 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "email": "arne@blankerts.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "arne@blankerts.de"
                 },
                 {
                     "name": "Sebastian Heuer",
-                    "email": "sebastian@phpeople.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "sebastian@phpeople.de"
                 },
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Component for reading phar.io manifest information from a PHP Archive (PHAR)",
@@ -1784,7 +1784,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -1830,8 +1830,8 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "email": "arne@blankerts.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "arne@blankerts.de"
                 }
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
@@ -2302,13 +2302,13 @@
             "authors": [
                 {
                     "name": "James Logsdon",
-                    "email": "jlogsdon@php.net",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "jlogsdon@php.net"
                 },
                 {
                     "name": "Daniel Bachhuber",
-                    "email": "daniel@handbuilt.co",
-                    "role": "Maintainer"
+                    "role": "Maintainer",
+                    "email": "daniel@handbuilt.co"
                 }
             ],
             "description": "Console utilities for PHP",
