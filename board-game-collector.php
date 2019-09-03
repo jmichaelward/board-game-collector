@@ -24,7 +24,7 @@ if ( is_readable( $autoload ) ) {
 }
 
 try {
-	add_action( 'plugins_loaded', [ new BoardGameCollector( $plugin_path, new Injector() ), 'run' ] );
+	add_action( 'plugins_loaded', [ new BoardGameCollector( __FILE__, new Injector() ), 'run' ] );
 } catch ( Throwable $e ) {
 	require_once $plugin_path . 'src/Admin/Notifier.php';
 
