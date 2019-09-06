@@ -6,7 +6,7 @@ use WebDevStudios\OopsWP\Structure\Content\PostType;
 /**
  * Class Game
  *
- * @author Jeremy Ward <jeremy@jmichaelward.com>
+ * @author  Jeremy Ward <jeremy@jmichaelward.com>
  * @package JMichaelWard\BoardGameCollector\Content\PostType;
  */
 class Game extends PostType {
@@ -17,6 +17,22 @@ class Game extends PostType {
 	 * @since 2019-05-01
 	 */
 	protected $slug = 'bgc_game';
+
+	/**
+	 * Singular name for API routes.
+	 *
+	 * @var string
+	 * @since 2019-09-06
+	 */
+	private $single_name = 'game';
+
+	/**
+	 * Plural name for API routes.
+	 *
+	 * @var string
+	 * @since 2019-09-06
+	 */
+	private $plural_name = 'games';
 
 	/**
 	 * Labels for this post type.
@@ -48,7 +64,7 @@ class Game extends PostType {
 	 * @return array
 	 */
 	public function get_args() : array {
-		return [
+		$args = [
 			'label'                 => _x( 'Games', 'post type label', 'bgc' ),
 			'description'           => __( 'A post type for a board games collection', 'bgc' ),
 			'rewrite'               => [
@@ -63,8 +79,21 @@ class Game extends PostType {
 			'hierarchical'          => false,
 			'supports'              => [ 'title', 'editor', 'thumbnail' ],
 			'show_in_rest'          => true,
-			'rest_base'             => 'games',
+			'rest_base'             => $this->plural_name,
 			'rest_controller_class' => 'WP_REST_Posts_Controller',
 		];
+
+		if ( ! class_exists( 'WPGraphQL' ) ) {
+			return $args;
+		}
+
+		return array_merge(
+			$args,
+			[
+				'show_in_graphql'     => true,
+				'graphql_single_name' => $this->single_name,
+				'graphql_plural_name' => $this->plural_name,
+			]
+		);
 	}
 }
