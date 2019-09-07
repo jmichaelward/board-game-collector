@@ -1,9 +1,9 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\Api;
 
-use JMichaelWard\BoardGameCollector\Api\Routes\Collection;
 use JMichaelWard\BoardGameCollector\Api\Routes\Games;
 use WebDevStudios\OopsWP\Structure\Service;
+use JMichaelWard\BoardGameCollector\Api\Routes\Custom\Collection;
 
 /**
  * Class ApiService
