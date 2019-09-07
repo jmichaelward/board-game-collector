@@ -12,6 +12,8 @@
     ],
     "require": {
         "php": "^7.2",
+        "ext-simplexml": "*",
+        "ext-libxml": "*",
         "webdevstudios/oops-wp": "^0.2",
         "rdlowrey/auryn": "^1.4",
         "composer/installers": "^1.6"
