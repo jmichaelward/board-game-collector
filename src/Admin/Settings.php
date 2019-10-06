@@ -35,8 +35,8 @@ class Settings extends Service implements SettingsFields {
 	 * Settings page hooks.
 	 */
 	public function register_hooks() {
-		add_action( 'admin_menu', [ $this, 'init_settings' ] );
 		add_action( 'admin_init', [ $this, 'setup_settings_pages' ] );
+		add_action( 'admin_menu', [ $this, 'init_settings' ] );
 		add_action( 'admin_menu', [ $this, 'register_settings_pages' ] );
 		add_action( 'admin_notices', [ $this, 'notify_missing_username' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
@@ -88,7 +88,9 @@ class Settings extends Service implements SettingsFields {
 	 * @return void
 	 */
 	public function setup_settings_pages() {
-		foreach ( $this->pages as $page ) {
+		/** @var SettingsPage $page_class */
+		foreach ( $this->pages as $page_class ) {
+			$page = new $page_class( $this->get_data() );
 			$page->setup();
 		}
 	}
@@ -103,7 +105,14 @@ class Settings extends Service implements SettingsFields {
 	public function enqueue_assets() {
 		$js = plugins_url( 'app/assets/dist/js/index.js', $this->file_path . 'board-game-collector.php' );
 
-		wp_enqueue_script( 'bgc-settings-js', $js, [ 'wp-element' ], false, true );
+		wp_register_script( 'bgc-settings-js', $js, [ 'wp-element' ], false, true );
+
+		wp_localize_script( 'bgc-settings-js', 'bgcollector', [
+			'apiRoot' => get_site_url( null, '/wp-json/bgc/v1' ),
+			'nonce'   => wp_create_nonce( 'wp_rest' ),
+		] );
+
+		wp_enqueue_script( 'bgc-settings-js' );
 	}
 
 	/**
@@ -111,8 +120,8 @@ class Settings extends Service implements SettingsFields {
 	 *
 	 * @return array
 	 */
-	public function get_data() {
-		return $this->data ?? get_option( self::SETTINGS_KEY );
+	public function get_data() : array {
+		return $this->data ?? get_option( self::SETTINGS_KEY, [] ) ?: [];
 	}
 
 

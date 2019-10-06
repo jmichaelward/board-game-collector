@@ -40,13 +40,23 @@ class SettingsPage implements SettingsFields, Renderable {
 	/**
 	 * SettingsPage constructor.
 	 *
-	 * @param string $slug The slug for the SettingsPage.
+	 * @param array $data Data for the settings page.
 	 *
 	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
 	 * @since  2019-05-01
 	 */
 	public function __construct( array $data ) {
 		$this->data = $data;
+	}
+
+	private function init_fields() : array {
+		if ( empty( $this->fields ) ) {
+			$this->fields = [
+				self::USERNAME_KEY => __( 'BoardGameGeek Username', 'bgc' ),
+			];
+		}
+
+		return $this->fields;
 	}
 
 	/**
@@ -57,9 +67,7 @@ class SettingsPage implements SettingsFields, Renderable {
 	 * @return void
 	 */
 	public function register() {
-		$this->fields = [
-			self::USERNAME_KEY => __( 'BoardGameGeek Username', 'bgc' ),
-		];
+		$this->init_fields();
 
 		add_submenu_page(
 			'edit.php?post_type=bgc_game',
@@ -81,6 +89,7 @@ class SettingsPage implements SettingsFields, Renderable {
 	 * @return void
 	 */
 	public function setup() {
+		$this->init_fields();
 		$this->add_section();
 		$this->add_fields();
 	}
@@ -94,10 +103,6 @@ class SettingsPage implements SettingsFields, Renderable {
 	 */
 	public function render() {
 		include $this->file_path . 'app/views/settings.php';
-	}
-
-	public function load() {
-		$this->setup();
 	}
 
 	/**
