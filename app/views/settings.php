@@ -11,4 +11,5 @@
 	<?php settings_fields( 'bgc-settings' ); ?>
 	<?php do_settings_sections( 'bgc-settings' ); ?>
 	<?php submit_button(); ?>
+	<div id="bgc-app"></div>
 </form>
