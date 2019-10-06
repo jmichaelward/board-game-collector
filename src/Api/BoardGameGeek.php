@@ -43,9 +43,14 @@ class BoardGameGeek {
 	 */
 	private function get_games_from_api( string $username ) : array {
 		$response = wp_remote_get( "{$this->base_path}/collection?username={$username}&stats=1" );
+		$status   = wp_remote_retrieve_response_code( $response );
 
-		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+		if ( is_wp_error( $response ) || ! in_array( $status, [ 200, 202 ], true ) ) {
 			return [];
+		}
+
+		if ( 202 === $status ) {
+			return [ 'status' => 202 ];
 		}
 
 		$games = $this->convert_xml_to_json( wp_remote_retrieve_body( $response ) );
