@@ -87,13 +87,15 @@ class GamesUpdater {
 	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
 	 * @since  2019-04-13
 	 */
-	private function save_game_data( array $data ) {
+	public function save_game_data( array $data ) {
 		$game    = ( new BGGGameAdapter( $data ) )->get_game();
 		$game_id = $this->game_exists( $game );
 
-		$game_id ? $this->update_game( $game, array_pop( $game_id ) ) : $this->insert_game( $game );
+		$game_id ? $this->update_game( $game, $game_id ) : $this->insert_game( $game );
 
 		do_action( 'bgc_tick_progress_bar' );
+
+		return $game_id;
 	}
 
 	/**
@@ -101,7 +103,7 @@ class GamesUpdater {
 	 *
 	 * @param GameData $game Interface for a game object.
 	 *
-	 * @return array
+	 * @return int
 	 */
 	private function game_exists( GameData $game ) {
 		$args = array_merge(
@@ -118,7 +120,7 @@ class GamesUpdater {
 
 		wp_reset_postdata();
 
-		return $posts;
+		return array_pop( $posts );
 	}
 
 	/**
@@ -137,7 +139,7 @@ class GamesUpdater {
 		);
 
 		if ( ! $id ) {
-			return;
+			return 0;
 		}
 
 		$this->set_featured_image_on_game( $id, $game );
@@ -147,6 +149,8 @@ class GamesUpdater {
 		// We'll save all the BGG meta data for reference.
 		update_post_meta( $id, 'bgc_game_id', $game->get_bgg_id() );
 		update_post_meta( $id, 'bgc_game_meta', $game );
+
+		return $id;
 	}
 
 	/**
@@ -158,6 +162,8 @@ class GamesUpdater {
 	private function update_game( GameData $game, $game_post_id ) {
 		update_post_meta( $game_post_id, 'bgc_game_meta', $game );
 		wp_set_object_terms( $game_post_id, $game->get_statuses(), 'bgc_game_status' );
+
+		return $game_post_id;
 	}
 
 	/**
