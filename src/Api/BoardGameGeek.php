@@ -6,7 +6,7 @@ use JMichaelWard\BoardGameCollector\Cron\CronService;
 /**
  * Class BoardGameGeek
  *
- * @package JMichaelWard\BoardGameCollector\API
+ * @package JMichaelWard\BoardGameCollector\Api
  */
 class BoardGameGeek {
 	/**
