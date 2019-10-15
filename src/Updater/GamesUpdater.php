@@ -1,7 +1,7 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\Updater;
 
-use JMichaelWard\BoardGameCollector\API\BoardGameGeek;
+use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
 use JMichaelWard\BoardGameCollector\Model\Games\BGGGameAdapter;
 use JMichaelWard\BoardGameCollector\Model\Games\GameData;
 use JMichaelWard\BoardGameCollector\Admin\Settings;
