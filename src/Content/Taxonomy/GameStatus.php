@@ -10,18 +10,19 @@ use WebDevStudios\OopsWP\Structure\Content\Taxonomy;
  */
 class GameStatus extends Taxonomy {
 	/**
-	 * Setup WordPress hooks.
+	 * Taxonomy slug.
+	 *
+	 * @var string
 	 */
-	public function register_hooks() {
-		add_action( 'init', [ $this, 'register' ] );
-	}
+	protected $slug = 'bgc_game_status';
 
 	/**
-	 * Register the taxonomy.
+	 * Object types this taxonomy supports.
+	 *
+	 * @var array
 	 */
-	public function register() {
-		register_taxonomy( 'bgc_game_status', 'bgc_game', $this->get_args() );
-	}
+	protected $object_types = [ 'bgc_game' ];
+
 
 	/**
 	 * Taxonomy labels.
