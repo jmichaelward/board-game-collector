@@ -1,3 +1,4 @@
-.cache/
-vendor/
-node_modules/
+/.cache/
+/app/dist/
+/vendor/
+/node_modules/
