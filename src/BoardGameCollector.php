@@ -55,7 +55,7 @@ final class BoardGameCollector extends Plugin {
 	 * @since  2019-04-12
 	 */
 	public function __construct( string $file, Injector $injector ) {
-		$this->plugin_file = $file;
+		$this->file_path = $file;
 		$this->injector    = $injector;
 	}
 
@@ -66,8 +66,6 @@ final class BoardGameCollector extends Plugin {
 	 * @since 1.0.0
 	 */
 	public function run() {
-		$this->file_path = plugin_dir_path( $this->plugin_file );
-
 		// Check to see if it's time to run cron processes.
 		CronService::maybe_schedule_cron();
 

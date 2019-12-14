@@ -11,8 +11,10 @@ namespace JMichaelWard\BoardGameCollector\Content;
 
 use JMichaelWard\BoardGameCollector\Content\PostType as PostType;
 use JMichaelWard\BoardGameCollector\Content\Taxonomy as Taxonomy;
+use JMichaelWard\BoardGameCollector\Content\Block as Block;
 use WebDevStudios\OopsWP\Structure\Content\ContentTypeInterface;
 use WebDevStudios\OopsWP\Structure\Service;
+use WebDevStudios\OopsWP\Utility\FilePathDependent;
 
 /**
  * Class ContentRegistrar
@@ -22,6 +24,8 @@ use WebDevStudios\OopsWP\Structure\Service;
  * @package JMichaelWard\BoardGameCollector\Content
  */
 class ContentRegistrar extends Service {
+	use FilePathDependent;
+
 	/**
 	 * Plugin post types.
 	 *
@@ -43,6 +47,15 @@ class ContentRegistrar extends Service {
 	];
 
 	/**
+	 * Custom editor blocks.
+	 *
+	 * @var array
+	 */
+	private $editor_blocks = [
+		Block\GameBlock::class,
+	];
+
+	/**
 	 * Register this service's hooks with WordPress.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
@@ -51,6 +64,7 @@ class ContentRegistrar extends Service {
 	public function register_hooks() {
 		add_action( 'init', [ $this, 'register_post_types' ] );
 		add_action( 'init', [ $this, 'register_taxonomies' ] );
+		add_action( 'init', [ $this, 'register_editor_blocks' ] );
 		add_action( 'init', [ $this, 'add_featured_image_support' ] );
 	}
 
@@ -77,6 +91,23 @@ class ContentRegistrar extends Service {
 		foreach ( $this->taxonomies as $taxonomy_class ) {
 			$taxonomy = new $taxonomy_class();
 			$this->register_content_type( $taxonomy );
+		}
+	}
+
+	/**
+	 * Registers custom blocks in the editor.
+	 *
+	 * @TODO Determine a shared interface for custom editor blocks and refactor.
+	 *
+	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @since  2019-12-14
+	 * @return void
+	 */
+	public function register_editor_blocks() {
+		foreach ( $this->editor_blocks as $editor_block_class ) {
+			$editor_block = new $editor_block_class();
+			$editor_block->set_file_path( $this->file_path );
+			$editor_block->register_hooks();
 		}
 	}
 

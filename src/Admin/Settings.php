@@ -77,7 +77,7 @@ class Settings extends Service implements SettingsFields {
 		$this->data = $this->get_data();
 
 		foreach ( $this->pages as $page ) {
-			$page->set_file_path( $this->file_path );
+			$page->set_file_path( plugin_dir_path( $this->file_path ) );
 			$page->register();
 		}
 	}
@@ -102,10 +102,20 @@ class Settings extends Service implements SettingsFields {
 	 * @since  2019-08-30
 	 * @return void
 	 */
-	public function enqueue_assets() {
-		$js = plugins_url( 'app/assets/dist/js/index.js', $this->file_path . 'board-game-collector.php' );
+	public function enqueue_assets( $hook ) {
+		if ( 'bgc_game_page_bgc-settings' !== $hook ) {
+			return;
+		}
 
-		wp_register_script( 'bgc-settings-js', $js, [ 'wp-element' ], false, true );
+		$js = plugins_url( 'app/dist/index.js', $this->file_path . 'board-game-collector.php' );
+
+		wp_register_script(
+			'bgc-settings-js',
+			$js,
+			[ 'wp-element' ],
+			filemtime( $js ),
+			true
+		);
 
 		wp_localize_script( 'bgc-settings-js', 'bgcollector', [
 			'apiRoot' => get_site_url( null, '/wp-json/bgc/v1' ),

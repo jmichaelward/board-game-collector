@@ -102,7 +102,7 @@ class SettingsPage implements SettingsFields, Renderable {
 	 * @return void
 	 */
 	public function render() {
-		include $this->file_path . 'app/views/settings.php';
+		include $this->file_path . '/views/settings.php';
 	}
 
 	/**
