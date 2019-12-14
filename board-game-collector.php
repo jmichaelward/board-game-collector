@@ -31,12 +31,4 @@ try {
 	( new Notifier() )->do_error_notice(
 		'Could not locate BoardGameCollector class. Did you remember to run composer install?'
 	);
-
-	// Deactivate the plugin.
-	add_action(
-		'admin_init',
-		function () {
-			deactivate_plugins( __FILE__ );
-		}
-	);
 }
