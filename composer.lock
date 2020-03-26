@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "54d54c1d6879a47beace7fb7b4269ced",
+    "content-hash": "0340dc9430a96ae317ec06f426deacca",
     "packages": [
         {
             "name": "composer/installers",
@@ -189,16 +189,16 @@
         },
         {
             "name": "webdevstudios/oops-wp",
-            "version": "0.2.1",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WebDevStudios/oops-wp.git",
-                "reference": "780dce74d0afe81500eba4aee7fe0bda8445d3db"
+                "reference": "0d94f018f385dfadaeacad88ea859e6b9096173e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WebDevStudios/oops-wp/zipball/780dce74d0afe81500eba4aee7fe0bda8445d3db",
-                "reference": "780dce74d0afe81500eba4aee7fe0bda8445d3db",
+                "url": "https://api.github.com/repos/WebDevStudios/oops-wp/zipball/0d94f018f385dfadaeacad88ea859e6b9096173e",
+                "reference": "0d94f018f385dfadaeacad88ea859e6b9096173e",
                 "shasum": ""
             },
             "require": {
@@ -222,7 +222,7 @@
                 }
             ],
             "description": "A collection of interfaces and class structures to promote object-oriented programming practices in WordPress.",
-            "time": "2019-09-03T00:45:21+00:00"
+            "time": "2020-01-31T22:26:07+00:00"
         }
     ],
     "packages-dev": [
@@ -1072,7 +1072,7 @@
                 "array_column",
                 "column"
             ],
-            "abandoned": true,
+            "abandoned": "it-for-free/array_column",
             "time": "2015-03-20T22:07:39+00:00"
         },
         {
