@@ -16,7 +16,7 @@ const Button = () => (
 const triggerUpdate = () => {
 	axios.post( bgcollector.apiRoot + '/collection', {
 			nonce: bgcollector.nonce,
-			username: document.getElementById('bgc-username').value,
+			username: document.getElementById('bgg-username').value,
 		},
 		{
 			headers: {
@@ -49,7 +49,7 @@ const triggerUpdate = () => {
 // what
 
 const settings = () => {
-	const username = document.getElementById('bgc-username');
+	const username = document.getElementById('bgg-username');
 
 	if (!username.value) {
 		return;

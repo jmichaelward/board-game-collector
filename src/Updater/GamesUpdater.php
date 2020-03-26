@@ -39,7 +39,7 @@ class GamesUpdater {
 	 * @param BoardGameGeek $api      Instance of our BoardGameGeek API model.
 	 * @param Settings      $settings Plugin settings.
 	 */
-	public function __construct( BoardGameGeek $api = null, Settings $settings = null ) {
+	public function __construct( BoardGameGeek $api, Settings $settings ) {
 		$this->api      = $api;
 		$this->settings = $settings;
 	}

@@ -9,6 +9,7 @@
 
 namespace JMichaelWard\BoardGameCollector\Api\Routes\Custom;
 
+use JMichaelWard\BoardGameCollector\Admin\Settings;
 use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsFields;
 use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
 use JMichaelWard\BoardGameCollector\Api\Routes\CustomRestRoute;
@@ -64,6 +65,8 @@ class Collection extends CustomRestRoute {
 	 * @return string
 	 */
 	private function get_saved_username() {
+		$options = get_option( SettingsFields::SETTINGS_KEY );
+
 		return get_option( SettingsFields::SETTINGS_KEY )[ SettingsFields::USERNAME_KEY ] ?? '';
 	}
 
@@ -88,9 +91,8 @@ class Collection extends CustomRestRoute {
 		$unprocessed = get_transient( BoardGameGeek::COLLECTION_TRANSIENT_KEY );
 
 		if ( ! $unprocessed ) {
-			$api = new BoardGameGeek();
-
-			$collection = $api->get_collection( get_option( SettingsFields::SETTINGS_KEY )[ SettingsFields::USERNAME_KEY ] );
+			$api        = new BoardGameGeek();
+			$collection = $api->get_collection( $this->get_saved_username() );
 
 			if ( isset( $collection['status'] ) && 202 === $collection['status'] ) {
 				return new \WP_REST_Response( [ 'status' => 202 ], 202 );

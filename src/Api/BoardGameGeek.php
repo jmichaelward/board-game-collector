@@ -29,7 +29,9 @@ class BoardGameGeek {
 	 * @return array|\WP_Error
 	 */
 	public function get_collection( string $username ) : array {
-		return get_transient( 'bgg_collection' ) ?: $this->get_games_from_api( $username );
+		$cached = get_transient( 'bgg_collection' );
+
+		return $cached ? $cached : $this->get_games_from_api( $username );
 	}
 
 	/**

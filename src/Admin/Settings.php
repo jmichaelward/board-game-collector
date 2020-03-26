@@ -131,7 +131,11 @@ class Settings extends Service implements SettingsFields {
 	 * @return array
 	 */
 	public function get_data() : array {
-		return $this->data ?? get_option( self::SETTINGS_KEY, [] ) ?: [];
+		if ( ! $this->data ) {
+			$this->data = get_option( self::SETTINGS_KEY, [] );
+		}
+
+		return $this->data;
 	}
 
 

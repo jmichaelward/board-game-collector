@@ -25,5 +25,5 @@ interface SettingsFields {
 	/**
 	 * The username field.
 	 */
-	const USERNAME_KEY = 'bgc-username';
+	const USERNAME_KEY = 'bgg-username';
 }
