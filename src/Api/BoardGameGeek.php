@@ -51,10 +51,6 @@ class BoardGameGeek {
 			return [];
 		}
 
-		if ( 202 === $status ) {
-			return [ 'status' => 202 ];
-		}
-
 		$games = $this->convert_xml_to_json( wp_remote_retrieve_body( $response ) );
 
 		if ( ! isset( $games['item'] ) ) {
