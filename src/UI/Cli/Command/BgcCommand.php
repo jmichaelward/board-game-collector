@@ -44,7 +44,7 @@ class BgcCommand {
 	 *
 	 * @param GamesUpdater $updater The GamesUpdater instance.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
 	 */
 	public function __construct( GamesUpdater $updater ) {

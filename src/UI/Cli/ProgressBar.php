@@ -2,7 +2,7 @@
 /**
  * Registers a ProgressBar for use by WP-CLI.
  *
- * @author  Jeremy Ward <jeremy.ward@webdevstudios.com>
+ * @author  Jeremy Ward <jeremy@jmichaelward.com>
  * @since   2019-05-01
  * @package JMichaelWard\BoardGameCollector\UI\Cli
  */
@@ -16,7 +16,7 @@ use function WP_CLI\Utils\make_progress_bar;
 /**
  * Class ProgressBar
  *
- * @author  Jeremy Ward <jeremy.ward@webdevstudios.com>
+ * @author  Jeremy Ward <jeremy@jmichaelward.com>
  * @since   2019-05-01
  * @package JMichaelWard\BoardGameCollector\UI\Cli
  */
@@ -40,7 +40,7 @@ class ProgressBar extends Service {
 	/**
 	 * Register the hooks for the Progress Bar.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-05-01
 	 */
 	public function register_hooks() {
@@ -54,7 +54,7 @@ class ProgressBar extends Service {
 	 *
 	 * @param int $count Number of items upon which to indicate progress.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-05-01
 	 * @return void
 	 */
@@ -66,7 +66,7 @@ class ProgressBar extends Service {
 	/**
 	 * Increment the progress bar.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-05-01
 	 * @return void
 	 */
@@ -77,7 +77,7 @@ class ProgressBar extends Service {
 	/**
 	 * Finish and reset the progress bar.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-05-01
 	 * @return void
 	 */

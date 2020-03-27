@@ -2,7 +2,7 @@
 /**
  *
  *
- * @author  Jeremy Ward <jeremy.ward@webdevstudios.com>
+ * @author  Jeremy Ward <jeremy@jmichaelward.com>
  * @since   2019-09-02
  * @package JMichaelWard\BoardGameCollector\Api\Routes
  */
@@ -12,7 +12,7 @@ namespace JMichaelWard\BoardGameCollector\Api\Routes;
 /**
  * Class CustomRestRoute
  *
- * @author  Jeremy Ward <jeremy.ward@webdevstudios.com>
+ * @author  Jeremy Ward <jeremy@jmichaelward.com>
  * @since   2019-09-02
  * @package JMichaelWard\BoardGameCollector\Api\Routes
  */

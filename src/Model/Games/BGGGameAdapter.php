@@ -80,7 +80,7 @@ class BGGGameAdapter {
 	 *
 	 * @param array $data Data from the BoardGameGeek API.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
 	 */
 	public function __construct( array $data ) {
@@ -91,7 +91,7 @@ class BGGGameAdapter {
 	/**
 	 * Get a BGGGame object from the raw data.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
 	 * @return BGGGame
 	 */
@@ -110,7 +110,7 @@ class BGGGameAdapter {
 	/**
 	 * Hydrate this object with data.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
 	 * @return void
 	 */
@@ -131,7 +131,7 @@ class BGGGameAdapter {
 	 *
 	 * @param string $property The object property.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
 	 * @return BGGGameAdapter
 	 */
@@ -145,7 +145,7 @@ class BGGGameAdapter {
 	/**
 	 * Parse the BGG ID.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
 	 * @return int
 	 */
@@ -156,7 +156,7 @@ class BGGGameAdapter {
 	/**
 	 * Parse the game name.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
 	 * @return string
 	 */
@@ -167,7 +167,7 @@ class BGGGameAdapter {
 	/**
 	 * Parse the game's publication year.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
 	 * @return string
 	 */
@@ -178,7 +178,7 @@ class BGGGameAdapter {
 	/**
 	 * Parse the game's play attributes.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
 	 * @return array
 	 */
@@ -189,7 +189,7 @@ class BGGGameAdapter {
 	/**
 	 * Parse the game's BGG rankings.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
 	 * @return array
 	 */
@@ -206,7 +206,7 @@ class BGGGameAdapter {
 	/**
 	 * Parse the player's statuses for the game.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
 	 * @return array
 	 */
@@ -217,7 +217,7 @@ class BGGGameAdapter {
 	/**
 	 * Parse the game's image URL.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
 	 * @return string
 	 */

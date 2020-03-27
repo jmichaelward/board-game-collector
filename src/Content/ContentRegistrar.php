@@ -99,7 +99,7 @@ class ContentRegistrar extends Service {
 	 *
 	 * @TODO Determine a shared interface for custom editor blocks and refactor.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-12-14
 	 * @return void
 	 */
@@ -114,7 +114,7 @@ class ContentRegistrar extends Service {
 	/**
 	 * Add featured-image support.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-12
 	 */
 	public function add_featured_image_support() {

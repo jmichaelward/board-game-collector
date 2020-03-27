@@ -1,4 +1,10 @@
 <?php
+/**
+ * Post type to represent a Game in WordPress.
+ *
+ * @package JMichaelWard\BoardGameCollector\Content\PostType
+ */
+
 namespace JMichaelWard\BoardGameCollector\Content\PostType;
 
 use WebDevStudios\OopsWP\Structure\Content\PostType;

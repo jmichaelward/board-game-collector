@@ -1,4 +1,10 @@
 <?php
+/**
+ * Interface for transformed data from BoardGameGeek.
+ *
+ * @package JMichaelWard\BoardGameCollector\Model\Games
+ */
+
 namespace JMichaelWard\BoardGameCollector\Model\Games;
 
 /**
@@ -57,9 +63,9 @@ interface GameData {
 	public function get_statuses();
 
 	/**
-	 * Get the unique identifers for the game for use by WP_Query.
+	 * Get the unique identifiers for the game for use by WP_Query.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
 	 * @return mixed
 	 */

@@ -1,4 +1,13 @@
 <?php
+/**
+ * This object is responsible for processing the Games data and creating posts in WordPress.
+ *
+ * It depends on the BoardGameGeek API to retrieve data, and the WordPress settings to know which
+ * data to act upon.
+ *
+ * @package JMichaelWard\BoardGameCollector\Updater
+ */
+
 namespace JMichaelWard\BoardGameCollector\Updater;
 
 use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
@@ -13,6 +22,13 @@ use JMichaelWard\BoardGameCollector\Admin\Settings;
  */
 class GamesUpdater {
 	/**
+	 * BoardGameGeek API.
+	 *
+	 * @var BoardGameGeek
+	 */
+	private $api;
+
+	/**
 	 * Plugin settings.
 	 *
 	 * @var Settings
@@ -20,18 +36,18 @@ class GamesUpdater {
 	private $settings;
 
 	/**
-	 * BoardGameGeek API
-	 *
-	 * @var BoardGameGeek
-	 */
-	private $api;
-
-	/**
 	 * Username saved in plugin settings.
 	 *
 	 * @var string
 	 */
 	private $username;
+
+	/**
+	 * The retrieved data.
+	 *
+	 * @var array
+	 */
+	private $data;
 
 	/**
 	 * GamesUpdater constructor.
@@ -48,7 +64,7 @@ class GamesUpdater {
 	 * Hydrate the object with data.
 	 */
 	private function hydrate() {
-		$data           = $this->settings->get_data();
+		$this->data     = $this->settings->get_data();
 		$this->username = sanitize_title( $data['bgg-username'] ?? '' );
 	}
 
@@ -84,10 +100,12 @@ class GamesUpdater {
 	 *
 	 * @param array $data Array data for a given game.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
+	 * @return int
 	 */
 	public function save_game_data( array $data ) {
+		// @TODO Inject the BGGGameAdapter into this object.
 		$game    = ( new BGGGameAdapter( $data ) )->get_game();
 		$game_id = $this->game_exists( $game );
 
@@ -127,6 +145,8 @@ class GamesUpdater {
 	 * Insert a new Games post into WordPress.
 	 *
 	 * @param GameData $game Interface for a game object.
+	 *
+	 * @return int
 	 */
 	private function insert_game( GameData $game ) {
 		$id = wp_insert_post(
@@ -158,6 +178,8 @@ class GamesUpdater {
 	 *
 	 * @param GameData $game         Interface for a game object.
 	 * @param int      $game_post_id ID of the bgc_game post.
+	 *
+	 * @return int
 	 */
 	private function update_game( GameData $game, $game_post_id ) {
 		update_post_meta( $game_post_id, 'bgc_game_meta', $game );
@@ -171,7 +193,7 @@ class GamesUpdater {
 	 *
 	 * @param string $image_url The remote URL of the image.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-05-01
 	 * @return int
 	 */
@@ -199,6 +221,8 @@ class GamesUpdater {
 
 	/**
 	 * Sideloads the game's image into the WordPress media library.
+	 *
+	 * @TODO Extract this logic into a separate class.
 	 *
 	 * @param int    $id        Post ID to which to attach the image.
 	 * @param string $image_url URL of the image asset.
@@ -253,11 +277,12 @@ class GamesUpdater {
 	 * @param int      $game_id ID of the game in WordPress.
 	 * @param GameData $game    The game data value object.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-05-01
 	 * @return void
 	 */
 	private function set_featured_image_on_game( $game_id, GameData $game ) {
+		// @TODO Update personal coding standards to remove this sniff.
 		$image_id = $this->get_image_id_from_url( $game->get_image_url() ) ?: $this->load_image( $game_id, $game->get_image_url(), $game->get_name() );
 
 		if ( ! $image_id ) {

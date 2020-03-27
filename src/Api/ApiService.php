@@ -1,4 +1,10 @@
 <?php
+/**
+ * Service to register custom API endpoints with WordPress.
+ *
+ * @package JMichaelWard\BoardGameCollector\Api
+ */
+
 namespace JMichaelWard\BoardGameCollector\Api;
 
 use JMichaelWard\BoardGameCollector\Api\Routes\Games;
@@ -31,7 +37,7 @@ class ApiService extends Service {
 	/**
 	 * Extend default WordPress API results with extra fields.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-05-01
 	 * @return void
 	 */

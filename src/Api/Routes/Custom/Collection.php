@@ -2,7 +2,7 @@
 /**
  *
  *
- * @author  Jeremy Ward <jeremy.ward@webdevstudios.com>
+ * @author  Jeremy Ward <jeremy@jmichaelward.com>
  * @since   2019-09-02
  * @package JMichaelWard\BoardGameCollector\Api\Routes
  */
@@ -20,7 +20,7 @@ use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 /**
  * Class Collection
  *
- * @author  Jeremy Ward <jeremy.ward@webdevstudios.com>
+ * @author  Jeremy Ward <jeremy@jmichaelward.com>
  * @since   2019-09-02
  * @package JMichaelWard\BoardGameCollector\Api\Routes
  */
@@ -36,7 +36,7 @@ class Collection extends CustomRestRoute {
 	/**
 	 * Register API routes with WordPress.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-09-01
 	 */
 	public function register_routes() {
@@ -60,7 +60,7 @@ class Collection extends CustomRestRoute {
 	}
 
 	/**
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-10-04
 	 * @return string
 	 */
@@ -73,7 +73,7 @@ class Collection extends CustomRestRoute {
 	/**
 	 * @param $username
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-10-04
 	 * @return bool
 	 */
@@ -84,7 +84,7 @@ class Collection extends CustomRestRoute {
 	/**
 	 * Connect to the BoardGameGeek API and update the collection of Games within WordPress.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-09-01
 	 */
 	public function update_items() {
@@ -109,7 +109,7 @@ class Collection extends CustomRestRoute {
 	/**
 	 * @param $games
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-10-04
 	 */
 	private function process_remaining_games( $games ) {
@@ -132,7 +132,7 @@ class Collection extends CustomRestRoute {
 	/**
 	 * @param array $games
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-10-04
 	 * @return array
 	 */

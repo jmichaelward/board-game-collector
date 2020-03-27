@@ -1,8 +1,8 @@
 <?php
 /**
+ * Registers a custom settings page with WordPress.
  *
- *
- * @author  Jeremy Ward <jeremy.ward@webdevstudios.com>
+ * @author  Jeremy Ward <jeremy@jmichaelward.com>
  * @since   2019-05-01
  * @package JMichaelWard\BoardGameCollector\Admin\Settings
  */
@@ -15,7 +15,7 @@ use WebDevStudios\OopsWP\Utility\Renderable;
 /**
  * Class Menu
  *
- * @author  Jeremy Ward <jeremy.ward@webdevstudios.com>
+ * @author  Jeremy Ward <jeremy@jmichaelward.com>
  * @since   2019-05-01
  * @package JMichaelWard\BoardGameCollector\Admin\Settings
  */
@@ -42,13 +42,18 @@ class SettingsPage implements SettingsFields, Renderable {
 	 *
 	 * @param array $data Data for the settings page.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-05-01
 	 */
 	public function __construct( array $data ) {
 		$this->data = $data;
 	}
 
+	/**
+	 * Initialize the options fields in the Settings page.
+	 *
+	 * @return array
+	 */
 	private function init_fields() : array {
 		if ( empty( $this->fields ) ) {
 			$this->fields = [
@@ -62,7 +67,7 @@ class SettingsPage implements SettingsFields, Renderable {
 	/**
 	 * Register the settings page.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-05-01
 	 * @return void
 	 */
@@ -84,7 +89,7 @@ class SettingsPage implements SettingsFields, Renderable {
 	/**
 	 * Setup the settings page sections and fields.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-05-01
 	 * @return void
 	 */
@@ -97,7 +102,7 @@ class SettingsPage implements SettingsFields, Renderable {
 	/**
 	 * Render the settings page.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-05-01
 	 * @return void
 	 */
@@ -142,7 +147,7 @@ class SettingsPage implements SettingsFields, Renderable {
 	 */
 	public function render_text_input( $args ) {
 		echo '<input type="text" id="' . esc_attr( $args['id'] )
-		     . '" name="bgc-settings[' . esc_attr( $args['id'] ) . ']" value="'
-		     . esc_attr( $this->data[ $args['id'] ] ) . '" />';
+			. '" name="bgc-settings[' . esc_attr( $args['id'] ) . ']" value="'
+			. esc_attr( $this->data[ $args['id'] ] ) . '" />';
 	}
 }

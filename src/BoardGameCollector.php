@@ -56,20 +56,19 @@ final class BoardGameCollector extends Plugin {
 	 */
 	public function __construct( string $file, Injector $injector ) {
 		$this->file_path = $file;
-		$this->injector    = $injector;
+		$this->injector  = $injector;
 	}
 
 	/**
 	 * Kick off the plugin functionality!
 	 *
-	 * @throws ConfigException If misconfigured.
 	 * @since 1.0.0
 	 */
 	public function run() {
+		parent::run();
+
 		// Check to see if it's time to run cron processes.
 		CronService::maybe_schedule_cron();
-
-		parent::run();
 	}
 
 	/**
@@ -77,7 +76,7 @@ final class BoardGameCollector extends Plugin {
 	 *
 	 * This method overrides the one defined in OOPS-WP so we can use the Auryn DI container to create our objects.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-02-21
 	 */
 	protected function init_services() {

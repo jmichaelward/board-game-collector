@@ -1,4 +1,12 @@
 <?php
+/**
+ * Model for the BoardGameGeek API.
+ *
+ * @TODO Consider whether this is the right location for this class.
+ *
+ * @package JMichaelWard\BoardGameCollector\Api
+ */
+
 namespace JMichaelWard\BoardGameCollector\Api;
 
 use JMichaelWard\BoardGameCollector\Cron\CronService;
@@ -39,7 +47,7 @@ class BoardGameGeek {
 	 *
 	 * @param string $username The username to query against.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-12
 	 * @return array
 	 */

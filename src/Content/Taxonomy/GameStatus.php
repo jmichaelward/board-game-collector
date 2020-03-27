@@ -1,4 +1,10 @@
 <?php
+/**
+ * Taxonomy for the game's ownership status.
+ *
+ * @package JMichaelWard\BoardGameCollector\Content\Taxonomy
+ */
+
 namespace JMichaelWard\BoardGameCollector\Content\Taxonomy;
 
 use WebDevStudios\OopsWP\Structure\Content\Taxonomy;

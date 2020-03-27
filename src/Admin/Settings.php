@@ -47,7 +47,7 @@ class Settings extends Service implements SettingsFields {
 	 *
 	 * @TODO This is a re-use of the service instantiation in the main plugin class. Consider generalizing.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-09-02
 	 */
 	public function init_settings() {
@@ -69,7 +69,7 @@ class Settings extends Service implements SettingsFields {
 	/**
 	 * Register this plugin's settings pages.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-09-02
 	 * @return void
 	 */
@@ -83,7 +83,7 @@ class Settings extends Service implements SettingsFields {
 	}
 
 	/**
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-09-02
 	 * @return void
 	 */
@@ -98,7 +98,7 @@ class Settings extends Service implements SettingsFields {
 	/**
 	 * Enqueue the plugin assets.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-08-30
 	 * @return void
 	 */
@@ -155,7 +155,7 @@ class Settings extends Service implements SettingsFields {
 	/**
 	 * Check whether the username field is entered.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-09-02
 	 * @return bool
 	 */

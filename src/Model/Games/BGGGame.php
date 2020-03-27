@@ -1,4 +1,10 @@
 <?php
+/**
+ * Data model for BoardGameGeek game data.
+ *
+ * @package JMichaelWard\BoardGameCollector\Model\Games
+ */
+
 namespace JMichaelWard\BoardGameCollector\Model\Games;
 
 /**
@@ -70,7 +76,7 @@ class BGGGame implements GameData {
 	 * @param array  $rankings        The game's rankings on BoardGameGeek.
 	 * @param array  $status          The player's ownership status for the game.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
 	 */
 	public function __construct(
@@ -94,7 +100,7 @@ class BGGGame implements GameData {
 	/**
 	 * Get the object data as an array.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-05-01
 	 * @return array
 	 */
@@ -184,7 +190,7 @@ class BGGGame implements GameData {
 	/**
 	 * Data that uniquely identifies this game in WordPress.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
 	 * @return array
 	 */

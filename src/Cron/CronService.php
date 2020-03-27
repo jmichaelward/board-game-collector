@@ -1,4 +1,12 @@
 <?php
+/**
+ * Cron service to update games periodically.
+ *
+ * @TODO Set this as an option under Settings.
+ *
+ * @package JMichaelWard\BoardGameCollector\Cron
+ */
+
 namespace JMichaelWard\BoardGameCollector\Cron;
 
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;

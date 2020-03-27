@@ -1,4 +1,10 @@
 <?php
+/**
+ * Class to handle admin notifications.
+ *
+ * @package JMichaelWard\BoardGameCollector\Admin
+ */
+
 namespace JMichaelWard\BoardGameCollector\Admin;
 
 /**
@@ -8,7 +14,11 @@ namespace JMichaelWard\BoardGameCollector\Admin;
  */
 class Notifier {
 	/**
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * Create an error notice.
+	 *
+	 * @param string $message The text of the notice to display.
+	 *
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-07-20
 	 * @return void
 	 */
@@ -28,11 +38,11 @@ class Notifier {
 	 *
 	 * @param string $message The error message to display.
 	 *
-	 * @author Jeremy Ward <jeremy.ward@webdevstudios.com>
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-07-20
 	 * @return void
 	 */
-	public function display_error_notice( $message ) { ?>
+	public function display_error_notice( string $message ) { ?>
 		<div class="notice notice-error is-dismissible">
 			<p><?php echo esc_html( $message ); ?></p>
 		</div>
