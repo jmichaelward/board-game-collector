@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0340dc9430a96ae317ec06f426deacca",
+    "content-hash": "c221177488cd646dae1fa3e2dea11f6a",
     "packages": [
         {
             "name": "composer/installers",
@@ -161,21 +161,21 @@
             "authors": [
                 {
                     "name": "Dan Ackroyd",
-                    "role": "Developer",
                     "email": "Danack@basereality.com",
-                    "homepage": "http://www.basereality.com"
+                    "homepage": "http://www.basereality.com",
+                    "role": "Developer"
                 },
                 {
                     "name": "Levi Morrison",
-                    "role": "Developer",
                     "email": "levim@php.net",
-                    "homepage": "http://morrisonlevi.github.com/"
+                    "homepage": "http://morrisonlevi.github.com/",
+                    "role": "Developer"
                 },
                 {
                     "name": "Daniel Lowrey",
-                    "role": "Creator / Main Developer",
                     "email": "rdlowrey@gmail.com",
-                    "homepage": "https://github.com/rdlowrey"
+                    "homepage": "https://github.com/rdlowrey",
+                    "role": "Creator / Main Developer"
                 }
             ],
             "description": "Auryn is a dependency injector for bootstrapping object-oriented PHP applications.",
@@ -414,18 +414,18 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "role": "Developer",
-                    "email": "arne@blankerts.de"
+                    "email": "arne@blankerts.de",
+                    "role": "Developer"
                 },
                 {
                     "name": "Sebastian Heuer",
-                    "role": "Developer",
-                    "email": "sebastian@phpeople.de"
+                    "email": "sebastian@phpeople.de",
+                    "role": "Developer"
                 },
                 {
                     "name": "Sebastian Bergmann",
-                    "role": "Developer",
-                    "email": "sebastian@phpunit.de"
+                    "email": "sebastian@phpunit.de",
+                    "role": "Developer"
                 }
             ],
             "description": "Component for reading phar.io manifest information from a PHP Archive (PHAR)",
@@ -1830,8 +1830,8 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "role": "Developer",
-                    "email": "arne@blankerts.de"
+                    "email": "arne@blankerts.de",
+                    "role": "Developer"
                 }
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
@@ -2302,13 +2302,13 @@
             "authors": [
                 {
                     "name": "James Logsdon",
-                    "role": "Developer",
-                    "email": "jlogsdon@php.net"
+                    "email": "jlogsdon@php.net",
+                    "role": "Developer"
                 },
                 {
                     "name": "Daniel Bachhuber",
-                    "role": "Maintainer",
-                    "email": "daniel@handbuilt.co"
+                    "email": "daniel@handbuilt.co",
+                    "role": "Maintainer"
                 }
             ],
             "description": "Console utilities for PHP",
@@ -2390,8 +2390,10 @@
     "prefer-lowest": false,
     "platform": {
         "php": "^7.2",
-        "ext-simplexml": "*",
-        "ext-libxml": "*"
+        "ext-simplexml": "^7.4",
+        "ext-libxml": "^7.4",
+        "ext-json": "^7.4"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }
