@@ -54,3 +54,5 @@ composer install
 
 This will achieve the same effect as above, except the package dependencies
 will be installed inside of your plugin instead of the root of the project.
+
+This plugin is available on [Packagist](https://packagist.org/packages/jmichaelward/board-game-collector).
