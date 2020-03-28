@@ -11,6 +11,7 @@ namespace JMichaelWard\BoardGameCollector\UI\Cli\Command;
 
 use JMichaelWard\BoardGameCollector\UI\Cli\ProgressBar;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
+use WP_CLI\ExitException;
 
 /**
  * Command entrypoint for the Board Game Collector plugin.
@@ -42,23 +43,30 @@ class BgcCommand {
 	/**
 	 * BgcCommand constructor.
 	 *
-	 * @param GamesUpdater $updater The GamesUpdater instance.
+	 * @param GamesUpdater $updater      The GamesUpdater instance.
+	 * @param ProgressBar  $progress_bar ProgressBar instance.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
 	 */
-	public function __construct( GamesUpdater $updater ) {
-		$this->updater = $updater;
+	public function __construct( GamesUpdater $updater, ProgressBar $progress_bar ) {
+		$this->updater      = $updater;
+		$this->progress_bar = $progress_bar;
 	}
 
 	/**
 	 * Update the Games post type with data from BoardGameGeek.
+	 *
+	 * @throws ExitException If process fails.
 	 */
 	public function update() {
-		$this->progress_bar = new ProgressBar();
 		$this->progress_bar->run();
 
-		$this->updater->update_collection();
+		try {
+			$this->updater->update_collection();
+		} catch ( \InvalidArgumentException $e ) {
+			\WP_CLI::error( $e->getMessage() );
+		}
 	}
 }
 
