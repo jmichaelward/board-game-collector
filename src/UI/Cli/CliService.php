@@ -3,6 +3,7 @@ namespace JMichaelWard\BoardGameCollector\UI\Cli;
 
 use Auryn\Injector;
 use JMichaelWard\BoardGameCollector\UI\Cli\Command\BgcCommand;
+use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 use WebDevStudios\OopsWP\Structure\Service;
 
 /**
@@ -20,25 +21,46 @@ class CliService extends Service {
 	private $injector;
 
 	/**
+	 * GamesUpdater instance.
+	 *
+	 * @var $updater
+	 */
+	private $updater;
+
+	/**
 	 * CliService constructor.
 	 *
-	 * @param Injector $injector Auryn\Injector instance.
+	 * @param Injector     $injector Auryn\Injector instance.
+	 * @param GamesUpdater $updater  GamesUpdater instance.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
 	 */
-	public function __construct( Injector $injector ) {
+	public function __construct( Injector $injector, GamesUpdater $updater ) {
 		$this->injector = $injector;
+		$this->updater  = $updater;
 	}
 
 	/**
-	 * Set of Cli commands registered to this plugin.
+	 * Set of Cli commands registered to this plugin.s
 	 *
 	 * @var array
 	 */
 	private $commands = [
 		'bgc' => BgcCommand::class,
 	];
+
+	/**
+	 * Run the CliService.
+	 *
+	 * It's necessary to share the GamesUpdater here so that it can be accessed by the CLI commands.
+	 *
+	 * @throws \Auryn\ConfigException If Auyrn is misconfigured.
+	 */
+	public function run() {
+		parent::run();
+		$this->injector->share( $this->updater );
+	}
 
 	/**
 	 * Initialize this service with WordPress.
