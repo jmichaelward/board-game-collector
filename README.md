@@ -36,3 +36,8 @@ again with a refreshed sense of purpose, and am hoping to make it
 better and more usable for myself, and hopefully for you, too! You can
 keep an eye on the (issues)[https://github.com/jmichaelward/board-game-collector/issues]
 page here on GitHub for a sense of upcoming features.
+
+### Contributing
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for information about contributing
+to this plugin, including steps for setting up your development environment,
+opening issues, etc.
