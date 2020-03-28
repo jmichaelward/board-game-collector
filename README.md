@@ -4,19 +4,10 @@ BoardGameGeek API. It retrieves information about a user's game collection,
 creates or updates a related custom post type in the database, saves its
 metadata, and attaches the box art as a featured image.
 
-### Installation
-There are a few options available to install this plugin, both of which
-involve using [Composer](https://getcomposer.org). You could:
-
-- Clone this repository to your wp-content directory, then run `composer install`
-    from the plugin's directory. Or:
-- Call `composer require jmichaelward/board-game-collector` from a project
-    that is installing multiple plugins from Composer.
-
-In either case, the plugin relies on the existence of the Composer
-class autoloader to instantiate its classes at runtime, so you'll
-need it one way or another until I either decide to submit this to
-the WordPress repository (thereby shipping an autoloader with it).
+### Contributing
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for information about contributing
+to this plugin, including steps for setting up your development environment,
+opening issues, etc.
 
 ### Usage
 Once activated, the plugin registers a custom post type, taxonomy, and
@@ -36,8 +27,3 @@ again with a refreshed sense of purpose, and am hoping to make it
 better and more usable for myself, and hopefully for you, too! You can
 keep an eye on the (issues)[https://github.com/jmichaelward/board-game-collector/issues]
 page here on GitHub for a sense of upcoming features.
-
-### Contributing
-Please see [CONTRIBUTING.md](CONTRIBUTING.md) for information about contributing
-to this plugin, including steps for setting up your development environment,
-opening issues, etc.
