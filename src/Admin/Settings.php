@@ -3,6 +3,7 @@ namespace JMichaelWard\BoardGameCollector\Admin;
 
 use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsFields;
 use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsPage;
+use JMichaelWard\BoardGameCollector\Model\Hydratable;
 use WebDevStudios\OopsWP\Structure\Service;
 use WebDevStudios\OopsWP\Utility\FilePathDependent;
 
@@ -11,7 +12,7 @@ use WebDevStudios\OopsWP\Utility\FilePathDependent;
  *
  * @package JMichaelWard\BoardGameCollector
  */
-class Settings extends Service implements SettingsFields {
+class Settings extends Service implements Hydratable, SettingsFields {
 	use FilePathDependent;
 
 	/**
@@ -40,6 +41,13 @@ class Settings extends Service implements SettingsFields {
 		add_action( 'admin_menu', [ $this, 'register_settings_pages' ] );
 		add_action( 'admin_notices', [ $this, 'notify_missing_username' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
+	}
+
+	/**
+	 * Hydrate the Settings object with its saved values.
+	 */
+	public function hydrate() {
+		$this->data = get_option( self::SETTINGS_KEY, [] );
 	}
 
 	/**
