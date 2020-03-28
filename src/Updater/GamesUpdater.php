@@ -36,20 +36,6 @@ class GamesUpdater {
 	private $settings;
 
 	/**
-	 * Username saved in plugin settings.
-	 *
-	 * @var string
-	 */
-	private $username;
-
-	/**
-	 * The retrieved data.
-	 *
-	 * @var array
-	 */
-	private $data;
-
-	/**
 	 * GamesUpdater constructor.
 	 *
 	 * @param BoardGameGeek $api      Instance of our BoardGameGeek API model.
@@ -58,14 +44,6 @@ class GamesUpdater {
 	public function __construct( BoardGameGeek $api, Settings $settings ) {
 		$this->api      = $api;
 		$this->settings = $settings;
-	}
-
-	/**
-	 * Hydrate the object with data.
-	 */
-	private function hydrate() {
-		$this->data     = $this->settings->get_data();
-		$this->username = sanitize_title( $data['bgg-username'] ?? '' );
 	}
 
 	/**
@@ -84,9 +62,8 @@ class GamesUpdater {
 			return;
 		}
 
-		$this->hydrate();
-
-		$games = $this->api->get_collection( $this->username );
+		// @TODO Generate a warning or notice if there is no username value.
+		$games = $this->api->get_collection( $this->settings->get_username() );
 
 		do_action( 'bgc_setup_progress_bar', count( $games ) );
 

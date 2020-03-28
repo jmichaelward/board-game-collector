@@ -138,6 +138,15 @@ class Settings extends Service implements SettingsFields {
 		return $this->data;
 	}
 
+	/**
+	 * Get the username from the settings.
+	 *
+	 * @return string
+	 */
+	public function get_username() {
+		return sanitize_title( $this->data['bgg-username'] ?? '' );
+	}
+
 
 	/**
 	 * Render an admin notice only on the bgc_game screen if a BGG Username is not entered.

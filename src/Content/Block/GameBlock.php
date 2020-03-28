@@ -37,7 +37,7 @@ class GameBlock implements Hookable {
 	 * @return void
 	 */
 	public function register_hooks() {
-		add_action( 'init', $this->enqueue_assets() );
+		add_action( 'init', [ $this, 'enqueue_assets' ] );
 	}
 
 	/**
