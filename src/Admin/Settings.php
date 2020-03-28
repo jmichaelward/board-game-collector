@@ -59,8 +59,6 @@ class Settings extends Service implements Hydratable, SettingsFields {
 	 * @since  2019-09-02
 	 */
 	public function init_settings() {
-		$this->data = $this->get_data();
-
 		$pages = array_map(
 			function ( $page_classname ) {
 				return [
@@ -82,8 +80,6 @@ class Settings extends Service implements Hydratable, SettingsFields {
 	 * @return void
 	 */
 	public function register_settings_pages() {
-		$this->data = $this->get_data();
-
 		foreach ( $this->pages as $page ) {
 			$page->set_file_path( plugin_dir_path( $this->file_path ) );
 			$page->register();
@@ -98,7 +94,7 @@ class Settings extends Service implements Hydratable, SettingsFields {
 	public function setup_settings_pages() {
 		/** @var SettingsPage $page_class */
 		foreach ( $this->pages as $page_class ) {
-			$page = new $page_class( $this->get_data() );
+			$page = new $page_class( $this->data );
 			$page->setup();
 		}
 	}
@@ -131,19 +127,6 @@ class Settings extends Service implements Hydratable, SettingsFields {
 		] );
 
 		wp_enqueue_script( 'bgc-settings-js' );
-	}
-
-	/**
-	 * Getter function for retrieving settings data outside of object.
-	 *
-	 * @return array
-	 */
-	public function get_data() : array {
-		if ( ! $this->data ) {
-			$this->data = get_option( self::SETTINGS_KEY, [] );
-		}
-
-		return $this->data;
 	}
 
 	/**
