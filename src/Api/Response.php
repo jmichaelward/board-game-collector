@@ -63,7 +63,7 @@ class Response {
 	 *
 	 * @return array
 	 */
-	private function convert_xml_to_json( $data ) : array {
+	private function convert_xml_to_json( string $data ) : array {
 		if ( ! $data ) {
 			return [];
 		}
