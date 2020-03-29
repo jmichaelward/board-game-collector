@@ -39,7 +39,19 @@ class BoardGameGeek {
 	public function get_collection( string $username ) : array {
 		$cached = get_transient( 'bgg_collection' );
 
-		return $cached ? $cached : $this->get_games_from_api( $username );
+		if ( $cached ) {
+			return $cached;
+		}
+
+		$games = $this->get_games_from_api( $username );
+
+		if ( ! $games ) {
+			return [];
+		}
+
+		set_transient( self::COLLECTION_TRANSIENT_KEY, $games, CronService::INTERVAL_VALUE );
+
+		return $games;
 	}
 
 	/**
@@ -52,44 +64,15 @@ class BoardGameGeek {
 	 * @return array
 	 */
 	private function get_games_from_api( string $username ) : array {
-		$response = wp_remote_get( "{$this->base_path}/collection?username={$username}&stats=1" );
-		$status   = wp_remote_retrieve_response_code( $response );
+		$request  = new Request( "{$this->base_path}/collection?username={$username}&stats=1" );
+		$response = $request->make();
 
-		if ( is_wp_error( $response ) || ! in_array( $status, [ 200, 202 ], true ) ) {
+		if ( is_wp_error( $response ) ) {
 			return [];
 		}
 
-		$games = $this->convert_xml_to_json( wp_remote_retrieve_body( $response ) );
-
-		if ( ! isset( $games['item'] ) ) {
-			return [];
-		}
-
-		set_transient( 'bgg_collection', $games['item'] ?? [], CronService::INTERVAL_VALUE );
+		$games = $response->get_body();
 
 		return $games['item'];
-	}
-
-	/**
-	 * Convert the BoardGameGeek API XML response to JSON.
-	 *
-	 * @param string $data XML data.
-	 *
-	 * @return array
-	 */
-	private function convert_xml_to_json( $data ) : array {
-		if ( ! $data ) {
-			return [];
-		}
-
-		libxml_use_internal_errors( true );
-
-		$xml = simplexml_load_string( $data );
-
-		if ( ! $xml ) {
-			return [];
-		}
-
-		return json_decode( wp_json_encode( $xml ), true );
 	}
 }
