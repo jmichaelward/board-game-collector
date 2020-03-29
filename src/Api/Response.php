@@ -72,6 +72,7 @@ class Response {
 
 		$xml = simplexml_load_string( $data );
 
-		return $xml ? json_decode( wp_json_encode( $xml ), true ) : [];
+		// @codingStandardsIgnoreLine
+		return $xml ? json_decode( json_encode( $xml ), true ) : json_decode( $data, true );
 	}
 }
