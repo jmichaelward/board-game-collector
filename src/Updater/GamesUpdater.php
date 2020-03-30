@@ -14,6 +14,8 @@ use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
 use JMichaelWard\BoardGameCollector\Model\Games\BGGGameAdapter;
 use JMichaelWard\BoardGameCollector\Model\Games\GameData;
 use JMichaelWard\BoardGameCollector\Admin\Settings;
+use \Exception;
+use \InvalidArgumentException;
 
 /**
  * Class GamesUpdater
@@ -49,7 +51,7 @@ class GamesUpdater {
 	/**
 	 * Convert data into WordPress content.
 	 *
-	 * @throws \InvalidArgumentException If username is not set.
+	 * @throws Exception|InvalidArgumentException If API request fails or username is not set.
 	 */
 	public function update_collection() {
 		// Load required WordPress functionality.
@@ -67,10 +69,9 @@ class GamesUpdater {
 		$username = $this->settings->get_username();
 
 		if ( ! $username ) {
-			throw new \InvalidArgumentException( 'No username set in BGC Settings. Refusing to make request.' );
+			throw new InvalidArgumentException( 'No username set in BGC Settings. Refusing to make request.' );
 		}
 
-		// @TODO Generate a warning or notice if there is no username value.
 		$games = $this->api->get_collection( $username );
 
 		do_action( 'bgc_setup_progress_bar', count( $games ) );

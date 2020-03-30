@@ -10,6 +10,7 @@
 namespace JMichaelWard\BoardGameCollector\Api;
 
 use JMichaelWard\BoardGameCollector\Cron\CronService;
+use Exception;
 
 /**
  * Class BoardGameGeek
@@ -33,11 +34,12 @@ class BoardGameGeek {
 	 * Attempt to retrieve a user's game collection from the API.
 	 *
 	 * @param string $username The user collection to retrieve.
+	 * @throws Exception If the response contained an error.
 	 *
-	 * @return array|\WP_Error
+	 * @return array
 	 */
 	public function get_collection( string $username ) : array {
-		$cached = get_transient( 'bgg_collection' );
+		$cached = get_transient( self::COLLECTION_TRANSIENT_KEY );
 
 		if ( $cached ) {
 			return $cached;
@@ -45,11 +47,9 @@ class BoardGameGeek {
 
 		$games = $this->get_games_from_api( $username );
 
-		if ( ! $games ) {
-			return [];
+		if ( $games ) {
+			set_transient( self::COLLECTION_TRANSIENT_KEY, $games, CronService::INTERVAL_VALUE );
 		}
-
-		set_transient( self::COLLECTION_TRANSIENT_KEY, $games, CronService::INTERVAL_VALUE );
 
 		return $games;
 	}
@@ -59,6 +59,8 @@ class BoardGameGeek {
 	 *
 	 * @param string $username The username to query against.
 	 *
+	 * @throws Exception If the API request contains any errors.
+	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-12
 	 * @return array
@@ -66,13 +68,14 @@ class BoardGameGeek {
 	private function get_games_from_api( string $username ) : array {
 		$request  = new Request( "{$this->base_path}/collection?username={$username}&stats=1" );
 		$response = $request->make();
+		$error    = $response->get_error();
 
-		if ( is_wp_error( $response ) ) {
-			return [];
+		if ( $error ) {
+			throw new Exception( $error );
 		}
 
 		$games = $response->get_body();
 
-		return $games['item'];
+		return $games['item'] ?? [];
 	}
 }

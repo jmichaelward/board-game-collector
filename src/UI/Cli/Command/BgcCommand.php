@@ -64,7 +64,7 @@ class BgcCommand {
 
 		try {
 			$this->updater->update_collection();
-		} catch ( \InvalidArgumentException $e ) {
+		} catch ( \Exception $e ) {
 			\WP_CLI::error( $e->getMessage() );
 		}
 	}

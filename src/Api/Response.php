@@ -57,6 +57,15 @@ class Response {
 	}
 
 	/**
+	 * Get request processing error.
+	 *
+	 * @return string
+	 */
+	public function get_error() : string {
+		return $this->data['error'] ?? '';
+	}
+
+	/**
 	 * Convert the BoardGameGeek API XML response to JSON.
 	 *
 	 * @param string $data XML data.
