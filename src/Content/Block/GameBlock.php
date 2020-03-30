@@ -22,27 +22,5 @@ class GameBlock extends EditorBlock {
 	 *
 	 * @var string
 	 */
-	private $dirname = 'single-game';
-
-	/**
-	 * Register this block's hooks with WordPress.
-	 *
-	 * @author Jeremy Ward <jeremy@jmichaelward.com>
-	 * @since  2019-12-14
-	 * @return void
-	 */
-	public function register_hooks() {
-		add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_assets' ] );
-	}
-
-	/**
-	 * Register this block's assets with WordPress.
-	 */
-	public function enqueue_assets() {
-		wp_enqueue_script( // @codingStandardsIgnoreLine
-			'bgc_game_block',
-			plugins_url( "app/dist/blocks/{$this->dirname}/index.js", $this->file_path ),
-			[ 'wp-blocks', 'wp-element' ]
-		);
-	}
+	protected $block_name = 'single-game';
 }
