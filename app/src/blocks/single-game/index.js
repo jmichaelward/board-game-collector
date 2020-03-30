@@ -11,7 +11,7 @@ const {
 	},
 } = wp;
 
-registerBlockType('board-game-collector/game', {
+registerBlockType('board-game-collector/single-game', {
 	title: __( 'Insert Board Game' ),
 	description: __( 'Insert a reference to a board game in your collection.' ),
 	category: 'widgets',

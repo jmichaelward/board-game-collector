@@ -9,9 +9,6 @@
 
 namespace JMichaelWard\BoardGameCollector\Content\Block;
 
-use WebDevStudios\OopsWP\Utility\FilePathDependent;
-use WebDevStudios\OopsWP\Utility\Hookable;
-
 /**
  * Class GameBlock
  *
@@ -19,15 +16,13 @@ use WebDevStudios\OopsWP\Utility\Hookable;
  * @since   2019-12-14
  * @package JMichaelWard\BoardGameCollector\Content\Block
  */
-class GameBlock implements Hookable {
-	use FilePathDependent;
-
+class GameBlock extends EditorBlock {
 	/**
 	 * The dirname for this block asset.
 	 *
 	 * @var string
 	 */
-	private $dirname = 'game';
+	private $dirname = 'single-game';
 
 	/**
 	 * Register this block's hooks with WordPress.
@@ -37,7 +32,7 @@ class GameBlock implements Hookable {
 	 * @return void
 	 */
 	public function register_hooks() {
-		add_action( 'init', [ $this, 'enqueue_assets' ] );
+		add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_assets' ] );
 	}
 
 	/**
