@@ -20,15 +20,28 @@ registerBlockType('board-game-collector/single-game', {
 	attributes: {
 		url: {
 			type: 'string',
-			default: 'http://bgcollector.localhost/games/yokohama/',
+			source: 'attribute',
+			attribute: 'data-url',
+			selector: '.game-title',
 		},
-		thumbnail: {
+		text: {
 			type: 'string',
-			default: 'https://bgcollector.localhost/wp-content/uploads/2019/10/pic3600984-215x300.jpg'
 		},
 		title: {
 			type: 'string',
-			default: 'Yokohama',
+			source: 'text',
+			selector: '.game-title',
+		},
+		gameId: {
+			type: 'string',
+			source: 'attribute',
+			attribute: 'data-id',
+			selector: '.game-title',
+		}
+	},
+	example: {
+		attributes: {
+			search: 'Hello World',
 		}
 	},
 	edit,

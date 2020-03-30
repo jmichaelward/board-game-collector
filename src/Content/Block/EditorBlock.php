@@ -20,6 +20,18 @@ abstract class EditorBlock implements Hookable {
 	use FilePathDependent;
 
 	/**
+	 * JavaScript dependencies.
+	 *
+	 * @var array
+	 */
+	protected $js_dependencies = [
+		'wp-blocks',
+		'wp-components',
+		'wp-editor',
+		'wp-element',
+	];
+
+	/**
 	 * Name of the block.
 	 *
 	 * @var string
@@ -62,7 +74,7 @@ abstract class EditorBlock implements Hookable {
 		wp_enqueue_script( // @codingStandardsIgnoreLine
 			"{$this->get_script_handle()}-js",
 			plugins_url( "app/dist/blocks/{$this->block_name}/index.js", $this->file_path ),
-			[ 'wp-blocks', 'wp-element' ]
+			$this->js_dependencies,
 		);
 	}
 

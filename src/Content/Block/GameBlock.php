@@ -9,6 +9,8 @@
 
 namespace JMichaelWard\BoardGameCollector\Content\Block;
 
+use \Exception;
+
 /**
  * Class GameBlock
  *
@@ -23,4 +25,14 @@ class GameBlock extends EditorBlock {
 	 * @var string
 	 */
 	protected $block_name = 'single-game';
+
+	/**
+	 * GameBlock constructor.
+	 *
+	 * @throws Exception If block name is not defined.
+	 */
+	public function __construct() {
+		parent::__construct();
+		$this->js_dependencies = array_merge( $this->js_dependencies, [ 'wp-api' ] );
+	}
 }

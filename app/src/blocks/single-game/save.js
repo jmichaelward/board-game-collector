@@ -1,20 +1,19 @@
+/* global wp */
+
 const Save = (props) => {
 	const {
+		className,
 		attributes: {
-			title,
 			url,
-			thumbnail
+			text,
+			gameId
 		}
 	} = props;
 
 	return (
-		<div>
-			<a href={url} title={title}>
-				<div>
-					<img src={thumbnail} title={title}/>
-					<p>{title}</p>
-				</div>
-			</a>
+		<div className={className}>
+			<p className="game-title" data-id={gameId} data-url={url}>
+				<a href={url}>{text}</a></p>
 		</div>
 	)
 };

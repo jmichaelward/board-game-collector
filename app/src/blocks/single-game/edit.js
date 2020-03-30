@@ -1,38 +1,53 @@
 /* global wp */
-import { Autocomplete } from "@wordpress/components";
 
 const {
-	apiFetch,
+	element: {
+		useEffect
+	},
+	editor: {
+		URLInputButton,
+	},
 } = wp;
 
 const Edit = (props) => {
 	const {
+		className,
+		setAttributes,
 		isSelected,
-		attributes,
+		attributes: {
+			text,
+			url,
+			gameId,
+		}
 	} = props;
 
-	const {
-		title,
-		url,
-		thumbnail,
-	} = attributes;
+	const onChangeContent = ( url, post ) => {
+		setAttributes( { url, text: (post && post.title) || '', gameId: (post && post.id) || null } );
+	};
 
-	if ( isSelected ) {
-		return (
-			<p>{JSON.stringify(props)}</p>
-		)
-	}
+	useEffect(() => {
+
+	});
 
 	return (
 		<div>
-			<a href={url} title={title}>
-				<div>
-					<img src={thumbnail} alt={title}/>
-					<p>{title}</p>
-				</div>
-			</a>
+			{isSelected &&
+				<>
+					<URLInputButton
+						url={ url }
+						onChange={ onChangeContent }
+					/>
+				</>
+			}
+
+			<div className={className}>
+				<p className="game-title"
+						data-id={gameId}
+						data-url={url}
+				><a href={url}>{text}</a></p>
+			</div>
 		</div>
-	);
+	)
 };
 
 export default Edit;
