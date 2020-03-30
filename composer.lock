@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "74bce9cbc03b5339b9b553cb3b3d2d5b",
+    "content-hash": "b72bfc6d5ff758336e96b5ca4150ac04",
     "packages": [
         {
             "name": "composer/installers",
@@ -125,6 +125,43 @@
                 "zikula"
             ],
             "time": "2018-08-27T06:10:37+00:00"
+        },
+        {
+            "name": "jmichaelward/oops-wp-plus",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jmichaelward/oops-wp-plus.git",
+                "reference": "f94307864660f46964c82bdffb7b5e90a3150df8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jmichaelward/oops-wp-plus/zipball/f94307864660f46964c82bdffb7b5e90a3150df8",
+                "reference": "f94307864660f46964c82bdffb7b5e90a3150df8",
+                "shasum": ""
+            },
+            "require": {
+                "webdevstudios/oops-wp": "^0.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "JMichaelWard\\OopsWPPlus\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jeremy Ward",
+                    "email": "jeremy@jmichaelward.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A custom extension of the OOPS-WP library.",
+            "time": "2020-03-30T16:21:34+00:00"
         },
         {
             "name": "rdlowrey/auryn",

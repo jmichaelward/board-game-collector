@@ -16,8 +16,8 @@
         "ext-libxml": "^7.4",
         "ext-json": "^7.4",
         "composer/installers": "^1.6",
-        "webdevstudios/oops-wp": "^0.3.0",
-        "rdlowrey/auryn": "^1.4"
+        "rdlowrey/auryn": "^1.4",
+        "jmichaelward/oops-wp-plus": "^0.1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.3",

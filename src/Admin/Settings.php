@@ -3,7 +3,7 @@ namespace JMichaelWard\BoardGameCollector\Admin;
 
 use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsFields;
 use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsPage;
-use JMichaelWard\BoardGameCollector\Model\Hydratable;
+use JMichaelWard\OopsWPPlus\Utility\Hydratable;
 use WebDevStudios\OopsWP\Structure\Service;
 use WebDevStudios\OopsWP\Utility\FilePathDependent;
 

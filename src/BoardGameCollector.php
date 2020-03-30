@@ -3,7 +3,7 @@ namespace JMichaelWard\BoardGameCollector;
 
 use Auryn\ConfigException;
 use Auryn\Injector;
-use JMichaelWard\BoardGameCollector\Model\Hydratable;
+use JMichaelWard\OopsWPPlus\Utility\Hydratable;
 use WebDevStudios\OopsWP\Structure\Plugin\Plugin;
 use JMichaelWard\BoardGameCollector\Content\ContentRegistrar;
 use JMichaelWard\BoardGameCollector\Api\ApiService;
