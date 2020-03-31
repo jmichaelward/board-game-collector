@@ -21,22 +21,17 @@ registerBlockType('board-game-collector/single-game', {
 		url: {
 			type: 'string',
 			source: 'attribute',
-			attribute: 'data-url',
-			selector: '.game-title',
-		},
-		text: {
-			type: 'string',
+			attribute: 'href',
+			selector: '.board-game-collector-single-game__link',
 		},
 		title: {
 			type: 'string',
-			source: 'text',
-			selector: '.game-title',
 		},
 		gameId: {
 			type: 'string',
 			source: 'attribute',
 			attribute: 'data-id',
-			selector: '.game-title',
+			selector: '.board-game-collector-single-game__details',
 		}
 	},
 	example: {

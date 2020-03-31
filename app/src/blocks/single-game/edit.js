@@ -15,14 +15,14 @@ const Edit = (props) => {
 		setAttributes,
 		isSelected,
 		attributes: {
-			text,
+			title,
 			url,
 			gameId,
 		}
 	} = props;
 
 	const onChangeContent = ( url, post ) => {
-		setAttributes( { url, text: (post && post.title) || '', gameId: (post && post.id) || null } );
+		setAttributes( { url, title: (post && post.title) || '', gameId: (post && post.id) || null } );
 	};
 
 	useEffect(() => {
@@ -30,7 +30,7 @@ const Edit = (props) => {
 	});
 
 	return (
-		<div>
+		<div className={className}>
 			{isSelected &&
 				<>
 					<URLInputButton
@@ -40,11 +40,10 @@ const Edit = (props) => {
 				</>
 			}
 
-			<div className={className}>
-				<p className="game-title"
-						data-id={gameId}
-						data-url={url}
-				><a href={url}>{text}</a></p>
+			<div className="board-game-collector-single-game__details" data-id={gameId}>
+				<p className="board-game-collector-single-game__title">
+					<a className="board-game-collector-single-game__link" href={url}>{title}</a>
+				</p>
 			</div>
 		</div>
 	)

@@ -5,15 +5,18 @@ const Save = (props) => {
 		className,
 		attributes: {
 			url,
-			text,
+			title,
 			gameId
 		}
 	} = props;
 
 	return (
 		<div className={className}>
-			<p className="game-title" data-id={gameId} data-url={url}>
-				<a href={url}>{text}</a></p>
+			<div className="board-game-collector-single-game__details" data-id={gameId}>
+				<p className="board-game-collector-single-game__title">
+					<a className="board-game-collector-single-game__link" href={url}>{title}</a>
+				</p>
+			</div>
 		</div>
 	)
 };
