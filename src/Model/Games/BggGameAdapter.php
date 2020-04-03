@@ -77,26 +77,18 @@ class BggGameAdapter {
 	private $image_url;
 
 	/**
-	 * BGGGameDataAdapter constructor.
+	 * Get a BGGGame object from the raw data.
 	 *
 	 * @param array $data Data from the BoardGameGeek API.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
-	 */
-	public function __construct( array $data ) {
-		$this->data = $data;
-		$this->hydrate();
-	}
-
-	/**
-	 * Get a BGGGame object from the raw data.
-	 *
-	 * @author Jeremy Ward <jeremy@jmichaelward.com>
-	 * @since  2019-04-13
 	 * @return BGGGame
 	 */
-	public function get_game() : BGGGame {
+	public function get_game( array $data ) : BGGGame {
+		$this->data = $data;
+		$this->hydrate();
+
 		return new BGGGame(
 			$this->id,
 			$this->name,

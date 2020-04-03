@@ -38,14 +38,23 @@ class GamesUpdater {
 	private $settings;
 
 	/**
+	 * Game data adapter.
+	 *
+	 * @var BggGameAdapter
+	 */
+	private $adapter;
+
+	/**
 	 * GamesUpdater constructor.
 	 *
-	 * @param BoardGameGeek $api      Instance of our BoardGameGeek API model.
-	 * @param Settings      $settings Plugin settings.
+	 * @param BoardGameGeek  $api      Instance of our BoardGameGeek API model.
+	 * @param Settings       $settings Plugin settings.
+	 * @param BggGameAdapter $adapter  Adapter for BoardGameGeek data.
 	 */
-	public function __construct( BoardGameGeek $api, Settings $settings ) {
+	public function __construct( BoardGameGeek $api, Settings $settings, BggGameAdapter $adapter ) {
 		$this->api      = $api;
 		$this->settings = $settings;
+		$this->adapter  = $adapter;
 	}
 
 	/**
@@ -91,8 +100,7 @@ class GamesUpdater {
 	 * @return int
 	 */
 	public function save_game_data( array $data ) {
-		// @TODO Inject the BGGGameAdapter into this object.
-		$game    = ( new BggGameAdapter( $data ) )->get_game();
+		$game    = $this->adapter->get_game( $data );
 		$game_id = $this->game_exists( $game );
 
 		$game_id ? $this->update_game( $game, $game_id ) : $this->insert_game( $game );
