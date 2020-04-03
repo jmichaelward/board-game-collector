@@ -52,6 +52,20 @@ class GamesUpdater {
 	private $adapter;
 
 	/**
+	 * A associative array mapping BoardGameGeek IDs to WordPress post IDs.
+	 *
+	 * [
+	 *      $bgg_id => [
+	 *          'post_id' => $wordpress_id (bgc_game),
+	 *          'image_id' => $wordpress_id (attachment)
+	 *     ]
+	 * ]
+	 *
+	 * @var array
+	 */
+	private $games_index;
+
+	/**
 	 * GamesUpdater constructor.
 	 *
 	 * @param BoardGameGeek  $api      Instance of our BoardGameGeek API model.
@@ -128,6 +142,12 @@ class GamesUpdater {
 	 * @return int
 	 */
 	private function game_exists( GameData $game ) {
+		$id = $this->get_wordpress_id_from_index( $game );
+
+		if ( $id ) {
+			return $id;
+		}
+
 		$args = array_merge(
 			[
 				'post_type'      => 'bgc_game',
@@ -143,6 +163,23 @@ class GamesUpdater {
 		wp_reset_postdata();
 
 		return array_pop( $posts );
+	}
+
+	/**
+	 * Get the WordPress post ID for a game within the games index.
+	 *
+	 * @param GameData $game Instance of GameData.
+	 *
+	 * @return int
+	 */
+	private function get_wordpress_id_from_index( GameData $game ) {
+		$bgg_id = $game->get_bgg_id();
+
+		if ( ! array_key_exists( $bgg_id, $this->games_index ) ) {
+			return 0;
+		}
+
+		return $this->games_index[ $bgg_id ]['post_id'] ?? 0;
 	}
 
 	/**
