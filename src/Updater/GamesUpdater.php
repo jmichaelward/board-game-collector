@@ -118,6 +118,8 @@ class GamesUpdater {
 
 		$games = $this->api->get_user_collection( $this->settings->get_username() );
 
+		$this->games_index = $this->get_games_index();
+
 		$this->process_games_data( $games );
 	}
 
