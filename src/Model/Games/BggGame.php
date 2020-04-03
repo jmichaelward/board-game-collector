@@ -12,7 +12,7 @@ namespace JMichaelWard\BoardGameCollector\Model\Games;
  *
  * @package JMichaelWard\BoardGameCollector\Model\Games
  */
-class BGGGame implements GameData {
+class BggGame implements GameData {
 	/**
 	 * BoardGameCollector ID for this game.
 	 *

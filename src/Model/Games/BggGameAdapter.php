@@ -83,13 +83,13 @@ class BggGameAdapter {
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
-	 * @return BGGGame
+	 * @return BggGame
 	 */
-	public function get_game( array $data ) : BGGGame {
+	public function get_game( array $data ) : BggGame {
 		$this->data = $data;
 		$this->hydrate();
 
-		return new BGGGame(
+		return new BggGame(
 			$this->id,
 			$this->name,
 			$this->year_published,

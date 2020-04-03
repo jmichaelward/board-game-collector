@@ -4,7 +4,7 @@
  */
 namespace JMichaelWard\BoardGameCollector\Api\Routes\WPExtension;
 
-use JMichaelWard\BoardGameCollector\Model\Games\BGGGame;
+use JMichaelWard\BoardGameCollector\Model\Games\BggGame;
 use WebDevStudios\OopsWP\Utility\Registerable;
 use JMichaelWard\BoardGameCollector\Api\Routes\RestRoute;
 
@@ -37,7 +37,7 @@ class Games extends RestRoute implements Registerable {
 				'get_callback' => function ( $post ) {
 					$data = get_post_meta( $post['id'], 'bgc_game_meta', true );
 
-					return is_a( $data, BGGGame::class ) ? $data->get_data() : [];
+					return is_a( $data, BggGame::class ) ? $data->get_data() : [];
 				},
 			]
 		);
