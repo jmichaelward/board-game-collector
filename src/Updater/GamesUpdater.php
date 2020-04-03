@@ -11,6 +11,7 @@
 namespace JMichaelWard\BoardGameCollector\Updater;
 
 use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
+use JMichaelWard\BoardGameCollector\Model\Games\BggGame;
 use JMichaelWard\BoardGameCollector\Model\Games\BggGameAdapter;
 use JMichaelWard\BoardGameCollector\Model\Games\GameData;
 use JMichaelWard\BoardGameCollector\Admin\Settings;
@@ -95,7 +96,7 @@ class GamesUpdater {
 			$this->remove_game_from_index( $game->get_bgg_id() );
 		}
 
-		return $game_id ? $this->update_game( $game, $game_id ) : $this->insert_game( $game );
+		return $game_id ? $this->update_game( $game_id, $game ) : $this->insert_game( $game );
 	}
 
 	/**
@@ -140,6 +141,27 @@ class GamesUpdater {
 		$this->save_index_updates();
 
 		do_action( 'bgc_finish_progress_bar' );
+
+		$this->process_images_data( $games );
+	}
+
+	/**
+	 * Process image data for the games.
+	 *
+	 * @TODO WIP. This method probably belongs in the ImageProcessor itself.
+	 *
+	 * @param array $games Array of games data.
+	 */
+	private function process_images_data( array $games ) {
+		$this->games_index = $this->get_games_index();
+		$image_handler     = new ImageProcessor();
+
+		foreach ( $games as $game_data ) {
+			$game    = $this->adapter->get_game( $game_data );
+			$game_id = $this->games_index[ $game->get_bgg_id() ]['post_id'] ?? 0;
+
+			$image_handler->set_featured_image( $game_id, $game );
+		}
 	}
 
 	/**
@@ -199,7 +221,7 @@ class GamesUpdater {
 	 * @return int
 	 */
 	private function insert_game( GameData $game ) {
-		$id = wp_insert_post(
+		$game_id = wp_insert_post(
 			[
 				'post_type'   => 'bgc_game',
 				'post_name'   => sanitize_title( $game->get_name() ),
@@ -208,23 +230,43 @@ class GamesUpdater {
 			]
 		);
 
-		if ( ! $id ) {
+		if ( ! $game_id ) {
 			return 0;
 		}
 
-		$image_handler = new ImageProcessor();
-		$image_handler->set_featured_image( $id, $game );
-
-		wp_set_object_terms( $id, $game->get_statuses(), 'bgc_game_status' );
-
 		// We'll save all the BGG meta data for reference.
-		update_post_meta( $id, 'bgc_game_id', $game->get_bgg_id() );
-		update_post_meta( $id, 'bgc_game_meta', $game );
+		$this->save_game_meta( $game_id, $game );
+		$this->add_game_to_index( $game->get_bgg_id(), $game_id );
 
-		$this->add_game_to_index( $game->get_bgg_id(), $id );
-
-		return $id;
+		return $game_id;
 	}
+
+	/**
+	 * Update the post meta and terms.
+	 *
+	 * @param int      $game_id WordPress ID of the game post.
+	 * @param GameData $game    Interface for a game object.
+	 *
+	 * @return int
+	 */
+	private function update_game( $game_id, GameData $game ) {
+		$this->save_game_meta( $game_id, $game );
+
+		return $game_id;
+	}
+
+	/**
+	 * Save the metadata of a game to its post.
+	 *
+	 * @param int      $game_id The WordPress ID of the game.
+	 * @param GameData $game    The adapted game data from BoardGameGeek.
+	 */
+	private function save_game_meta( $game_id, GameData $game ) {
+		update_post_meta( $game_id, 'bgc_game_id', $game->get_bgg_id() );
+		update_post_meta( $game_id, 'bgc_game_meta', $game );
+		wp_set_object_terms( $game_id, $game->get_statuses(), 'bgc_game_status' );
+	}
+
 
 	/**
 	 * Get the saved games index.
@@ -263,20 +305,5 @@ class GamesUpdater {
 	 */
 	private function save_index_updates() {
 		update_option( self::GAMES_INDEX_OPTION_KEY, $this->games_index );
-	}
-
-	/**
-	 * Update the post meta and terms.
-	 *
-	 * @param GameData $game         Interface for a game object.
-	 * @param int      $game_post_id ID of the bgc_game post.
-	 *
-	 * @return int
-	 */
-	private function update_game( GameData $game, $game_post_id ) {
-		update_post_meta( $game_post_id, 'bgc_game_meta', $game );
-		wp_set_object_terms( $game_post_id, $game->get_statuses(), 'bgc_game_status' );
-
-		return $game_post_id;
 	}
 }
