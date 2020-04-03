@@ -91,6 +91,10 @@ class GamesUpdater {
 		$game    = $this->adapter->get_game( $data );
 		$game_id = $this->game_exists( $game );
 
+		if ( ! $game_id ) {
+			unset( $this->games_index[ $game->get_bgg_id() ] );
+		}
+
 		return $game_id ? $this->update_game( $game, $game_id ) : $this->insert_game( $game );
 	}
 
@@ -144,10 +148,11 @@ class GamesUpdater {
 	 * @return int
 	 */
 	private function game_exists( GameData $game ) {
-		$id = $this->get_wordpress_id_from_index( $game );
+		$id   = $this->get_wordpress_id_from_index( $game );
+		$post = get_post( $id );
 
-		if ( $id ) {
-			return $id;
+		if ( $post instanceof \WP_Post ) {
+			return $post->ID;
 		}
 
 		$args = array_merge(
