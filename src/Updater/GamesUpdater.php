@@ -92,7 +92,7 @@ class GamesUpdater {
 		$game_id = $this->game_exists( $game );
 
 		if ( ! $game_id ) {
-			unset( $this->games_index[ $game->get_bgg_id() ] );
+			$this->remove_game_from_index( $game->get_bgg_id() );
 		}
 
 		return $game_id ? $this->update_game( $game, $game_id ) : $this->insert_game( $game );
@@ -219,7 +219,7 @@ class GamesUpdater {
 		update_post_meta( $id, 'bgc_game_id', $game->get_bgg_id() );
 		update_post_meta( $id, 'bgc_game_meta', $game );
 
-		$this->update_games_index( $game->get_bgg_id(), $id );
+		$this->add_game_to_index( $game->get_bgg_id(), $id );
 
 		return $id;
 	}
@@ -243,8 +243,17 @@ class GamesUpdater {
 	 * @param int $bgg_id The ID of the game on BoardGameGeek.
 	 * @param int $wordpress_id The ID of the game in WordPress.
 	 */
-	private function update_games_index( $bgg_id, $wordpress_id ) {
+	private function add_game_to_index( $bgg_id, $wordpress_id ) {
 		$this->games_index[ $bgg_id ]['post_id'] = $wordpress_id;
+	}
+
+	/**
+	 * Remove a game from the games index.
+	 *
+	 * @param int $bgg_id The ID of the game on BoardGameGeek.
+	 */
+	private function remove_game_from_index( $bgg_id ) {
+		unset( $this->games_index[ $bgg_id ] );
 	}
 
 	/**
