@@ -131,6 +131,8 @@ class GamesUpdater {
 			do_action( 'bgc_tick_progress_bar' );
 		}
 
+		$this->save_index_updates();
+
 		do_action( 'bgc_finish_progress_bar' );
 	}
 
@@ -229,14 +231,22 @@ class GamesUpdater {
 	/**
 	 * Update the games index with the newly-saved game's data.
 	 *
+	 * These updates are saved to memory only. save_index_updates gets called at the end of the process.
+	 *
+	 * @see GamesUpdater::save_index_updates()
+	 *
 	 * @param int $bgg_id The ID of the game on BoardGameGeek.
 	 * @param int $wordpress_id The ID of the game in WordPress.
 	 */
 	private function update_games_index( $bgg_id, $wordpress_id ) {
-		$index                       = $this->get_games_index();
-		$index[ $bgg_id ]['post_id'] = $wordpress_id;
+		$this->games_index[ $bgg_id ]['post_id'] = $wordpress_id;
+	}
 
-		update_option( self::GAMES_INDEX_OPTION_KEY, $index );
+	/**
+	 * Save updates to the games index.
+	 */
+	private function save_index_updates() {
+		update_option( self::GAMES_INDEX_OPTION_KEY, $this->games_index );
 	}
 
 	/**
