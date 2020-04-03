@@ -64,7 +64,7 @@ class BgcCommand {
 
 		try {
 			$this->updater->update_collection();
-		} catch ( \Exception $e ) {
+		} catch ( \Throwable $e ) {
 			\WP_CLI::error( $e->getMessage() );
 		}
 	}

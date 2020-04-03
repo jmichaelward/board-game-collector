@@ -92,7 +92,7 @@ class Collection extends CustomRestRoute {
 
 		if ( ! $unprocessed ) {
 			$api        = new BoardGameGeek();
-			$collection = $api->get_collection( $this->get_saved_username() );
+			$collection = $api->get_user_collection( $this->get_saved_username() );
 
 			if ( isset( $collection['status'] ) && 202 === $collection['status'] ) {
 				return new \WP_REST_Response( [ 'status' => 202 ], 202 );

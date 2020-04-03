@@ -10,6 +10,7 @@
 namespace JMichaelWard\BoardGameCollector\Api;
 
 use JMichaelWard\BoardGameCollector\Cron\CronService;
+use InvalidArgumentException;
 use Exception;
 
 /**
@@ -34,18 +35,18 @@ class BoardGameGeek {
 	 * Attempt to retrieve a user's game collection from the API.
 	 *
 	 * @param string $username The user collection to retrieve.
-	 * @throws Exception If the response contained an error.
+	 * @throws Exception|InvalidArgumentException If API error response or missing username.
 	 *
 	 * @return array
 	 */
-	public function get_collection( string $username ) : array {
+	public function get_user_collection( string $username ) : array {
 		$cached = get_transient( self::COLLECTION_TRANSIENT_KEY );
 
 		if ( $cached ) {
 			return $cached;
 		}
 
-		$games = $this->get_games_from_api( $username );
+		$games = $this->get_games_by_user( $username );
 
 		if ( $games ) {
 			set_transient( self::COLLECTION_TRANSIENT_KEY, $games, CronService::INTERVAL_VALUE );
@@ -59,13 +60,20 @@ class BoardGameGeek {
 	 *
 	 * @param string $username The username to query against.
 	 *
-	 * @throws Exception If the API request contains any errors.
+	 * @throws Exception If API error response.
+	 * @throws InvalidArgumentException If missing username.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-12
 	 * @return array
 	 */
-	private function get_games_from_api( string $username ) : array {
+	private function get_games_by_user( string $username ) : array {
+		if ( ! $username ) {
+			throw new InvalidArgumentException(
+				__( 'No username set in BGC Settings. Refusing to make request.', 'bgcollector' )
+			);
+		}
+
 		$request  = new Request( "{$this->base_path}/collection?username={$username}&stats=1" );
 		$response = $request->make();
 		$error    = $response->get_error();

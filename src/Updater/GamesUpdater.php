@@ -58,39 +58,6 @@ class GamesUpdater {
 	}
 
 	/**
-	 * Convert data into WordPress content.
-	 *
-	 * @throws Exception|InvalidArgumentException If API request fails or username is not set.
-	 */
-	public function update_collection() {
-		// Load required WordPress functionality.
-		include_once ABSPATH . WPINC . '/pluggable.php';
-
-		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
-			// @TODO Authorization.
-			wp_set_auth_cookie( 1 );
-		}
-
-		if ( ! WP_CLI && ! current_user_can( 'edit_posts' ) ) {
-			return;
-		}
-
-		$username = $this->settings->get_username();
-
-		if ( ! $username ) {
-			throw new InvalidArgumentException( 'No username set in BGC Settings. Refusing to make request.' );
-		}
-
-		$games = $this->api->get_collection( $username );
-
-		do_action( 'bgc_setup_progress_bar', count( $games ) );
-
-		array_filter( $games, [ $this, 'save_game_data' ] );
-
-		do_action( 'bgc_finish_progress_bar' );
-	}
-
-	/**
 	 * Save game data to WordPress.
 	 *
 	 * @param array $data Array data for a given game.
@@ -108,6 +75,33 @@ class GamesUpdater {
 		do_action( 'bgc_tick_progress_bar' );
 
 		return $game_id;
+	}
+
+	/**
+	 * Convert data into WordPress content.
+	 *
+	 * @throws Exception|InvalidArgumentException If API request requirements are unmet.
+	 */
+	public function update_collection() {
+		// Load required WordPress functionality.
+		include_once ABSPATH . WPINC . '/pluggable.php';
+
+		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
+			// @TODO Authorization.
+			wp_set_auth_cookie( 1 );
+		}
+
+		if ( ! WP_CLI && ! current_user_can( 'edit_posts' ) ) {
+			return;
+		}
+
+		$games = $this->api->get_user_collection( $this->settings->get_username() );
+
+		do_action( 'bgc_setup_progress_bar', count( $games ) );
+
+		array_filter( $games, [ $this, 'save_game_data' ] );
+
+		do_action( 'bgc_finish_progress_bar' );
 	}
 
 	/**
