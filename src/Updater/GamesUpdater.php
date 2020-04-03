@@ -24,6 +24,13 @@ use \InvalidArgumentException;
  */
 class GamesUpdater {
 	/**
+	 * Key for the games index.
+	 *
+	 * This index maps a BoardGameGeek game ID to the ID in WordPress to facilitate lookup.
+	 */
+	const GAMES_INDEX_OPTION_KEY = 'bgc_collection_index';
+
+	/**
 	 * BoardGameGeek API.
 	 *
 	 * @var BoardGameGeek
@@ -70,11 +77,7 @@ class GamesUpdater {
 		$game    = $this->adapter->get_game( $data );
 		$game_id = $this->game_exists( $game );
 
-		$game_id ? $this->update_game( $game, $game_id ) : $this->insert_game( $game );
-
-		do_action( 'bgc_tick_progress_bar' );
-
-		return $game_id;
+		return $game_id ? $this->update_game( $game, $game_id ) : $this->insert_game( $game );
 	}
 
 	/**
@@ -97,9 +100,22 @@ class GamesUpdater {
 
 		$games = $this->api->get_user_collection( $this->settings->get_username() );
 
+		$this->process_games_data( $games );
+	}
+
+	/**
+	 * Process the retrieved games data.
+	 *
+	 * @param array $games Games retrieved from BoardGameGeek.
+	 */
+	private function process_games_data( array $games ) {
 		do_action( 'bgc_setup_progress_bar', count( $games ) );
 
-		array_filter( $games, [ $this, 'save_game_data' ] );
+		foreach ( $games as $game ) {
+			$this->save_game_data( $game );
+
+			do_action( 'bgc_tick_progress_bar' );
+		}
 
 		do_action( 'bgc_finish_progress_bar' );
 	}
@@ -151,7 +167,6 @@ class GamesUpdater {
 		}
 
 		$image_handler = new ImageProcessor();
-
 		$image_handler->set_featured_image( $id, $game );
 
 		wp_set_object_terms( $id, $game->get_statuses(), 'bgc_game_status' );
@@ -160,7 +175,31 @@ class GamesUpdater {
 		update_post_meta( $id, 'bgc_game_id', $game->get_bgg_id() );
 		update_post_meta( $id, 'bgc_game_meta', $game );
 
+		$this->update_games_index( $game->get_bgg_id(), $id );
+
 		return $id;
+	}
+
+	/**
+	 * Get the saved games index.
+	 *
+	 * @return array
+	 */
+	private function get_games_index() : array {
+		return get_option( self::GAMES_INDEX_OPTION_KEY, [] );
+	}
+
+	/**
+	 * Update the games index with the newly-saved game's data.
+	 *
+	 * @param int $bgg_id The ID of the game on BoardGameGeek.
+	 * @param int $wordpress_id The ID of the game in WordPress.
+	 */
+	private function update_games_index( $bgg_id, $wordpress_id ) {
+		$index                       = $this->get_games_index();
+		$index[ $bgg_id ]['post_id'] = $wordpress_id;
+
+		update_option( self::GAMES_INDEX_OPTION_KEY, $index );
 	}
 
 	/**
