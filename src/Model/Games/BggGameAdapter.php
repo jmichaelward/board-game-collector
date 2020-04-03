@@ -215,6 +215,8 @@ class BggGameAdapter {
 	 * @return string
 	 */
 	private function parse_image_url() : string {
-		return $this->data['image'] ?? '';
+		$image_url = $this->data['image'] ?? '';
+
+		return is_string( $image_url ) ? $image_url : '';
 	}
 }
