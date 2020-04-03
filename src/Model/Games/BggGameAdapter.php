@@ -1,14 +1,15 @@
 <?php
+/**
+ * Class for converting BoardGameGeek data structures into a custom structure for our API.
+ */
 namespace JMichaelWard\BoardGameCollector\Model\Games;
 
 /**
  * Class BGGGameAdapter
  *
- * Converts the data structure from BoardGameGeek into a custom structure for the API.
- *
  * @package JMichaelWard\BoardGameCollector\Model\Games
  */
-class BGGGameAdapter {
+class BggGameAdapter {
 	/**
 	 * Raw data from the BoardGameGeek API.
 	 *
@@ -133,7 +134,7 @@ class BGGGameAdapter {
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
-	 * @return BGGGameAdapter
+	 * @return BggGameAdapter
 	 */
 	private function set( string $property ) {
 		$callback          = "parse_{$property}";

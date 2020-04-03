@@ -11,7 +11,7 @@
 namespace JMichaelWard\BoardGameCollector\Updater;
 
 use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
-use JMichaelWard\BoardGameCollector\Model\Games\BGGGameAdapter;
+use JMichaelWard\BoardGameCollector\Model\Games\BggGameAdapter;
 use JMichaelWard\BoardGameCollector\Model\Games\GameData;
 use JMichaelWard\BoardGameCollector\Admin\Settings;
 use \Exception;
@@ -92,7 +92,7 @@ class GamesUpdater {
 	 */
 	public function save_game_data( array $data ) {
 		// @TODO Inject the BGGGameAdapter into this object.
-		$game    = ( new BGGGameAdapter( $data ) )->get_game();
+		$game    = ( new BggGameAdapter( $data ) )->get_game();
 		$game_id = $this->game_exists( $game );
 
 		$game_id ? $this->update_game( $game, $game_id ) : $this->insert_game( $game );

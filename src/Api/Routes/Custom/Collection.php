@@ -14,7 +14,7 @@ use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsFields;
 use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
 use JMichaelWard\BoardGameCollector\Api\Routes\CustomRestRoute;
 use JMichaelWard\BoardGameCollector\Model\Games\BGGGame;
-use JMichaelWard\BoardGameCollector\Model\Games\BGGGameAdapter;
+use JMichaelWard\BoardGameCollector\Model\Games\BggGameAdapter;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 
 /**
