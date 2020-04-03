@@ -7,9 +7,9 @@
 
 namespace JMichaelWard\BoardGameCollector\Api;
 
-use JMichaelWard\BoardGameCollector\Api\Routes\Games;
 use WebDevStudios\OopsWP\Structure\Service;
-use JMichaelWard\BoardGameCollector\Api\Routes\Custom\Collection;
+use JMichaelWard\BoardGameCollector\Api\Routes\WPExtension;
+use JMichaelWard\BoardGameCollector\Api\Routes\Custom;
 
 /**
  * Class ApiService
@@ -23,8 +23,8 @@ class ApiService extends Service {
 	 * @var array
 	 */
 	private $routes = [
-		Games::class,
-		Collection::class,
+		WPExtension\Games::class,
+		Custom\Collection::class,
 	];
 
 	/**

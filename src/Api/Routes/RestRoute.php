@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * Abstract class for REST routes which extend native WordPress.
  *
  * @author  Jeremy Ward <jeremy@jmichaelward.com>
  * @since   2019-09-01

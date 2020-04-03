@@ -2,10 +2,11 @@
 /**
  *
  */
-namespace JMichaelWard\BoardGameCollector\Api\Routes;
+namespace JMichaelWard\BoardGameCollector\Api\Routes\WPExtension;
 
 use JMichaelWard\BoardGameCollector\Model\Games\BGGGame;
 use WebDevStudios\OopsWP\Utility\Registerable;
+use JMichaelWard\BoardGameCollector\Api\Routes\RestRoute;
 
 /**
  * Class Games
