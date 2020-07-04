@@ -7,6 +7,9 @@
 
 namespace JMichaelWard\BoardGameCollector\Api;
 
+use Auryn\Injector;
+use JMichaelWard\BoardGameCollector\Admin\Settings;
+use JMichaelWard\BoardGameCollector\Model\Games\BggGameAdapter;
 use WebDevStudios\OopsWP\Structure\Service;
 use JMichaelWard\BoardGameCollector\Api\Routes\WPExtension;
 use JMichaelWard\BoardGameCollector\Api\Routes\Custom;
@@ -28,6 +31,22 @@ class ApiService extends Service {
 	];
 
 	/**
+	 * Auryn injector instance.
+	 *
+	 * @var Injector
+	 */
+	private $injector;
+
+	/**
+	 * ApiService constructor.
+	 *
+	 * @param Injector $injector Auryn injector instance.
+	 */
+	public function __construct( Injector $injector ) {
+		$this->injector = $injector;
+	}
+
+	/**
 	 * Register WordPress hooks.
 	 */
 	public function register_hooks() {
@@ -43,7 +62,7 @@ class ApiService extends Service {
 	 */
 	public function register_extended_api_fields() {
 		foreach ( $this->routes as $route_class ) {
-			$route = new $route_class();
+			$route = $this->injector->make( $route_class );
 			$route->register();
 		}
 	}

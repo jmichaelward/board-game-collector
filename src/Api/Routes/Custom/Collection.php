@@ -9,12 +9,9 @@
 
 namespace JMichaelWard\BoardGameCollector\Api\Routes\Custom;
 
-use JMichaelWard\BoardGameCollector\Admin\Settings;
 use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsFields;
 use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
 use JMichaelWard\BoardGameCollector\Api\Routes\CustomRestRoute;
-use JMichaelWard\BoardGameCollector\Model\Games\BggGame;
-use JMichaelWard\BoardGameCollector\Model\Games\BggGameAdapter;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 
 /**
@@ -32,6 +29,31 @@ class Collection extends CustomRestRoute {
 	 * @since 2019-09-01
 	 */
 	protected $rest_base = 'collection';
+
+	/**
+	 * BoardGameGeek API instance.
+	 *
+	 * @var BoardGameGeek
+	 */
+	private $bgg_api;
+
+	/**
+	 * GamesUpdater instance.
+	 *
+	 * @var GamesUpdater
+	 */
+	private $updater;
+
+	/**
+	 * Collection constructor.
+	 *
+	 * @param BoardGameGeek $bgg_api BoardGameGeek API instance.
+	 * @param GamesUpdater  $updater GamesUpdater instance.
+	 */
+	public function __construct( BoardGameGeek $bgg_api, GamesUpdater $updater ) {
+		$this->bgg_api = $bgg_api;
+		$this->updater = $updater;
+	}
 
 	/**
 	 * Register API routes with WordPress.
@@ -60,18 +82,18 @@ class Collection extends CustomRestRoute {
 	}
 
 	/**
+	 * Get the saved username from the settings page.
+	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-10-04
 	 * @return string
 	 */
 	private function get_saved_username() {
-		$options = get_option( SettingsFields::SETTINGS_KEY );
-
 		return get_option( SettingsFields::SETTINGS_KEY )[ SettingsFields::USERNAME_KEY ] ?? '';
 	}
 
 	/**
-	 * @param $username
+	 * @param string $username
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-10-04
@@ -91,14 +113,13 @@ class Collection extends CustomRestRoute {
 		$unprocessed = get_transient( BoardGameGeek::COLLECTION_TRANSIENT_KEY );
 
 		if ( ! $unprocessed ) {
-			$api        = new BoardGameGeek();
-			$collection = $api->get_user_collection( $this->get_saved_username() );
+			$collection = $this->bgg_api->get_user_collection( $this->get_saved_username() );
 
 			if ( isset( $collection['status'] ) && 202 === $collection['status'] ) {
 				return new \WP_REST_Response( [ 'status' => 202 ], 202 );
 			}
 
-			set_transient( BoardGameGeek::COLLECTION_TRANSIENT_KEY, $collection, 5 * MINUTE_IN_SECONDS );
+			set_transient( $this->bgg_api::COLLECTION_TRANSIENT_KEY, $collection, 5 * MINUTE_IN_SECONDS );
 
 			return $collection;
 		}
@@ -113,18 +134,17 @@ class Collection extends CustomRestRoute {
 	 * @since  2019-10-04
 	 */
 	private function process_remaining_games( $games ) {
-		$updater          = new GamesUpdater();
 		$games_to_process = $this->get_games_to_process( $games );
 
 		foreach ( $games_to_process as $index => $game ) {
-			if ( $updater->save_game_data( $game ) ) {
+			if ( $this->updater->save_game_data( $game ) ) {
 				unset( $games[ $index ] );
 			}
 		}
 
 		$games = array_values( $games );
 
-		set_transient( BoardGameGeek::COLLECTION_TRANSIENT_KEY, $games, 5 * MINUTE_IN_SECONDS );
+		set_transient( $this->bgg_api::COLLECTION_TRANSIENT_KEY, $games, 5 * MINUTE_IN_SECONDS );
 
 		return $games;
 	}
