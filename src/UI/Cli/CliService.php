@@ -5,6 +5,7 @@ use Auryn\Injector;
 use JMichaelWard\BoardGameCollector\UI\Cli\Command\BgcCommand;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 use WebDevStudios\OopsWP\Structure\Service;
+use WebDevStudios\OopsWP\Utility\Hookable;
 
 /**
  * Class CliService
@@ -77,7 +78,13 @@ class CliService extends Service {
 	public function register_commands() {
 		foreach ( $this->commands as $command_name => $command_class ) {
 			try {
-				\WP_CLI::add_command( $command_name, $this->injector->make( $command_class ) );
+				$command = $this->injector->make( $command_class );
+
+				if ( in_array( Hookable::class, class_implements( $command_class ), true ) ) {
+					$command->register_hooks();
+				}
+
+				\WP_CLI::add_command( $command_name, $command );
 			} catch ( \Exception $e ) {
 				\WP_CLI::error( $e->getMessage() );
 			}
