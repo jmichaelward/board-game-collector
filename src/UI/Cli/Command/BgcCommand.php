@@ -69,5 +69,28 @@ class BgcCommand {
 			WP_CLI::error( $e->getMessage() );
 		}
 	}
+
+	/**
+	 * Clear games and associated images from WordPress.
+	 */
+	public function reset() {
+		// Load required WordPress functionality.
+		include_once ABSPATH . WPINC . '/pluggable.php';
+
+		try {
+			$games_query = new \WP_Query(
+				[
+					'post_type'      => 'bgc_game',
+					'posts_per_page' => -1,
+				]
+			);
+
+			foreach ( $this->updater->remove_collection( $games_query ) as $game_title ) {
+				WP_CLI::success( "Deleted post and attachment for {$game_title}." );
+			}
+		} catch ( \Throwable $e ) {
+			WP_CLI::error( $e->getMessage() );
+		}
+	}
 }
 

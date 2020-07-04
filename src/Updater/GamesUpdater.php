@@ -11,7 +11,6 @@
 namespace JMichaelWard\BoardGameCollector\Updater;
 
 use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
-use JMichaelWard\BoardGameCollector\Model\Games\BggGame;
 use JMichaelWard\BoardGameCollector\Model\Games\BggGameAdapter;
 use JMichaelWard\BoardGameCollector\Model\Games\GameData;
 use JMichaelWard\BoardGameCollector\Admin\Settings;
@@ -136,6 +135,27 @@ class GamesUpdater {
 		$this->games_index = $this->get_games_index();
 
 		$this->process_games_data( $games );
+	}
+
+	/**
+	 * Remove posts from a set of query results.
+	 *
+	 * @param \WP_Query $query
+	 *
+	 * @return \Generator
+	 */
+	public function remove_collection( \WP_Query $query ) {
+		foreach ( $query->get_posts() as $post ) {
+			$attachment_id = get_post_thumbnail_id( $post->ID );
+
+			if ( $attachment_id ) {
+				wp_delete_attachment( $attachment_id, true );
+			}
+
+			wp_delete_post( $post->ID );
+
+			yield $post->post_title;
+		}
 	}
 
 	/**
