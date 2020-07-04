@@ -2,6 +2,7 @@
 namespace JMichaelWard\BoardGameCollector\UI\Cli;
 
 use Auryn\Injector;
+use JMichaelWard\BoardGameCollector\Model\Games\BggGame;
 use JMichaelWard\BoardGameCollector\UI\Cli\Command\BgcCommand;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 use WebDevStudios\OopsWP\Structure\Service;
@@ -68,6 +69,7 @@ class CliService extends Service {
 	 */
 	public function register_hooks() {
 		add_action( 'cli_init', [ $this, 'register_commands' ] );
+		add_action( 'bgc_notify_image_processed', [ $this, 'notify_image_processed' ], 10, 3 );
 	}
 
 	/**
@@ -89,5 +91,18 @@ class CliService extends Service {
 				\WP_CLI::error( $e->getMessage() );
 			}
 		}
+	}
+
+	/**
+	 * @param int     $image_id
+	 * @param int     $game_id
+	 * @param BggGame $game
+	 */
+	public function notify_image_processed( int $image_id, int $game_id, BggGame $game ) {
+		$game_name = $game->get_name();
+
+		$image_id
+			? WP_CLI::success( "Set featured image ID {$image_id} on game ID {$game_id}: {$game_name}." )
+			: WP_CLI::error( "Failed to process image for {$game_name}." );
 	}
 }
