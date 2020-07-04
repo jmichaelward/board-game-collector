@@ -102,7 +102,7 @@ class CliService extends Service {
 		$game_name = $game->get_name();
 
 		$image_id
-			? WP_CLI::success( "Set featured image ID {$image_id} on game ID {$game_id}: {$game_name}." )
-			: WP_CLI::error( "Failed to process image for {$game_name}." );
+			? \WP_CLI::success( "Set featured image ID {$image_id} on game ID {$game_id}: {$game_name}." )
+			: \WP_CLI::error( "Failed to process image for {$game_name}." );
 	}
 }
