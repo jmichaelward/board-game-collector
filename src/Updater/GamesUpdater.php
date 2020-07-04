@@ -140,22 +140,37 @@ class GamesUpdater {
 	/**
 	 * Remove posts from a set of query results.
 	 *
-	 * @param \WP_Query $query
-	 *
 	 * @return \Generator
 	 */
-	public function remove_collection( \WP_Query $query ) {
-		foreach ( $query->get_posts() as $post ) {
+	public function remove_collection() {
+		foreach ( $this->get_wp_query_all_games()->get_posts() as $post ) {
 			$attachment_id = get_post_thumbnail_id( $post->ID );
 
 			if ( $attachment_id ) {
 				wp_delete_attachment( $attachment_id, true );
 			}
 
-			wp_delete_post( $post->ID );
+			$result = wp_delete_post( $post->ID );
 
-			yield $post->post_title;
+			yield [
+				'status' => $result,
+				'post'   => $result instanceof \WP_Post ? $result : $post,
+			];
 		}
+	}
+
+	/**
+	 * Query all games.
+	 *
+	 * @return \WP_Query
+	 */
+	private function get_wp_query_all_games() : \WP_Query {
+		return new \WP_Query(
+			[
+				'post_type'      => 'bgc_game',
+				'posts_per_page' => -1,
+			]
+		);
 	}
 
 	/**
