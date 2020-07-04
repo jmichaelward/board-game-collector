@@ -153,7 +153,7 @@ class GamesUpdater {
 			$result = wp_delete_post( $post->ID );
 
 			yield [
-				'status' => $result,
+				'status' => $result instanceof \WP_Post ? 'success' : 'fail',
 				'post'   => $result instanceof \WP_Post ? $result : $post,
 			];
 		}

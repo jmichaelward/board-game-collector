@@ -79,7 +79,7 @@ class BgcCommand {
 
 		try {
 			foreach ( $this->updater->remove_collection() as $result ) {
-				$result['status'] instanceof \WP_Post
+				'success' === $result['status']
 					? WP_CLI::success( "{$result['post']->post_title} successfully deleted." )
 					: WP_CLI::warning( "Failed to delete {$result['post']->post_title}." );
 			}
