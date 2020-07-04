@@ -32,7 +32,13 @@ class ImageProcessor {
 	private $game_data;
 
 	/**
-	 * Load the game for image processing.
+	 * Process the game's image and return its ID.
+	 *
+	 * This method checks whether a game already has a featured image and simply
+	 * returns its ID if it does. Otherwise, it attempts to download the image
+	 * from BoardGameGeek, sideload it into WordPress, attach it to the game,
+	 * and set some metadata on the image itself for reference. Finally, we
+	 * return the ID.
 	 *
 	 * @param int     $game_id   WordPress post ID of the game.
 	 * @param BggGame $game_data The game's data from BoardGameGeek.
@@ -42,13 +48,11 @@ class ImageProcessor {
 	public function process_game_image( int $game_id, BggGame $game_data ) {
 		$this->game_id   = $game_id;
 		$this->game_data = $game_data;
-		$image_id        = $this->get_image_id();
+		$image_id        = $this->get_featured_image_id();
 
 		if ( ! $image_id ) {
-			return 0;
+			$image_id = $this->load_image( $this->game_id, $this->game_data->get_image_url(), $this->game_data->get_name() );
 		}
-
-		$this->set_image_meta( $image_id );
 
 		return $image_id;
 	}
@@ -129,17 +133,18 @@ class ImageProcessor {
 			return 0;
 		}
 
+		$this->set_image_meta( $img_id );
+
 		return $img_id;
 	}
 
 	/**
-	 * Set the featured image on a Game post.
+	 * Get a game's image ID.
 	 *
 	 * @return int The post ID of the attachment.
 	 */
-	private function get_image_id() {
-		return $this->get_image_id_from_game_id() ?:
-			$this->load_image( $this->game_id, $this->game_data->get_image_url(), $this->game_data->get_name() );
+	private function get_featured_image_id() {
+		return get_post_thumbnail_id( $this->game_id );
 	}
 
 	/**
@@ -147,7 +152,11 @@ class ImageProcessor {
 	 *
 	 * @param int $image_id WordPress post ID for a game image.
 	 */
-	private function set_image_meta( int $image_id ) {
+	private function set_image_meta( int $image_id ) : void {
+		if ( ! $image_id ) {
+			return;
+		}
+
 		update_post_meta( $this->game_id, '_thumbnail_id', $image_id );
 		update_post_meta( $image_id, '_bgc_orig_image_url', $this->game_data->get_image_url() );
 		update_post_meta( $image_id, '_bgc_game_id', $this->game_id );
