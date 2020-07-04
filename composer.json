@@ -30,9 +30,6 @@
     "scripts": {
         "post-install-cmd": [
             "./vendor/bin/phpcs --config-set installed_paths $PWD/vendor/jmichaelward/wpcs-modified/JMichaelWardWpcs,$PWD/vendor/wp-coding-standards/wpcs"
-        ],
-        "reset-games": [
-            "./vendor/bin/wp post delete $(wp post list --format=ids --post_type=bgc_game) --force"
         ]
     },
     "autoload": {
