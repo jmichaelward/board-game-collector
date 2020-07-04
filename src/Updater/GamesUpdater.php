@@ -53,6 +53,13 @@ class GamesUpdater {
 	private $adapter;
 
 	/**
+	 * Instance of the ImageProcessor class.
+	 *
+	 * @var ImageProcessor
+	 */
+	private $image_processor;
+
+	/**
 	 * A associative array mapping BoardGameGeek IDs to WordPress post IDs.
 	 *
 	 * [
@@ -69,14 +76,21 @@ class GamesUpdater {
 	/**
 	 * GamesUpdater constructor.
 	 *
-	 * @param BoardGameGeek  $api      Instance of our BoardGameGeek API model.
-	 * @param Settings       $settings Plugin settings.
-	 * @param BggGameAdapter $adapter  Adapter for BoardGameGeek data.
+	 * @param BoardGameGeek  $api             Instance of our BoardGameGeek API model.
+	 * @param Settings       $settings        Plugin settings.
+	 * @param BggGameAdapter $adapter         Adapter for BoardGameGeek data.
+	 * @param ImageProcessor $image_processor Instance of ImageProcessor class.
 	 */
-	public function __construct( BoardGameGeek $api, Settings $settings, BggGameAdapter $adapter ) {
-		$this->api      = $api;
-		$this->settings = $settings;
-		$this->adapter  = $adapter;
+	public function __construct(
+		BoardGameGeek $api,
+		Settings $settings,
+		BggGameAdapter $adapter,
+		ImageProcessor $image_processor
+	) {
+		$this->api             = $api;
+		$this->settings        = $settings;
+		$this->adapter         = $adapter;
+		$this->image_processor = $image_processor;
 	}
 
 	/**
@@ -142,7 +156,7 @@ class GamesUpdater {
 
 		do_action( 'bgc_finish_progress_bar' );
 
-		$this->process_images_data( $games );
+		$this->process_images( $games );
 	}
 
 	/**
@@ -152,15 +166,32 @@ class GamesUpdater {
 	 *
 	 * @param array $games Array of games data.
 	 */
-	private function process_images_data( array $games ) {
+	private function process_images( array $games ) {
 		$this->games_index = $this->get_games_index();
-		$image_handler     = new ImageProcessor();
 
-		foreach ( $games as $game_data ) {
-			$game    = $this->adapter->get_game( $game_data );
-			$game_id = $this->games_index[ $game->get_bgg_id() ]['post_id'] ?? 0;
+		$data = array_filter(
+			array_map(
+				function( $game_data ) {
+					$game = $this->adapter->get_game( $game_data );
+					$id   = $this->games_index[ $game->get_bgg_id() ]['post_id'] ?? 0;
 
-			$image_handler->set_featured_image( $game_id, $game );
+					if ( ! $id ) {
+						return [];
+					}
+
+					return [
+						'game' => $game,
+						'id'   => $id,
+					];
+				},
+				$games
+			)
+		);
+
+		foreach ( $data as $game ) {
+			$id = $this->image_processor->process_game_image( $game['id'], $game['game'] );
+
+			do_action( 'bgc_notify_image_processed', $id, $game['id'], $game['game'] );
 		}
 	}
 

@@ -8,6 +8,7 @@
 
 namespace JMichaelWard\BoardGameCollector\Updater;
 
+use JMichaelWard\BoardGameCollector\Model\Games\BggGame;
 use JMichaelWard\BoardGameCollector\Model\Games\GameData;
 
 /**
@@ -17,15 +18,49 @@ use JMichaelWard\BoardGameCollector\Model\Games\GameData;
  */
 class ImageProcessor {
 	/**
-	 * Check for the existence of the image based on its URL.
+	 * WordPress post ID for the game.
 	 *
-	 * @param string $image_url The remote URL of the image.
+	 * @var int
+	 */
+	private $game_id;
+
+	/**
+	 * Processed BoardGameGeek data.
+	 *
+	 * @var BggGame
+	 */
+	private $game_data;
+
+	/**
+	 * Load the game for image processing.
+	 *
+	 * @param int     $game_id   WordPress post ID of the game.
+	 * @param BggGame $game_data The game's data from BoardGameGeek.
+	 *
+	 * @return int ID of the processed image.
+	 */
+	public function process_game_image( int $game_id, BggGame $game_data ) {
+		$this->game_id   = $game_id;
+		$this->game_data = $game_data;
+		$image_id        = $this->get_image_id();
+
+		if ( ! $image_id ) {
+			return 0;
+		}
+
+		$this->set_image_meta( $image_id );
+
+		return $image_id;
+	}
+
+	/**
+	 * Check for the existence of the image based on the BoardGameGeek game ID.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-05-01
 	 * @return int
 	 */
-	private function get_image_id_from_url( string $image_url ) {
+	private function get_image_id_from_game_id() {
 		$query = new \WP_Query(
 			[
 				'fields'      => 'ids',
@@ -33,18 +68,18 @@ class ImageProcessor {
 				'post_status' => 'inherit',
 				'meta_query'  => [ // @codingStandardsIgnoreLine
 					[
-						'key'   => '_bgc_orig_image_url',
-						'value' => $image_url,
+						'key'   => '_bgc_game_id',
+						'value' => $this->game_id,
 					],
 				],
 			]
 		);
 
-		$result = $query->get_posts();
+		$result = $query->get_queried_object_id();
 
 		wp_reset_postdata();
 
-		return 1 !== count( $result ) ? 0 : $result[0];
+		return $result;
 	}
 
 	/**
@@ -94,24 +129,27 @@ class ImageProcessor {
 			return 0;
 		}
 
-		update_post_meta( $img_id, '_bgc_orig_image_url', $image_url );
-
 		return $img_id;
 	}
 
 	/**
 	 * Set the featured image on a Game post.
 	 *
-	 * @param int      $post_id Post ID of the game in WordPress.
-	 * @param GameData $game    Game data from BoardGameGeek.
+	 * @return int The post ID of the attachment.
 	 */
-	function set_featured_image( $post_id, GameData $game ) {
-		$image_id = $this->get_image_id_from_url( $game->get_image_url() ) ?: $this->load_image( $post_id, $game->get_image_url(), $game->get_name() );
+	private function get_image_id() {
+		return $this->get_image_id_from_game_id() ?:
+			$this->load_image( $this->game_id, $this->game_data->get_image_url(), $this->game_data->get_name() );
+	}
 
-		if ( ! $image_id ) {
-			return;
-		}
-
-		update_post_meta( $post_id, '_thumbnail_id', $image_id );
+	/**
+	 * Set post meta on the game image.
+	 *
+	 * @param int $image_id WordPress post ID for a game image.
+	 */
+	private function set_image_meta( int $image_id ) {
+		update_post_meta( $this->game_id, '_thumbnail_id', $image_id );
+		update_post_meta( $image_id, '_bgc_orig_image_url', $this->game_data->get_image_url() );
+		update_post_meta( $image_id, '_bgc_game_id', $this->game_id );
 	}
 }
