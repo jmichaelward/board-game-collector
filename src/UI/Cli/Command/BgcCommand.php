@@ -86,7 +86,7 @@ class BgcCommand {
 			);
 
 			foreach ( $this->updater->remove_collection( $games_query ) as $game_title ) {
-				WP_CLI::success( "Deleted post and attachment for {$game_title}." );
+				WP_CLI::success( "{$game_title} successfully deleted." );
 			}
 		} catch ( \Throwable $e ) {
 			WP_CLI::error( $e->getMessage() );
