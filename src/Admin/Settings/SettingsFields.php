@@ -20,10 +20,10 @@ interface SettingsFields {
 	/**
 	 * The main settings key.
 	 */
-	const SETTINGS_KEY = 'bgc-settings';
+	public const SETTINGS_KEY = 'bgc-settings';
 
 	/**
 	 * The username field.
 	 */
-	const USERNAME_KEY = 'bgg-username';
+	public const USERNAME_KEY = 'bgg-username';
 }

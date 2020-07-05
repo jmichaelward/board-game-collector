@@ -28,7 +28,7 @@ class GamesUpdater {
 	 *
 	 * This index maps a BoardGameGeek game ID to the ID in WordPress to facilitate lookup.
 	 */
-	const GAMES_INDEX_OPTION_KEY = 'bgc_collection_index';
+	private const GAMES_INDEX_OPTION_KEY = 'bgc_collection_index';
 
 	/**
 	 * BoardGameGeek API.

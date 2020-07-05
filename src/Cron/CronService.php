@@ -23,17 +23,17 @@ class CronService extends Service {
 	/**
 	 * Name of the interval.
 	 */
-	const INTERVAL_NAME = 'five_minutes';
+	private const INTERVAL_NAME = 'five_minutes';
 
 	/**
 	 * Value of the interval.
 	 */
-	const INTERVAL_VALUE = 300;
+	public const INTERVAL_VALUE = 300;
 
 	/**
 	 * Description of the interval.
 	 */
-	const INTERVAL_DESCRIPTION = 'Every five minutes';
+	private const INTERVAL_DESCRIPTION = 'Every five minutes';
 
 	/**
 	 * BGG Updater class.
