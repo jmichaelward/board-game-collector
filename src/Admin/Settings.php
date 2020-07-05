@@ -111,13 +111,14 @@ class Settings extends Service implements Hydratable, SettingsFields {
 			return;
 		}
 
-		$js = plugins_url( 'app/dist/index.js', $this->file_path . 'board-game-collector.php' );
+		$script_path = 'app/dist/index.js';
+		$js          = plugins_url( $script_path, $this->file_path . 'board-game-collector.php' );
 
 		wp_register_script(
 			'bgc-settings-js',
 			$js,
 			[ 'wp-element' ],
-			filemtime( $js ),
+			filemtime( plugin_dir_path( $this->file_path ) . "/{$script_path}" ),
 			true
 		);
 
