@@ -16,6 +16,11 @@ class Settings extends Service implements Hydratable, SettingsFields {
 	use FilePathDependent;
 
 	/**
+	 * WordPress handle for the Settings JavaScript.
+	 */
+	private const JS_SETTINGS_NAME = 'bgc-settings-js';
+
+	/**
 	 * The settings menu class.
 	 *
 	 * @var SettingsPage
@@ -114,20 +119,22 @@ class Settings extends Service implements Hydratable, SettingsFields {
 		$script_path = 'app/dist/index.js';
 		$js          = plugins_url( $script_path, $this->file_path . 'board-game-collector.php' );
 
-		wp_register_script(
-			'bgc-settings-js',
+		wp_enqueue_script(
+			self::JS_SETTINGS_NAME,
 			$js,
 			[ 'wp-element' ],
 			filemtime( plugin_dir_path( $this->file_path ) . "/{$script_path}" ),
 			true
 		);
 
-		wp_localize_script( 'bgc-settings-js', 'bgcollector', [
-			'apiRoot' => get_site_url( null, '/wp-json/bgc/v1' ),
-			'nonce'   => wp_create_nonce( 'wp_rest' ),
-		] );
-
-		wp_enqueue_script( 'bgc-settings-js' );
+		wp_localize_script(
+			self::JS_SETTINGS_NAME,
+			'bgcollector',
+			[
+				'apiRoot' => get_site_url( null, '/wp-json/bgc/v1' ),
+				'nonce'   => wp_create_nonce( 'wp_rest' ),
+			]
+		);
 	}
 
 	/**
