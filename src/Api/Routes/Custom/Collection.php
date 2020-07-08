@@ -10,6 +10,7 @@
 namespace JMichaelWard\BoardGameCollector\Api\Routes\Custom;
 
 use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsFields;
+use JMichaelWard\BoardGameCollector\Api\ApiService;
 use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
 use JMichaelWard\BoardGameCollector\Api\Routes\CustomRestRoute;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
@@ -79,7 +80,7 @@ class Collection extends CustomRestRoute {
 					],
 				],
 				'permission_callback' => function ( \WP_REST_Request $request ) {
-					return wp_verify_nonce( $request->get_param( 'nonce' ), 'wp_rest' );
+					return wp_verify_nonce( $request->get_header( 'x_wp_nonce' ), 'wp_rest' );
 				},
 			]
 		);
@@ -125,7 +126,7 @@ class Collection extends CustomRestRoute {
 
 			set_transient( $this->bgg_api::COLLECTION_TRANSIENT_KEY, $collection, 5 * MINUTE_IN_SECONDS );
 
-			return $collection;
+			return new \WP_REST_Response( $collection );
 		}
 
 		return $this->process_remaining_games( $unprocessed );

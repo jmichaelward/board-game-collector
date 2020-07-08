@@ -122,7 +122,7 @@ class Settings extends Service implements Hydratable, SettingsFields {
 		wp_enqueue_script(
 			self::JS_SETTINGS_NAME,
 			$js,
-			[ 'wp-element' ],
+			[ 'wp-element', 'wp-api-fetch' ],
 			filemtime( plugin_dir_path( $this->file_path ) . "/{$script_path}" ),
 			true
 		);
