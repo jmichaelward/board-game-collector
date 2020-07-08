@@ -62,6 +62,10 @@ class Collection extends CustomRestRoute {
 	 * @since  2019-09-01
 	 */
 	public function register_routes() {
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+
 		register_rest_route(
 			$this->namespace,
 			$this->rest_base,
