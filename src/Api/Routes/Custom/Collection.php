@@ -118,29 +118,34 @@ class Collection extends CustomRestRoute {
 	public function update_items() {
 		$unprocessed = get_transient( BoardGameGeek::COLLECTION_TRANSIENT_KEY );
 
-		if ( ! $unprocessed ) {
+		if ( false === $unprocessed ) {
 			$response = $this->bgg_api->request_user_collection( $this->get_saved_username() );
 
 			if ( 202 === $response->get_status_code() ) {
-				return new \WP_REST_Response( [ 'status' => 202 ], 202 );
+				return new \WP_REST_Response( [ 'games' => [], 'status' => 202 ], 202 );
 			}
 
-			set_transient( $this->bgg_api::COLLECTION_TRANSIENT_KEY, $response, 5 * MINUTE_IN_SECONDS );
+			$unprocessed = $response->get_body()['item'] ?? [];
 
-			return $response;
+			set_transient( $this->bgg_api::COLLECTION_TRANSIENT_KEY, $unprocessed, 5 * MINUTE_IN_SECONDS );
+
+			return new \WP_REST_Response( [ 'games' => $unprocessed, 'status' => 200 ], 200 );
 		}
 
-		return $this->process_remaining_games( $unprocessed );
+		return new \WP_REST_Response( [ 'games' => $this->process_remaining_games( $unprocessed ), 'status' => 200 ], 200 );
 	}
 
 	/**
-	 * @param Response $response API response to the games query.
+	 * @param array $games API response to the games query.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-10-04
 	 */
-	private function process_remaining_games( Response $response ) {
-		$games = $response->get_body()['item'] ?? [];
+	private function process_remaining_games( array $games ) {
+		if ( ! $games ) {
+			return [];
+		}
+
 		$games_to_process = $this->get_games_to_process( $games );
 
 		foreach ( $games_to_process as $index => $game ) {
@@ -151,11 +156,9 @@ class Collection extends CustomRestRoute {
 
 		$games = array_values( $games );
 
-		$new_response = new Response(['item' => $games]);
+		set_transient( $this->bgg_api::COLLECTION_TRANSIENT_KEY, $games, 5 * MINUTE_IN_SECONDS );
 
-		set_transient( $this->bgg_api::COLLECTION_TRANSIENT_KEY, $new_response, 5 * MINUTE_IN_SECONDS );
-
-		return $new_response;
+		return $games;
 	}
 
 	/**

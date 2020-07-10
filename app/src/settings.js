@@ -26,43 +26,28 @@ const triggerUpdate = () => {
 			method: 'POST',
 			data: { username: document.getElementById( 'bgg-username' ).value }
 		}
-	).then( result => console.log( result ) );
-	// .then( result => console.log( result ) )
-	// .error( error => console.log( error ) );
+	).then( result => {
+		const { games, status } = result;
+		if ( 202 === status ) {
+			setTimeout( function () {
+				updateCollection();
+			}, 5000 );
+			return;
+		}
 
-	// axios.post( bgcollector.apiRoot + '/collection', {
-	// 		nonce: bgcollector.nonce,
-	// 		username: document.getElementById('bgg-username').value,
-	// 	},
-	// 	{
-	// 		headers: {
-	// 			'X-WP-Nonce': bgcollector.nonce
-	// 		}
-	// 	})
-	// 	.then( ({data, status}) => {
-	// 		if (202 === data.status) {
-	// 			setTimeout(function() {
-	// 				updateCollection();
-	// 			},5000);
-	// 			return;
-	// 		}
-	//
-	// 		if (200 !== status) {
-	// 			console.log('Something went wrong');
-	// 		}
-	//
-	// 		if (0 !== data.length) {
-	// 			console.log(data.length);
-	// 			triggerUpdate();
-	// 		}
-	// 	} )
-	// 	.catch( error => {
-	// 		console.log(error);
-	// 	} );
+		if ( 200 !== status ) {
+			// @TODO Create admin notification for status notification.
+			console.log( 'Something went wrong' );
+		}
+
+		if ( 0 !== games.length ) {
+			triggerUpdate();
+		}
+	} ).catch( error => {
+		// @TODO Create admin notification for error message.
+		console.log( error );
+	} );
 };
-
-
-// what
 
 const settings = () => {
 	const username = document.getElementById('bgg-username');
