@@ -10,6 +10,7 @@
 namespace JMichaelWard\BoardGameCollector\Admin\Settings;
 
 use JMichaelWard\BoardGameCollector\Admin\Notifier;
+use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
 use WebDevStudios\OopsWP\Utility\FilePathDependent;
 use WebDevStudios\OopsWP\Utility\Hookable;
 use WebDevStudios\OopsWP\Utility\Registerable;
@@ -25,12 +26,21 @@ use WebDevStudios\OopsWP\Utility\Renderable;
 class SettingsPage implements SettingsFields, Hookable, Registerable, Renderable {
 	use FilePathDependent;
 
+	private const VERIFIED_USERNAME_KEY = 'verified-username';
+
 	/**
 	 * Class instance.
 	 *
 	 * @var Notifier
 	 */
 	private $notifier;
+
+	/**
+	 * BGG API instance.
+	 *
+	 * @var BoardGameGeek
+	 */
+	private $bgg_api;
 
 	/**
 	 * The Settings data.
@@ -47,7 +57,8 @@ class SettingsPage implements SettingsFields, Hookable, Registerable, Renderable
 	 */
 	private $fields = [];
 
-	public function __construct( Notifier $notifier ) {
+	public function __construct( BoardGameGeek $bgg_api, Notifier $notifier ) {
+		$this->bgg_api  = $bgg_api;
 		$this->notifier = $notifier;
 	}
 
@@ -55,7 +66,7 @@ class SettingsPage implements SettingsFields, Hookable, Registerable, Renderable
 	 * Register hooks for this settings page.
 	 */
 	public function register_hooks() {
-		add_action( 'admin_notices', [ $this, 'validate_username' ] );
+		add_action( 'admin_init', [ $this, 'notify_invalid_username' ] );
 		add_action( 'admin_notices', [ $this, 'notify_missing_username' ] );
 	}
 
@@ -161,6 +172,50 @@ class SettingsPage implements SettingsFields, Hookable, Registerable, Renderable
 		echo '<input type="text" id="' . esc_attr( $args['id'] )
 			. '" name="bgc-settings[' . esc_attr( $args['id'] ) . ']" value="'
 			. esc_attr( $this->data[ $args['id'] ] ) . '" />';
+	}
+
+	/**
+	 * Validate whether the username saved to the settings page is registered with BoardGameGeek.
+	 */
+	public function notify_invalid_username() {
+		if ( $this->username_verified() || ! $this->is_settings_page() ) {
+			return;
+		}
+
+		$username = $this->get_username();
+
+		if ( empty( $username ) ) {
+			return;
+		}
+
+		$is_valid_username = $this->bgg_api->is_username_valid( $username );
+
+		$this->data[ self::VERIFIED_USERNAME_KEY ] = $is_valid_username;
+		update_option( self::SETTINGS_KEY, $this->data );
+
+		if ( $is_valid_username ) {
+			return;
+		}
+
+		$this->notifier->do_error_notice( "There is no user registered on BoardGameGeek by the name of ${username}." );
+	}
+
+	/**
+	 * Check whether a username as been verified.
+	 *
+	 * @return bool
+	 */
+	private function username_verified() : bool {
+		return get_option( self::SETTINGS_KEY )[ self::VERIFIED_USERNAME_KEY ] ?? false;
+	}
+
+	/**
+	 * Check whether it's our custom settings page.
+	 *
+	 * @return bool
+	 */
+	private function is_settings_page() : bool {
+		return self::SETTINGS_KEY === filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
 	}
 
 	/**

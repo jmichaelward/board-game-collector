@@ -32,6 +32,34 @@ class BoardGameGeek {
 	private $base_path = 'https://www.boardgamegeek.com/xmlapi2';
 
 	/**
+	 * Make a request to BoardGameGeek for a given username.
+	 *
+	 * @param string $username
+	 *
+	 * @return Response
+	 */
+	private function request_username( string $username ) : Response {
+		return ( new Request( "{$this->base_path}/user?name={$username}") )->make();
+	}
+
+	/**
+	 * Confirm whether a saved username is a valid one on BoardGameGeek.
+	 *
+	 * The BGG API always returns a response with data, regardless of the username.
+	 * Valid usernames have a user ID associated with them.
+	 *
+	 * @param string $username The username to check.
+	 *
+	 * @return bool
+	 */
+	public function is_username_valid( $username ) : bool {
+		$response     = $this->request_username( $username );
+		$bgg_username = $response->get_body()['@attributes']['id'] ?? '';
+
+		return ! empty( $bgg_username );
+	}
+
+	/**
 	 * Attempt to retrieve a user's game collection from the API.
 	 *
 	 * @param string $username The user collection to retrieve.
@@ -74,7 +102,7 @@ class BoardGameGeek {
 			);
 		}
 
-		$request  = new Request( "{$this->base_path}/collection?username={$username}&stats=1" );
+		$request = new Request( "{$this->base_path}/collection?username={$username}&stats=1" );
 
 		return $request->make();
 	}
