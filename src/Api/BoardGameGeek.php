@@ -37,22 +37,22 @@ class BoardGameGeek {
 	 * @param string $username The user collection to retrieve.
 	 * @throws Exception|InvalidArgumentException If API error response or missing username.
 	 *
-	 * @return array
+	 * @return Response
 	 */
-	public function get_user_collection( string $username ) : array {
+	public function request_user_collection( string $username ) : Response {
 		$cached = get_transient( self::COLLECTION_TRANSIENT_KEY );
 
 		if ( $cached ) {
 			return $cached;
 		}
 
-		$games = $this->request_games_by_username( $username );
+		$response = $this->request_games_by_username( $username );
 
-		if ( $games ) {
-			set_transient( self::COLLECTION_TRANSIENT_KEY, $games, CronService::INTERVAL_VALUE );
+		if ( 200 == $response->get_status_code() && $response->get_body()['item'] ?? [] ) {
+			set_transient( self::COLLECTION_TRANSIENT_KEY, $response, CronService::INTERVAL_VALUE );
 		}
 
-		return $games;
+		return $response;
 	}
 
 	/**
@@ -65,9 +65,9 @@ class BoardGameGeek {
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-12
-	 * @return array
+	 * @return Response
 	 */
-	private function request_games_by_username( string $username ) : array {
+	private function request_games_by_username( string $username ) : Response {
 		if ( ! $username ) {
 			throw new InvalidArgumentException(
 				__( 'No username set in BGC Settings. Refusing to make request.', 'bgcollector' )
@@ -75,15 +75,7 @@ class BoardGameGeek {
 		}
 
 		$request  = new Request( "{$this->base_path}/collection?username={$username}&stats=1" );
-		$response = $request->make();
-		$error    = $response->get_error();
 
-		if ( $error ) {
-			throw new Exception( $error );
-		}
-
-		$games = $response->get_body();
-
-		return $games['item'] ?? [];
+		return $request->make();
 	}
 }

@@ -12,6 +12,7 @@ namespace JMichaelWard\BoardGameCollector\Api\Routes\Custom;
 use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsFields;
 use JMichaelWard\BoardGameCollector\Api\ApiService;
 use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
+use JMichaelWard\BoardGameCollector\Api\Response;
 use JMichaelWard\BoardGameCollector\Api\Routes\CustomRestRoute;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 
@@ -118,27 +119,28 @@ class Collection extends CustomRestRoute {
 		$unprocessed = get_transient( BoardGameGeek::COLLECTION_TRANSIENT_KEY );
 
 		if ( ! $unprocessed ) {
-			$collection = $this->bgg_api->get_user_collection( $this->get_saved_username() );
+			$response = $this->bgg_api->request_user_collection( $this->get_saved_username() );
 
-			if ( isset( $collection['status'] ) && 202 === $collection['status'] ) {
+			if ( 202 === $response->get_status_code() ) {
 				return new \WP_REST_Response( [ 'status' => 202 ], 202 );
 			}
 
-			set_transient( $this->bgg_api::COLLECTION_TRANSIENT_KEY, $collection, 5 * MINUTE_IN_SECONDS );
+			set_transient( $this->bgg_api::COLLECTION_TRANSIENT_KEY, $response, 5 * MINUTE_IN_SECONDS );
 
-			return new \WP_REST_Response( $collection );
+			return $response;
 		}
 
 		return $this->process_remaining_games( $unprocessed );
 	}
 
 	/**
-	 * @param $games
+	 * @param Response $response API response to the games query.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-10-04
 	 */
-	private function process_remaining_games( $games ) {
+	private function process_remaining_games( Response $response ) {
+		$games = $response->get_body()['item'] ?? [];
 		$games_to_process = $this->get_games_to_process( $games );
 
 		foreach ( $games_to_process as $index => $game ) {
@@ -149,9 +151,11 @@ class Collection extends CustomRestRoute {
 
 		$games = array_values( $games );
 
-		set_transient( $this->bgg_api::COLLECTION_TRANSIENT_KEY, $games, 5 * MINUTE_IN_SECONDS );
+		$new_response = new Response(['item' => $games]);
 
-		return $games;
+		set_transient( $this->bgg_api::COLLECTION_TRANSIENT_KEY, $new_response, 5 * MINUTE_IN_SECONDS );
+
+		return $new_response;
 	}
 
 	/**

@@ -11,6 +11,7 @@
 namespace JMichaelWard\BoardGameCollector\Updater;
 
 use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
+use JMichaelWard\BoardGameCollector\Api\Response;
 use JMichaelWard\BoardGameCollector\Model\Games\BggGameAdapter;
 use JMichaelWard\BoardGameCollector\Model\Games\GameData;
 use JMichaelWard\BoardGameCollector\Admin\Settings;
@@ -130,7 +131,7 @@ class GamesUpdater {
 			return;
 		}
 
-		$games = $this->api->get_user_collection( $this->settings->get_username() );
+		$games = $this->api->request_user_collection( $this->settings->get_username() );
 
 		$this->games_index = $this->get_games_index();
 
@@ -176,9 +177,10 @@ class GamesUpdater {
 	/**
 	 * Process the retrieved games data.
 	 *
-	 * @param array $games Games retrieved from BoardGameGeek.
+	 * @param Response $response Games retrieved from BoardGameGeek.
 	 */
-	private function process_games_data( array $games ) {
+	private function process_games_data( Response $response ) {
+		$games = $response->get_body()['item'] ?? [];
 		do_action( 'bgc_setup_progress_bar', count( $games ) );
 
 		foreach ( $games as $game ) {

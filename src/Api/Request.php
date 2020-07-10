@@ -62,7 +62,7 @@ class Request {
 	 *
 	 * @return Response
 	 */
-	public function make() {
+	public function make() : Response {
 		try {
 			$request_method = $this->methods[ $this->method ];
 			$data           = $request_method( $this->url );
