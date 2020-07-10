@@ -46,7 +46,7 @@ class BoardGameGeek {
 			return $cached;
 		}
 
-		$games = $this->get_games_by_user( $username );
+		$games = $this->request_games_by_username( $username );
 
 		if ( $games ) {
 			set_transient( self::COLLECTION_TRANSIENT_KEY, $games, CronService::INTERVAL_VALUE );
@@ -67,7 +67,7 @@ class BoardGameGeek {
 	 * @since  2019-04-12
 	 * @return array
 	 */
-	private function get_games_by_user( string $username ) : array {
+	private function request_games_by_username( string $username ) : array {
 		if ( ! $username ) {
 			throw new InvalidArgumentException(
 				__( 'No username set in BGC Settings. Refusing to make request.', 'bgcollector' )
