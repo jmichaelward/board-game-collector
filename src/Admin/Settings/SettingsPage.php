@@ -203,9 +203,15 @@ class SettingsPage implements SettingsFields, Hookable, Registerable, Renderable
 	/**
 	 * Check whether a username as been verified.
 	 *
+	 * Recently updated settings are always considered non-verified.
+	 *
 	 * @return bool
 	 */
 	private function username_verified() : bool {
+		if ( filter_input( INPUT_GET, 'settings-updated', FILTER_VALIDATE_BOOLEAN ) ) {
+			return false;
+		}
+
 		return get_option( self::SETTINGS_KEY )[ self::VERIFIED_USERNAME_KEY ] ?? false;
 	}
 
