@@ -46,7 +46,7 @@ class GameBlock implements Hookable {
 	public function enqueue_assets() {
 		wp_enqueue_script( // @codingStandardsIgnoreLine
 			'bgc_game_block',
-			plugins_url( "app/dist/blocks/{$this->dirname}/index.js", $this->file_path ),
+			plugins_url( "app/dist/blocks.js", $this->file_path ),
 			[ 'wp-blocks', 'wp-element' ]
 		);
 	}

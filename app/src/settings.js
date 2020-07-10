@@ -76,4 +76,6 @@ const settings = () => {
 		document.getElementById( 'bgc-app' ) );
 };
 
+settings();
+
 export default settings;

@@ -116,7 +116,7 @@ class Settings extends Service implements Hydratable, SettingsFields {
 			return;
 		}
 
-		$script_path = 'app/dist/index.js';
+		$script_path = 'app/dist/settings.js';
 		$js          = plugins_url( $script_path, $this->file_path . 'board-game-collector.php' );
 
 		wp_enqueue_script(
