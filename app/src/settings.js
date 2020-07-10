@@ -1,5 +1,6 @@
 /* global wp, bgcollector */
-import { render, createElement } from '@wordpress/element';
+import { Button } from "@wordpress/components";
+import { render } from "@wordpress/element";
 
 const {
 	apiFetch
@@ -12,10 +13,6 @@ const updateCollection = (e) => {
 
 	triggerUpdate();
 };
-
-const Button = () => (
-	<button onClick={updateCollection}>Update Collection</button>
-);
 
 const triggerUpdate = () => {
 	apiFetch.use( apiFetch.createNonceMiddleware( bgcollector.nonce ) );
@@ -57,7 +54,7 @@ const settings = () => {
 	}
 
 	render(
-		createElement( Button ),
+		<Button onClick={updateCollection}>Update Collection</Button>,
 		document.getElementById( 'bgc-app' ) );
 };
 
