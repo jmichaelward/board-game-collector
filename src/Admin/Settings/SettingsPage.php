@@ -26,6 +26,13 @@ class SettingsPage implements SettingsFields, Hookable, Registerable, Renderable
 	use FilePathDependent;
 
 	/**
+	 * Class instance.
+	 *
+	 * @var Notifier
+	 */
+	private $notifier;
+
+	/**
 	 * The Settings data.
 	 *
 	 * @var array
@@ -39,6 +46,10 @@ class SettingsPage implements SettingsFields, Hookable, Registerable, Renderable
 	 * @var array
 	 */
 	private $fields = [];
+
+	public function __construct( Notifier $notifier ) {
+		$this->notifier = $notifier;
+	}
 
 	/**
 	 * Register hooks for this settings page.
@@ -172,7 +183,7 @@ class SettingsPage implements SettingsFields, Hookable, Registerable, Renderable
 			return;
 		}
 
-		( new Notifier() )->do_warning_settings_not_configured();
+		$this->notifier->do_warning_settings_not_configured();
 	}
 
 	/**
