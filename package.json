@@ -26,7 +26,10 @@
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@wordpress/hooks": "^2.9.0",
+    "@wordpress/notices": "^2.8.0"
+  },
   "babel": {
     "presets": [
       "@babel/preset-env",
