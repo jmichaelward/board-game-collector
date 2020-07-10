@@ -9,7 +9,10 @@
 
 namespace JMichaelWard\BoardGameCollector\Admin\Settings;
 
+use JMichaelWard\BoardGameCollector\Admin\Notifier;
 use WebDevStudios\OopsWP\Utility\FilePathDependent;
+use WebDevStudios\OopsWP\Utility\Hookable;
+use WebDevStudios\OopsWP\Utility\Registerable;
 use WebDevStudios\OopsWP\Utility\Renderable;
 
 /**
@@ -19,7 +22,7 @@ use WebDevStudios\OopsWP\Utility\Renderable;
  * @since   2019-05-01
  * @package JMichaelWard\BoardGameCollector\Admin\Settings
  */
-class SettingsPage implements SettingsFields, Renderable {
+class SettingsPage implements SettingsFields, Hookable, Registerable, Renderable {
 	use FilePathDependent;
 
 	/**
@@ -38,15 +41,11 @@ class SettingsPage implements SettingsFields, Renderable {
 	private $fields = [];
 
 	/**
-	 * SettingsPage constructor.
-	 *
-	 * @param array $data Data for the settings page.
-	 *
-	 * @author Jeremy Ward <jeremy@jmichaelward.com>
-	 * @since  2019-05-01
+	 * Register hooks for this settings page.
 	 */
-	public function __construct( array $data ) {
-		$this->data = $data;
+	public function register_hooks() {
+		add_action( 'admin_notices', [ $this, 'validate_username' ] );
+		add_action( 'admin_notices', [ $this, 'notify_missing_username' ] );
 	}
 
 	/**
@@ -72,7 +71,8 @@ class SettingsPage implements SettingsFields, Renderable {
 	 * @return void
 	 */
 	public function register() {
-		$this->init_fields();
+		$this->setup();
+		$this->register_hooks();
 
 		add_submenu_page(
 			'edit.php?post_type=bgc_game',
@@ -93,10 +93,11 @@ class SettingsPage implements SettingsFields, Renderable {
 	 * @since  2019-05-01
 	 * @return void
 	 */
-	public function setup() {
+	private function setup() {
 		$this->init_fields();
 		$this->add_section();
 		$this->add_fields();
+		$this->data = get_option( self::SETTINGS_KEY, [] );
 	}
 
 	/**
@@ -149,5 +150,39 @@ class SettingsPage implements SettingsFields, Renderable {
 		echo '<input type="text" id="' . esc_attr( $args['id'] )
 			. '" name="bgc-settings[' . esc_attr( $args['id'] ) . ']" value="'
 			. esc_attr( $this->data[ $args['id'] ] ) . '" />';
+	}
+
+	/**
+	 * Get the username from the settings.
+	 *
+	 * @return string
+	 */
+	public function get_username() {
+		return sanitize_title( $this->data['bgg-username'] ?? '' );
+	}
+
+
+	/**
+	 * Render an admin notice only on the bgc_game screen if a BGG Username is not entered.
+	 */
+	public function notify_missing_username() {
+		$screen = get_current_screen();
+
+		if ( 'bgc_game' !== $screen->post_type || $this->has_username() ) {
+			return;
+		}
+
+		( new Notifier() )->do_warning_settings_not_configured();
+	}
+
+	/**
+	 * Check whether the username field is entered.
+	 *
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
+	 * @since  2019-09-02
+	 * @return bool
+	 */
+	private function has_username() {
+		return isset( $this->data[ self::USERNAME_KEY ] ) && ! empty( $this->data[ self::USERNAME_KEY ] );
 	}
 }

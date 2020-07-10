@@ -1,9 +1,9 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\Admin;
 
+use Auryn\Injector;
 use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsFields;
 use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsPage;
-use JMichaelWard\OopsWPPlus\Utility\Hydratable;
 use WebDevStudios\OopsWP\Structure\Service;
 use WebDevStudios\OopsWP\Utility\FilePathDependent;
 
@@ -12,13 +12,20 @@ use WebDevStudios\OopsWP\Utility\FilePathDependent;
  *
  * @package JMichaelWard\BoardGameCollector
  */
-class Settings extends Service implements Hydratable, SettingsFields {
+class Settings extends Service implements SettingsFields {
 	use FilePathDependent;
 
 	/**
 	 * WordPress handle for the Settings JavaScript.
 	 */
 	private const JS_SETTINGS_NAME = 'bgc-settings-js';
+
+	/**
+	 * Auryn Injector instance.
+	 *
+	 * @var Injector
+	 */
+	private $injector;
 
 	/**
 	 * The settings menu class.
@@ -31,28 +38,20 @@ class Settings extends Service implements Hydratable, SettingsFields {
 	];
 
 	/**
-	 * Settings data.
+	 * Settings constructor.
 	 *
-	 * @var array $data
+	 * @param Injector $injector
 	 */
-	private $data;
+	public function __construct(Injector $injector) {
+		$this->injector = $injector;
+	}
 
 	/**
 	 * Settings page hooks.
 	 */
 	public function register_hooks() {
-		add_action( 'admin_init', [ $this, 'setup_settings_pages' ] );
-		add_action( 'admin_menu', [ $this, 'init_settings' ] );
 		add_action( 'admin_menu', [ $this, 'register_settings_pages' ] );
-		add_action( 'admin_notices', [ $this, 'notify_missing_username' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
-	}
-
-	/**
-	 * Hydrate the Settings object with its saved values.
-	 */
-	public function hydrate() {
-		$this->data = get_option( self::SETTINGS_KEY, [] );
 	}
 
 	/**
@@ -63,12 +62,12 @@ class Settings extends Service implements Hydratable, SettingsFields {
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-09-02
 	 */
-	public function init_settings() {
+	private function initialize_settings_pages() {
 		$pages = array_map(
 			function ( $page_classname ) {
 				return [
 					'namespace' => $page_classname,
-					'object'    => new $page_classname( $this->data ),
+					'object'    => $this->injector->make( $page_classname ),
 				];
 			},
 			$this->pages
@@ -85,22 +84,11 @@ class Settings extends Service implements Hydratable, SettingsFields {
 	 * @return void
 	 */
 	public function register_settings_pages() {
+		$this->initialize_settings_pages();
+
 		foreach ( $this->pages as $page ) {
 			$page->set_file_path( plugin_dir_path( $this->file_path ) );
 			$page->register();
-		}
-	}
-
-	/**
-	 * @author Jeremy Ward <jeremy@jmichaelward.com>
-	 * @since  2019-09-02
-	 * @return void
-	 */
-	public function setup_settings_pages() {
-		/** @var SettingsPage $page_class */
-		foreach ( $this->pages as $page_class ) {
-			$page = new $page_class( $this->data );
-			$page->setup();
 		}
 	}
 
@@ -135,39 +123,5 @@ class Settings extends Service implements Hydratable, SettingsFields {
 				'nonce'   => wp_create_nonce( 'wp_rest' ),
 			]
 		);
-	}
-
-	/**
-	 * Get the username from the settings.
-	 *
-	 * @return string
-	 */
-	public function get_username() {
-		return sanitize_title( $this->data['bgg-username'] ?? '' );
-	}
-
-
-	/**
-	 * Render an admin notice only on the bgc_game screen if a BGG Username is not entered.
-	 */
-	public function notify_missing_username() {
-		$screen = get_current_screen();
-
-		if ( 'bgc_game' !== $screen->post_type || $this->has_username() ) {
-			return;
-		}
-
-		( new Notifier() )->do_warning_settings_not_configured();
-	}
-
-	/**
-	 * Check whether the username field is entered.
-	 *
-	 * @author Jeremy Ward <jeremy@jmichaelward.com>
-	 * @since  2019-09-02
-	 * @return bool
-	 */
-	private function has_username() {
-		return isset( $this->data[ self::USERNAME_KEY ] ) && ! empty( $this->data[ self::USERNAME_KEY ] );
 	}
 }
