@@ -116,14 +116,15 @@ class GamesUpdater {
 	/**
 	 * Convert data into WordPress content.
 	 *
+	 * @param array $games Optional collection of games to process.
+	 *
 	 * @throws Exception|InvalidArgumentException If API request requirements are unmet.
 	 */
-	public function update_collection() {
-		$games = $this->api->request_user_collection( $this->settings->get_username() );
-
+	public function update_collection( array $games = [] ) {
 		$this->games_index = $this->get_games_index();
+		$games_to_process  = $games ?: $this->api->request_user_collection( $this->settings->get_username() );
 
-		$this->process_games_data( $games );
+		$this->process_games_data( $games_to_process );
 	}
 
 	/**
