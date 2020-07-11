@@ -14,7 +14,7 @@ use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
 use JMichaelWard\BoardGameCollector\Api\Response;
 use JMichaelWard\BoardGameCollector\Model\Games\BggGameAdapter;
 use JMichaelWard\BoardGameCollector\Model\Games\GameData;
-use JMichaelWard\BoardGameCollector\Admin\Settings;
+use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsPage;
 use \Exception;
 use \InvalidArgumentException;
 
@@ -41,7 +41,7 @@ class GamesUpdater {
 	/**
 	 * Plugin settings.
 	 *
-	 * @var Settings
+	 * @var SettingsPage
 	 */
 	private $settings;
 
@@ -77,13 +77,13 @@ class GamesUpdater {
 	 * GamesUpdater constructor.
 	 *
 	 * @param BoardGameGeek  $api             Instance of our BoardGameGeek API model.
-	 * @param Settings       $settings        Plugin settings.
+	 * @param SettingsPage   $settings        Plugin settings.
 	 * @param BggGameAdapter $adapter         Adapter for BoardGameGeek data.
 	 * @param ImageProcessor $image_processor Instance of ImageProcessor class.
 	 */
 	public function __construct(
 		BoardGameGeek $api,
-		Settings $settings,
+		SettingsPage $settings,
 		BggGameAdapter $adapter,
 		ImageProcessor $image_processor
 	) {
