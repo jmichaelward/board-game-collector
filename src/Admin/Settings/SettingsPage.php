@@ -72,21 +72,6 @@ class SettingsPage implements SettingsFields, Hookable, Hydratable, Registerable
 	}
 
 	/**
-	 * Initialize the options fields in the Settings page.
-	 *
-	 * @return array
-	 */
-	private function init_fields() : array {
-		if ( empty( $this->fields ) ) {
-			$this->fields = [
-				self::USERNAME_KEY => __( 'BoardGameGeek Username', 'bgc' ),
-			];
-		}
-
-		return $this->fields;
-	}
-
-	/**
 	 * Register the settings page.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
@@ -110,20 +95,6 @@ class SettingsPage implements SettingsFields, Hookable, Hydratable, Registerable
 	}
 
 	/**
-	 * Setup the settings page sections and fields.
-	 *
-	 * @author Jeremy Ward <jeremy@jmichaelward.com>
-	 * @since  2019-05-01
-	 * @return void
-	 */
-	private function setup() {
-		$this->init_fields();
-		$this->add_section();
-		$this->add_fields();
-		$this->hydrate();
-	}
-
-	/**
 	 * Hydrate this object with its settings data.
 	 */
 	public function hydrate() {
@@ -140,6 +111,36 @@ class SettingsPage implements SettingsFields, Hookable, Hydratable, Registerable
 	public function render() {
 		include $this->file_path . '/views/settings.php';
 	}
+
+	/**
+	 * Initialize the options fields in the Settings page.
+	 *
+	 * @return array
+	 */
+	private function init_fields() : array {
+		if ( empty( $this->fields ) ) {
+			$this->fields = [
+				self::USERNAME_KEY => __( 'BoardGameGeek Username', 'bgc' ),
+			];
+		}
+
+		return $this->fields;
+	}
+
+	/**
+	 * Setup the settings page sections and fields.
+	 *
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
+	 * @since  2019-05-01
+	 * @return void
+	 */
+	private function setup() {
+		$this->init_fields();
+		$this->add_section();
+		$this->add_fields();
+		$this->hydrate();
+	}
+
 
 	/**
 	 * Register the settings section.
