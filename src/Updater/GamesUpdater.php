@@ -119,18 +119,6 @@ class GamesUpdater {
 	 * @throws Exception|InvalidArgumentException If API request requirements are unmet.
 	 */
 	public function update_collection() {
-		// Load required WordPress functionality.
-		include_once ABSPATH . WPINC . '/pluggable.php';
-
-		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
-			// @TODO Authorization.
-			wp_set_auth_cookie( 1 );
-		}
-
-		if ( ! WP_CLI && ! current_user_can( 'edit_posts' ) ) {
-			return;
-		}
-
 		$games = $this->api->request_user_collection( $this->settings->get_username() );
 
 		$this->games_index = $this->get_games_index();

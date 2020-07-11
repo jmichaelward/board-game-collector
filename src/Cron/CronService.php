@@ -57,7 +57,7 @@ class CronService extends Service {
 	public function register_hooks() {
 		// Setup the cron interval and the callback task.
 		add_filter( 'cron_schedules', [ $this, 'add_interval' ] ); // @codingStandardsIgnoreLine
-		add_action( 'bgc_collection_update', [ $this->updater, 'update_collection' ], 10, 1 );
+		add_action( 'bgc_collection_update', [ $this, 'update_collection' ], 10, 1 );
 	}
 
 	/**
@@ -86,5 +86,26 @@ class CronService extends Service {
 		if ( ! wp_next_scheduled( 'bgc_collection_update' ) ) {
 			wp_schedule_event( time(), self::INTERVAL_NAME, 'bgc_collection_update' );
 		}
+	}
+
+	/**
+	 * Process game updates.
+	 *
+	 * @throws \Exception
+	 */
+	public function update_collection() {
+		// Load required WordPress functionality.
+		include_once ABSPATH . WPINC . '/pluggable.php';
+
+		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
+			// @TODO Authorization.
+			wp_set_auth_cookie( 1 );
+		}
+
+		if ( ! WP_CLI && ! current_user_can( 'edit_posts' ) ) {
+			return;
+		}
+
+		$this->updater->update_collection();
 	}
 }
