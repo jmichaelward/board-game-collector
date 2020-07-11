@@ -10,9 +10,7 @@
 namespace JMichaelWard\BoardGameCollector\Api\Routes\Custom;
 
 use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsFields;
-use JMichaelWard\BoardGameCollector\Api\ApiService;
 use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
-use JMichaelWard\BoardGameCollector\Api\Response;
 use JMichaelWard\BoardGameCollector\Api\Routes\CustomRestRoute;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 
