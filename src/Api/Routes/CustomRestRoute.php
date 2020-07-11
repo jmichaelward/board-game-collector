@@ -44,4 +44,15 @@ abstract class CustomRestRoute extends \WP_REST_Controller implements Registerab
 	public function register() {
 		$this->register_routes();
 	}
+
+	/**
+	 * Basic nonce-based permission callback.
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return bool|int
+	 */
+	public function permission_callback_verify_nonce( \WP_REST_Request $request ) {
+		return wp_verify_nonce( $request->get_header( 'x_wp_nonce' ), 'wp_rest' );
+	}
 }

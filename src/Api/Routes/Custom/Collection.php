@@ -78,9 +78,17 @@ class Collection extends CustomRestRoute {
 						'validate_callback' => [ $this, 'validate_username' ],
 					],
 				],
-				'permission_callback' => function ( \WP_REST_Request $request ) {
-					return wp_verify_nonce( $request->get_header( 'x_wp_nonce' ), 'wp_rest' );
-				},
+				'permission_callback' => [ $this, 'permission_callback_verify_nonce' ]
+			]
+		);
+
+		register_rest_route(
+			$this->namespace,
+			"{$this->rest_base}/images",
+			[
+				'methods' => \WP_REST_Server::CREATABLE,
+				'callback' => [ $this, 'update_images' ],
+				'permission_callback' => [ $this, 'permission_callback_verify_nonce' ]
 			]
 		);
 	}
@@ -131,6 +139,15 @@ class Collection extends CustomRestRoute {
 		}
 
 		return new \WP_REST_Response( [ 'games' => $this->process_remaining_games( $unprocessed ), 'status' => 200 ], 200 );
+	}
+
+	/**
+	 * Route callback to download images and set them as featured on a game.
+	 *
+	 * @param \WP_REST_Request $request
+	 */
+	public function update_images( \WP_REST_Request $request ) {
+		return [];
 	}
 
 	/**
