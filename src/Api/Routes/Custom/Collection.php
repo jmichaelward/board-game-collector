@@ -9,7 +9,7 @@
 
 namespace JMichaelWard\BoardGameCollector\Api\Routes\Custom;
 
-use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsFields;
+use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsPage;
 use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
 use JMichaelWard\BoardGameCollector\Api\Routes\CustomRestRoute;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
@@ -38,6 +38,13 @@ class Collection extends CustomRestRoute {
 	private $bgg_api;
 
 	/**
+	 * SettingsPage instance.
+	 *
+	 * @var SettingsPage
+	 */
+	private $settings;
+
+	/**
 	 * GamesUpdater instance.
 	 *
 	 * @var GamesUpdater
@@ -47,12 +54,14 @@ class Collection extends CustomRestRoute {
 	/**
 	 * Collection constructor.
 	 *
-	 * @param BoardGameGeek $bgg_api BoardGameGeek API instance.
-	 * @param GamesUpdater  $updater GamesUpdater instance.
+	 * @param BoardGameGeek $bgg_api  BoardGameGeek API instance.
+	 * @param SettingsPage  $settings SettingsPage instance.
+	 * @param GamesUpdater  $updater  GamesUpdater instance.
 	 */
-	public function __construct( BoardGameGeek $bgg_api, GamesUpdater $updater ) {
-		$this->bgg_api = $bgg_api;
-		$this->updater = $updater;
+	public function __construct( BoardGameGeek $bgg_api, SettingsPage $settings, GamesUpdater $updater ) {
+		$this->bgg_api  = $bgg_api;
+		$this->settings = $settings;
+		$this->updater  = $updater;
 	}
 
 	/**
@@ -94,17 +103,6 @@ class Collection extends CustomRestRoute {
 	}
 
 	/**
-	 * Get the saved username from the settings page.
-	 *
-	 * @author Jeremy Ward <jeremy@jmichaelward.com>
-	 * @since  2019-10-04
-	 * @return string
-	 */
-	private function get_saved_username() {
-		return get_option( SettingsFields::SETTINGS_KEY )[ SettingsFields::USERNAME_KEY ] ?? '';
-	}
-
-	/**
 	 * @param string $username
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
@@ -112,7 +110,7 @@ class Collection extends CustomRestRoute {
 	 * @return bool
 	 */
 	public function validate_username( $username ) {
-		return  ! empty( $username ) && $username === $this->get_saved_username();
+		return ! empty( $username ) && strtolower( $username ) === strtolower( $this->settings->get_username() );
 	}
 
 	/**
@@ -125,7 +123,7 @@ class Collection extends CustomRestRoute {
 		$unprocessed = get_transient( BoardGameGeek::COLLECTION_TRANSIENT_KEY );
 
 		if ( false === $unprocessed ) {
-			$response = $this->bgg_api->request_user_collection( $this->get_saved_username() );
+			$response = $this->bgg_api->request_user_collection( $this->settings->get_username() );
 
 			if ( 202 === $response->get_status_code() ) {
 				return new \WP_REST_Response( [ 'games' => [], 'status' => 202 ], 202 );

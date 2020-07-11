@@ -15,6 +15,7 @@ use WebDevStudios\OopsWP\Utility\FilePathDependent;
 use WebDevStudios\OopsWP\Utility\Hookable;
 use WebDevStudios\OopsWP\Utility\Registerable;
 use WebDevStudios\OopsWP\Utility\Renderable;
+use JMichaelWard\OopsWPPlus\Utility\Hydratable;
 
 /**
  * Class Menu
@@ -23,7 +24,7 @@ use WebDevStudios\OopsWP\Utility\Renderable;
  * @since   2019-05-01
  * @package JMichaelWard\BoardGameCollector\Admin\Settings
  */
-class SettingsPage implements SettingsFields, Hookable, Registerable, Renderable {
+class SettingsPage implements SettingsFields, Hookable, Hydratable, Registerable, Renderable {
 	use FilePathDependent;
 
 	private const VERIFIED_USERNAME_KEY = 'verified-username';
@@ -119,6 +120,13 @@ class SettingsPage implements SettingsFields, Hookable, Registerable, Renderable
 		$this->init_fields();
 		$this->add_section();
 		$this->add_fields();
+		$this->hydrate();
+	}
+
+	/**
+	 * Hydrate this object with its settings data.
+	 */
+	public function hydrate() {
 		$this->data = get_option( self::SETTINGS_KEY, [] );
 	}
 
@@ -230,6 +238,10 @@ class SettingsPage implements SettingsFields, Hookable, Registerable, Renderable
 	 * @return string
 	 */
 	public function get_username() {
+		if ( empty( $this->data ) ) {
+			$this->hydrate();
+		}
+
 		return sanitize_title( $this->data['bgg-username'] ?? '' );
 	}
 
