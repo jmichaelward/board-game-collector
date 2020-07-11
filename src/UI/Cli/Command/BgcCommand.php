@@ -9,6 +9,8 @@
 
 namespace JMichaelWard\BoardGameCollector\UI\Cli\Command;
 
+use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
+use JMichaelWard\BoardGameCollector\Api\Routes\Custom\Collection;
 use JMichaelWard\BoardGameCollector\UI\Cli\ProgressBar;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 use WP_CLI;
@@ -65,6 +67,7 @@ class BgcCommand {
 
 		try {
 			$this->updater->update_collection();
+			$this->updater->process_collection_images();
 		} catch ( \Throwable $e ) {
 			WP_CLI::error( $e->getMessage() );
 		}
@@ -83,6 +86,9 @@ class BgcCommand {
 					? WP_CLI::success( "{$result['post']->post_title} successfully deleted." )
 					: WP_CLI::warning( "Failed to delete {$result['post']->post_title}." );
 			}
+
+			delete_transient( BoardGameGeek::COLLECTION_TRANSIENT_KEY );
+			delete_transient( Collection::REMAINING_GAMES_TRANSIENT_KEY );
 		} catch ( \Throwable $e ) {
 			WP_CLI::error( $e->getMessage() );
 		}

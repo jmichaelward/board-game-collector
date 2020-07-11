@@ -12,6 +12,7 @@ namespace JMichaelWard\BoardGameCollector\Updater;
 
 use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
 use JMichaelWard\BoardGameCollector\Api\Response;
+use JMichaelWard\BoardGameCollector\Model\Games\BggGame;
 use JMichaelWard\BoardGameCollector\Model\Games\BggGameAdapter;
 use JMichaelWard\BoardGameCollector\Model\Games\GameData;
 use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsPage;
@@ -74,6 +75,13 @@ class GamesUpdater {
 	private $games_index;
 
 	/**
+	 * Array of games data.
+	 *
+	 * @var array
+	 */
+	private $games = [];
+
+	/**
 	 * GamesUpdater constructor.
 	 *
 	 * @param BoardGameGeek  $api             Instance of our BoardGameGeek API model.
@@ -122,9 +130,29 @@ class GamesUpdater {
 	 */
 	public function update_collection( array $games = [] ) {
 		$this->games_index = $this->get_games_index();
-		$games_to_process  = $games ?: $this->api->request_user_collection( $this->settings->get_username() );
+		$this->games  = $games ?: $this->request_games_from_bgg();
 
-		$this->process_games_data( $games_to_process );
+		do_action( 'bgc_setup_progress_bar', count( $this->games ) );
+
+		foreach ( $this->games as $game ) {
+			$this->save_game_data( $game );
+
+			do_action( 'bgc_tick_progress_bar' );
+		}
+
+		$this->save_index_updates();
+
+		do_action( 'bgc_finish_progress_bar' );
+	}
+
+	/**
+	 * @throws Exception
+	 * @return array
+	 */
+	private function request_games_from_bgg() : array {
+		$response = $this->api->request_user_collection( $this->settings->get_username() );
+
+		return $response->get_body()['item'] ?? [];
 	}
 
 	/**
@@ -164,41 +192,18 @@ class GamesUpdater {
 	}
 
 	/**
-	 * Process the retrieved games data.
-	 *
-	 * @param Response $response Games retrieved from BoardGameGeek.
-	 */
-	private function process_games_data( Response $response ) {
-		$games = $response->get_body()['item'] ?? [];
-		do_action( 'bgc_setup_progress_bar', count( $games ) );
-
-		foreach ( $games as $game ) {
-			$this->save_game_data( $game );
-
-			do_action( 'bgc_tick_progress_bar' );
-		}
-
-		$this->save_index_updates();
-
-		do_action( 'bgc_finish_progress_bar' );
-
-		$this->process_images( $games );
-	}
-
-	/**
 	 * Process image data for the games.
 	 *
-	 * @TODO WIP. This method probably belongs in the ImageProcessor itself.
-	 *
-	 * @param array $games Array of games data.
+	 * @param array $games Optional array of games to process.
 	 */
-	private function process_images( array $games ) {
+	public function process_collection_images( array $games = [] ) {
+		$games_to_process = $games ?: $this->games;
 		$this->games_index = $this->get_games_index();
 
 		$data = array_filter(
 			array_map(
 				function( $game_data ) {
-					$game = $this->adapter->get_game( $game_data );
+					$game = $game_data instanceof BggGame ? $game_data : $this->adapter->get_game( $game_data );
 					$id   = $this->games_index[ $game->get_bgg_id() ]['post_id'] ?? 0;
 
 					if ( ! $id ) {
@@ -210,7 +215,7 @@ class GamesUpdater {
 						'id'   => $id,
 					];
 				},
-				$games
+				$games_to_process
 			)
 		);
 

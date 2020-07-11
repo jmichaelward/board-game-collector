@@ -11,6 +11,7 @@ namespace JMichaelWard\BoardGameCollector\Api\Routes\Custom;
 
 use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsPage;
 use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
+use JMichaelWard\BoardGameCollector\Api\Response;
 use JMichaelWard\BoardGameCollector\Api\Routes\CustomRestRoute;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 
@@ -22,6 +23,11 @@ use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
  * @package JMichaelWard\BoardGameCollector\Api\Routes
  */
 class Collection extends CustomRestRoute {
+	/**
+	 * Transient key for remaining games to process.
+	 */
+	const REMAINING_GAMES_TRANSIENT_KEY = 'bgc_remaining_games_to_process';
+
 	/**
 	 * REST base for this route.
 	 *
@@ -120,9 +126,9 @@ class Collection extends CustomRestRoute {
 	 * @since  2019-09-01
 	 */
 	public function update_items() {
-		$unprocessed = get_transient( BoardGameGeek::COLLECTION_TRANSIENT_KEY );
+		$unprocessed = get_transient( self::REMAINING_GAMES_TRANSIENT_KEY );
 
-		if ( false === $unprocessed ) {
+		if ( false === $unprocessed || $unprocessed instanceof Response ) {
 			$response = $this->bgg_api->request_user_collection( $this->settings->get_username() );
 
 			if ( 202 === $response->get_status_code() ) {
@@ -131,7 +137,7 @@ class Collection extends CustomRestRoute {
 
 			$unprocessed = $response->get_body()['item'] ?? [];
 
-			set_transient( $this->bgg_api::COLLECTION_TRANSIENT_KEY, $unprocessed, 5 * MINUTE_IN_SECONDS );
+			set_transient( self::REMAINING_GAMES_TRANSIENT_KEY, $unprocessed, 1 * DAY_IN_SECONDS );
 
 			return new \WP_REST_Response( [ 'games' => $unprocessed, 'status' => 200 ], 200 );
 		}
@@ -145,7 +151,32 @@ class Collection extends CustomRestRoute {
 	 * @param \WP_REST_Request $request
 	 */
 	public function update_images( \WP_REST_Request $request ) {
-		return [];
+		// Get all games that don't have featured images.
+		$query = new \WP_Query(
+			[
+				'post_type' => 'bgc_game',
+				'meta_query' => [
+					[
+						'key' => '_thumbnail_id',
+						'compare' => 'NOT EXISTS',
+					]
+				]
+			]
+		);
+
+		$games = $query->get_posts();
+
+		if ( empty( $games ) ) {
+			return [];
+		}
+
+		$games_data = array_map( function( $game ) {
+			return get_post_meta( $game->ID, 'bgc_game_meta', true );
+		}, $games );
+
+		$this->updater->process_collection_images( $games_data );
+
+		return $games;
 	}
 
 	/**
@@ -169,7 +200,7 @@ class Collection extends CustomRestRoute {
 
 		$games = array_values( $games );
 
-		set_transient( $this->bgg_api::COLLECTION_TRANSIENT_KEY, $games, 5 * MINUTE_IN_SECONDS );
+		set_transient( self::REMAINING_GAMES_TRANSIENT_KEY, $games, 1 * DAY_IN_SECONDS );
 
 		return $games;
 	}

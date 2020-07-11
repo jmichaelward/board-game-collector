@@ -99,6 +99,10 @@ class CliService extends Service {
 	 * @param BggGame $game
 	 */
 	public function notify_image_processed( int $image_id, int $game_id, BggGame $game ) {
+		if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
+			return;
+		}
+
 		$game_name = $game->get_name();
 
 		$image_id
