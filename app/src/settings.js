@@ -6,7 +6,7 @@ const {
   apiFetch
 } = wp;
 
-const updateGames = () => {
+const updateGames = async () => {
   const loop = () => {
     apiFetch.use( apiFetch.createNonceMiddleware( bgcollector.nonce ) );
 
@@ -42,10 +42,10 @@ const updateGames = () => {
     } );
   }
 
-  return loop();
+  return await loop();
 };
 
-const updateImages = () => {
+const updateImages = async () => {
   const loop = () => {
     apiFetch.use( apiFetch.createNonceMiddleware( bgcollector.nonce ) );
 
@@ -54,10 +54,10 @@ const updateImages = () => {
         path: 'bgc/v1/collection/images',
         method: 'POST'
       }
-    ).then( async result => {
+    ).then( result => {
       console.info( result );
       if ( 0 !== result.length ) {
-        await loop();
+        return loop();
       }
 
       console.info( 'Finished processing images.' );
@@ -66,7 +66,7 @@ const updateImages = () => {
     } );
   }
 
-  return loop();
+  return await loop();
 };
 
 const updateCollection = async ( e ) => {
