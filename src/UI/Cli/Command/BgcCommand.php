@@ -89,6 +89,7 @@ class BgcCommand {
 
 			delete_transient( BoardGameGeek::COLLECTION_TRANSIENT_KEY );
 			delete_transient( Collection::REMAINING_GAMES_TRANSIENT_KEY );
+			delete_option( GamesUpdater::GAMES_INDEX_OPTION_KEY );
 		} catch ( \Throwable $e ) {
 			WP_CLI::error( $e->getMessage() );
 		}

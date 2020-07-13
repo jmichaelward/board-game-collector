@@ -180,10 +180,24 @@ class Collection extends CustomRestRoute {
 	}
 
 	/**
+	 * Gets a subset of games from a collection and creates post objects in WordPress.
+	 *
+	 * The purpose of this method is to allow batch processing of games via the API, essentially
+	 * looping through multiple internal API calls until the number of games remaining to add is
+	 * zero.
+	 *
+	 * Logic here is a little confusing, so I'm leaving a note for now should I need to revisit.
+	 *
+	 * 1. Get a batch of games for which we need to create records.
+	 * 2. Pass those games to the GamesUpdater to create their records.
+	 * 3. Iterate through the batch, and remove all the processed records from the larger set.
+	 * 4. Set a new transient with the remaining set of games to process on the next iteration.
+	 *
 	 * @param array $games API response to the games query.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-10-04
+	 * @return array Games from BoardGameGeek which are not yet in WordPress.
 	 */
 	private function process_remaining_games( array $games ) {
 		if ( ! $games ) {
@@ -191,9 +205,10 @@ class Collection extends CustomRestRoute {
 		}
 
 		$games_to_process = $this->get_games_to_process( $games );
+		$unprocessed      = $this->updater->update_collection( $games_to_process );
 
 		foreach ( $games_to_process as $index => $game ) {
-			if ( $this->updater->save_game_data( $game ) ) {
+			if ( ! array_key_exists( $index, $unprocessed ) ) {
 				unset( $games[ $index ] );
 			}
 		}

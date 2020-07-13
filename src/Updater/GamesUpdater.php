@@ -11,7 +11,6 @@
 namespace JMichaelWard\BoardGameCollector\Updater;
 
 use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
-use JMichaelWard\BoardGameCollector\Api\Response;
 use JMichaelWard\BoardGameCollector\Model\Games\BggGame;
 use JMichaelWard\BoardGameCollector\Model\Games\BggGameAdapter;
 use JMichaelWard\BoardGameCollector\Model\Games\GameData;
@@ -30,7 +29,7 @@ class GamesUpdater {
 	 *
 	 * This index maps a BoardGameGeek game ID to the ID in WordPress to facilitate lookup.
 	 */
-	private const GAMES_INDEX_OPTION_KEY = 'bgc_collection_index';
+	public const GAMES_INDEX_OPTION_KEY = 'bgc_collection_index';
 
 	/**
 	 * BoardGameGeek API.
@@ -127,6 +126,7 @@ class GamesUpdater {
 	 * @param array $games Optional collection of games to process.
 	 *
 	 * @throws Exception|InvalidArgumentException If API request requirements are unmet.
+	 * @return array Any games which were unprocessed by WordPress.
 	 */
 	public function update_collection( array $games = [] ) {
 		$this->games_index = $this->get_games_index();
@@ -134,15 +134,17 @@ class GamesUpdater {
 
 		do_action( 'bgc_setup_progress_bar', count( $this->games ) );
 
-		foreach ( $this->games as $game ) {
-			$this->save_game_data( $game );
-
+		$unprocessed = array_filter( $this->games, function( $game ) {
 			do_action( 'bgc_tick_progress_bar' );
-		}
+
+			return ! $this->save_game_data( $game );
+		} );
 
 		$this->save_index_updates();
 
 		do_action( 'bgc_finish_progress_bar' );
+
+		return $unprocessed;
 	}
 
 	/**
