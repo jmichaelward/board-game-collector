@@ -1,4 +1,5 @@
 /* global wp, bgcollector */
+import { useEffect, useState } from 'react';
 import { Button } from '@wordpress/components';
 import { render } from '@wordpress/element';
 
@@ -77,6 +78,29 @@ const updateCollection = async ( e ) => {
   await updateGames().then(updateImages);
 };
 
+const data = {
+  usernameVerified: bgcollector.usernameVerified,
+}
+
+const App = ( props ) => {
+  const state = {
+    usernameVerified: data.usernameVerified
+  };
+
+  const [verifiedUser, setVerifiedUser] = useState(data.usernameVerified);
+
+  document.getElementById('#bgg-username').addEventListener('keyup', function(e) {
+    console.log('test');
+  });
+
+  return (
+    <div>
+      <Button onClick={ updateCollection } disabled={props.usernameVerified}>Update Collection</Button>
+    </div>
+  )
+};
+
+
 const settings = () => {
   const username = document.getElementById( 'bgg-username' );
 
@@ -85,7 +109,7 @@ const settings = () => {
   }
 
   render(
-    <Button onClick={ updateCollection }>Update Collection</Button>,
+    <App verifieduser={data.usernameVerified}/>,
     document.getElementById( 'bgc-app' ) );
 };
 
