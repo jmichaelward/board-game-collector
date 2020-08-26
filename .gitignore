@@ -2,3 +2,4 @@
 /app/dist/
 /vendor/
 /node_modules/
+/bin/extractedComposer/
