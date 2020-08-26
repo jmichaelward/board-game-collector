@@ -65,10 +65,14 @@ class Settings extends Service implements SettingsFields {
 	private function initialize_settings_pages() {
 		$pages = array_map(
 			function ( $page_classname ) {
-				return [
-					'namespace' => $page_classname,
-					'object'    => $this->injector->make( $page_classname ),
-				];
+				try {
+					return [
+						'namespace' => $page_classname,
+						'object'    => $this->injector->make( $page_classname ),
+					];
+				} catch ( \Throwable $e ) {
+					return [];
+				}
 			},
 			$this->pages
 		);

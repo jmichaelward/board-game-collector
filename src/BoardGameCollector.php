@@ -84,20 +84,26 @@ final class BoardGameCollector extends Plugin {
 	protected function init_services() {
 		$objects = array_map(
 			function ( $service_classname ) {
-				$service = $this->injector->make( $service_classname );
+				try {
+					$service = $this->injector->make( $service_classname );
 
-				if ( $this->is_hydratable_service( $service_classname ) ) {
-					$service->hydrate();
+					if ( $this->is_hydratable_service( $service_classname ) ) {
+						$service->hydrate();
+					}
+
+					if ( $this->is_shared_service( $service_classname ) ) {
+						$this->share_service( $service );
+					}
+
+					return [
+						'namespace' => $service_classname,
+						'object'    => $service,
+					];
+				} catch ( \Throwable $e ) {
+					$this->services = [];
+
+					return $this->services;
 				}
-
-				if ( $this->is_shared_service( $service_classname ) ) {
-					$this->share_service( $service );
-				}
-
-				return [
-					'namespace' => $service_classname,
-					'object'    => $service,
-				];
 			},
 			$this->services
 		);
