@@ -89,7 +89,7 @@ const App = ( props ) => {
 
   const [verifiedUser, setVerifiedUser] = useState(data.usernameVerified);
 
-  document.getElementById('#bgg-username').addEventListener('keyup', function(e) {
+  document.getElementById( 'bgg-username' ).addEventListener('keyup', function(e) {
     console.log('test');
   });
 
@@ -113,6 +113,8 @@ const settings = () => {
     document.getElementById( 'bgc-app' ) );
 };
 
-settings();
+(function() {
+    // settings();
+})();
 
 export default settings;
