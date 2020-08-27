@@ -7,10 +7,13 @@
 
 ?>
 
-<div id="bgc-app">
+<div id="bgc-app"></div>
+<div id="bgc-settings">
 	<form method="POST" action="options.php">
 		<?php settings_fields( 'bgc-settings' ); ?>
 		<?php do_settings_sections( 'bgc-settings' ); ?>
+
 		<?php submit_button(); ?>
 	</form>
 </div>
+

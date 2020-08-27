@@ -114,7 +114,7 @@ const settings = () => {
 };
 
 (function() {
-    // settings();
+    settings();
 })();
 
 export default settings;
