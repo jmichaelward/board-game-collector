@@ -35,7 +35,8 @@ function maybe_install_dependencies( string $plugin_filepath, string $plugin_cla
 			[
 				'command'  => 'install',
 				'-d'       => "{$plugin_dir}",
-				'--no-dev' => false,
+				'-o'       => true,
+				'--no-dev' => true,
 			]
 		);
 
