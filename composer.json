@@ -35,6 +35,9 @@
     "autoload": {
         "psr-4": {
             "JMichaelWard\\BoardGameCollector\\": "src/"
-        }
+        },
+        "files": [
+            "src/common.php"
+        ]
     }
 }
