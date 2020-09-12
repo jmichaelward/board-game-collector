@@ -9,12 +9,11 @@
 
 namespace JMichaelWard\BoardGameCollector\UI\Cli\Command;
 
-use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
-use JMichaelWard\BoardGameCollector\Api\Routes\Custom\Collection;
 use JMichaelWard\BoardGameCollector\UI\Cli\ProgressBar;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 use WP_CLI;
 use WP_CLI\ExitException;
+use function JMichaelWard\BoardGameCollector\delete_user_transients;
 
 /**
  * Command entrypoint for the Board Game Collector plugin.
@@ -99,9 +98,7 @@ class BgcCommand {
 					: WP_CLI::warning( "Failed to delete {$result['post']->post_title}." );
 			}
 
-			delete_transient( BoardGameGeek::COLLECTION_TRANSIENT_KEY );
-			delete_transient( Collection::REMAINING_GAMES_TRANSIENT_KEY );
-			delete_option( GamesUpdater::GAMES_INDEX_OPTION_KEY );
+			delete_user_transients();
 		} catch ( \Throwable $e ) {
 			WP_CLI::error( $e->getMessage() );
 		}

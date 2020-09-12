@@ -16,6 +16,7 @@ use WebDevStudios\OopsWP\Utility\Hookable;
 use WebDevStudios\OopsWP\Utility\Registerable;
 use WebDevStudios\OopsWP\Utility\Renderable;
 use JMichaelWard\OopsWPPlus\Utility\Hydratable;
+use function JMichaelWard\BoardGameCollector\delete_user_transients;
 
 /**
  * Class Menu
@@ -69,6 +70,24 @@ class SettingsPage implements SettingsFields, Hookable, Hydratable, Registerable
 	public function register_hooks() {
 		add_action( 'admin_init', [ $this, 'notify_invalid_username' ] );
 		add_action( 'admin_notices', [ $this, 'notify_missing_username' ] );
+		add_action( 'update_option_' . self::SETTINGS_KEY, [ $this, 'maybe_clear_transients' ] );
+	}
+
+	/**
+	 * @param $settings
+	 *
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
+	 * @since  2020-09-12
+	 * @return void
+	 */
+	public function maybe_clear_transients( $settings ) {
+		$old_settings = get_option( self::SETTINGS_KEY );
+
+		if ( $old_settings['bgg-username'] === $settings['bgg-username'] ) {
+			return;
+		}
+
+		delete_user_transients();
 	}
 
 	/**
