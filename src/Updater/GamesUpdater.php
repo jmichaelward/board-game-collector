@@ -34,7 +34,7 @@ class GamesUpdater {
 	/**
 	 * Amount of time in milliseconds to wait on a request retry.
 	 */
-	private const REQUEST_RETRY_MILLISECOND_WAIT = 10000000;
+	public const REQUEST_RETRY_MILLISECOND_WAIT = 10000000;
 
 	/**
 	 * BoardGameGeek API.
@@ -143,7 +143,7 @@ class GamesUpdater {
 				do_action( 'bgc_notify_collection_processing' );
 				usleep( self::REQUEST_RETRY_MILLISECOND_WAIT );
 
-				return $this->update_collection();
+				return [ 'processing' => true ];
 			}
 
 			$games = $response->get_body()['item'] ?? [];

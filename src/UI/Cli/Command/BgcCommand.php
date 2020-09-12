@@ -43,6 +43,11 @@ class BgcCommand {
 	private $progress_bar;
 
 	/**
+	 * Max number of attempts to try for updates.
+	 */
+	private const MAX_UPDATE_ATTEMPTS = 5;
+
+	/**
 	 * BgcCommand constructor.
 	 *
 	 * @param GamesUpdater $updater      The GamesUpdater instance.
@@ -74,7 +79,18 @@ class BgcCommand {
 		$this->progress_bar->run();
 
 		try {
-			$this->updater->update_collection();
+			$attempts = 0;
+
+			while (
+				array_key_exists( 'processing', $this->updater->update_collection() )
+			) {
+				if ( self::MAX_UPDATE_ATTEMPTS === $attempts ) {
+					WP_CLI::log( __( 'Looks like this is a pretty large collection. Try again later.', 'bgcollector' ) );
+				}
+
+				$attempts++;
+				usleep( $this->updater::REQUEST_RETRY_MILLISECOND_WAIT );
+			}
 
 			if ( isset( $options['with-images'] ) ) {
 				$this->updater->process_collection_images();
