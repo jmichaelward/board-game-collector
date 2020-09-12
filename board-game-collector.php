@@ -26,10 +26,9 @@ $plugin_class = 'JMichaelWard\\BoardGameCollector\\BoardGameCollector';
 register_activation_hook(
 	__FILE__,
 	function() use ( $plugin_class ) {
-		maybe_install_dependencies( $plugin_class );
+		maybe_install_dependencies( __FILE__, $plugin_class );
 	}
 );
-
 
 maybe_autoload();
 
@@ -37,7 +36,7 @@ if ( ! class_exists( $plugin_class ) ) {
 	require_once __DIR__ . '/src/Admin/Notifier.php';
 
 	( new Notifier() )->do_error_notice(
-		'Could not locate BoardGameCollector class. Did you remember to run composer install?'
+		__( 'Could not locate BoardGameCollector class. Did you remember to run composer install?', 'bgcollector' )
 	);
 
 	return;
