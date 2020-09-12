@@ -32,6 +32,11 @@ class GamesUpdater {
 	public const GAMES_INDEX_OPTION_KEY = 'bgc_collection_index';
 
 	/**
+	 * Amount of time in milliseconds to wait on a request retry.
+	 */
+	private const REQUEST_RETRY_MILLISECOND_WAIT = 10000000;
+
+	/**
 	 * BoardGameGeek API.
 	 *
 	 * @var BoardGameGeek
@@ -130,7 +135,21 @@ class GamesUpdater {
 	 */
 	public function update_collection( array $games = [] ) {
 		$this->games_index = $this->get_games_index();
-		$this->games  = $games ?: $this->request_games_from_bgg();
+
+		if ( empty( $games ) ) {
+			$response = $this->api->request_user_collection( $this->settings->get_username() );
+
+			if ( 202 === $response->get_status_code() ) {
+				do_action( 'bgc_notify_collection_processing' );
+				usleep( self::REQUEST_RETRY_MILLISECOND_WAIT );
+
+				return $this->update_collection();
+			}
+
+			$games = $response->get_body()['item'] ?? [];
+		}
+
+		$this->games = $games;
 
 		do_action( 'bgc_setup_progress_bar', count( $this->games ) );
 
@@ -145,16 +164,6 @@ class GamesUpdater {
 		do_action( 'bgc_finish_progress_bar' );
 
 		return $unprocessed;
-	}
-
-	/**
-	 * @throws Exception
-	 * @return array
-	 */
-	private function request_games_from_bgg() : array {
-		$response = $this->api->request_user_collection( $this->settings->get_username() );
-
-		return $response->get_body()['item'] ?? [];
 	}
 
 	/**
@@ -369,5 +378,16 @@ class GamesUpdater {
 	 */
 	private function save_index_updates() {
 		update_option( self::GAMES_INDEX_OPTION_KEY, $this->games_index );
+	}
+
+	/**
+	 * Get the request retry length in seconds.
+	 *
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
+	 * @since  2020-09-12
+	 * @return int
+	 */
+	public function get_request_retry_length_in_seconds() : int {
+		return self::REQUEST_RETRY_MILLISECOND_WAIT / 1000000;
 	}
 }

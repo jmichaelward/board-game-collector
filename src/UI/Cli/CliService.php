@@ -70,6 +70,7 @@ class CliService extends Service {
 	public function register_hooks() {
 		add_action( 'cli_init', [ $this, 'register_commands' ] );
 		add_action( 'bgc_notify_image_processed', [ $this, 'notify_image_processed' ], 10, 3 );
+		add_action( 'bgc_notify_collection_processing', [ $this, 'notify_collection_processing' ] );
 	}
 
 	/**
@@ -94,19 +95,34 @@ class CliService extends Service {
 	}
 
 	/**
-	 * @param int     $image_id
-	 * @param int     $game_id
-	 * @param BggGame $game
+	 * Generate a notification that a game's image has been processed.
+	 *
+	 * @param int     $image_id WordPress ID of the image.
+	 * @param int     $game_id  WordPress ID of the game.
+	 * @param BggGame $game     The BggGame object.
 	 */
 	public function notify_image_processed( int $image_id, int $game_id, BggGame $game ) {
-		if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
-			return;
-		}
-
 		$game_name = $game->get_name();
 
 		$image_id
 			? \WP_CLI::success( "Set featured image ID {$image_id} on game ID {$game_id}: {$game_name}." )
 			: \WP_CLI::error( "Failed to process image for {$game_name}." );
+	}
+
+	/**
+	 * Generate a notification that the collection request is being processed.
+	 *
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
+	 * @since  2020-09-12
+	 * @return void
+	 */
+	public function notify_collection_processing() {
+		\WP_CLI::success(
+			__(
+				// @codingStandardsIgnoreLine - integer value.
+				"Request received. Large collections take longer to process -- trying again in {$this->updater->get_request_retry_length_in_seconds()} seconds.",
+				'bgcollector'
+			)
+		);
 	}
 }
