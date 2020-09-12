@@ -69,8 +69,11 @@ class CliService extends Service {
 	 */
 	public function register_hooks() {
 		add_action( 'cli_init', [ $this, 'register_commands' ] );
-		add_action( 'bgc_notify_image_processed', [ $this, 'notify_image_processed' ], 10, 3 );
-		add_action( 'bgc_notify_collection_processing', [ $this, 'notify_collection_processing' ] );
+
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			add_action( 'bgc_notify_image_processed', [ $this, 'notify_image_processed' ], 10, 3 );
+			add_action( 'bgc_notify_collection_processing', [ $this, 'notify_collection_processing' ] );
+		}
 	}
 
 	/**
