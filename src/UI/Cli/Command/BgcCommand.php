@@ -60,14 +60,25 @@ class BgcCommand {
 	/**
 	 * Update the Games post type with data from BoardGameGeek.
 	 *
+	 * ## OPTIONS
+	 * [--with-images]
+	 * : Download and set the game's box art as the featured image when updating. This can take a long time depending
+	 * on the size of the collection.
+	 *
+	 * @param array $args  Command arguments.
+	 * @param array $argsv Command options.
+	 *
 	 * @throws ExitException If process fails.
 	 */
-	public function update() {
+	public function update( array $args, array $argsv ) {
 		$this->progress_bar->run();
 
 		try {
 			$this->updater->update_collection();
-			$this->updater->process_collection_images();
+
+			if ( isset( $argsv['with-images'] ) ) {
+				$this->updater->process_collection_images();
+			}
 		} catch ( \Throwable $e ) {
 			WP_CLI::error( $e->getMessage() );
 		}
