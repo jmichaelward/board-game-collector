@@ -61,22 +61,24 @@ class BgcCommand {
 	 * Update the Games post type with data from BoardGameGeek.
 	 *
 	 * ## OPTIONS
+	 * <username>
+	 *
 	 * [--with-images]
 	 * : Download and set the game's box art as the featured image when updating. This can take a long time depending
 	 * on the size of the collection.
 	 *
-	 * @param array $args  Command arguments.
-	 * @param array $argsv Command options.
+	 * @param array $args    Command arguments.
+	 * @param array $options Command options.
 	 *
 	 * @throws ExitException If process fails.
 	 */
-	public function update( array $args, array $argsv ) {
+	public function update( array $args, array $options ) {
 		$this->progress_bar->run();
 
 		try {
 			$this->updater->update_collection();
 
-			if ( isset( $argsv['with-images'] ) ) {
+			if ( isset( $options['with-images'] ) ) {
 				$this->updater->process_collection_images();
 			}
 		} catch ( \Throwable $e ) {
