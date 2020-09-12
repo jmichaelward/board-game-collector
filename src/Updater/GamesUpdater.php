@@ -208,8 +208,8 @@ class GamesUpdater {
 	 * @param array $games Optional array of games to process.
 	 */
 	public function process_collection_images( array $games = [] ) {
-		$games_to_process = $games ?: $this->games;
-		$this->games_index = $this->get_games_index();
+		$games_to_process  = $games ?: $this->games;
+		$this->games_index = $this->get_games_index() ?: $this->add_games_to_index( $games );
 
 		$data = array_filter(
 			array_map(
@@ -338,6 +338,23 @@ class GamesUpdater {
 		update_post_meta( $game_id, 'bgc_game_id', $game->get_bgg_id() );
 		update_post_meta( $game_id, 'bgc_game_meta', $game );
 		wp_set_object_terms( $game_id, $game->get_statuses(), 'bgc_game_status' );
+	}
+
+	/**
+	 * Adds games to the games_index.
+	 *
+	 * @param array $games Array of GameData objects.
+	 *
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
+	 * @since  2020-09-12
+	 * @return array
+	 */
+	private function add_games_to_index( array $games ) {
+		foreach ( $games as $game ) {
+			$this->add_game_to_index( $game->get_bgg_id(), $this->game_exists( $game ) );
+		}
+
+		return $this->games_index;
 	}
 
 
