@@ -61,7 +61,6 @@ class BgcCommand {
 	 * Update the Games post type with data from BoardGameGeek.
 	 *
 	 * ## OPTIONS
-	 * <username>
 	 *
 	 * [--with-images]
 	 * : Download and set the game's box art as the featured image when updating. This can take a long time depending
