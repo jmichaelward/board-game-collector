@@ -26,4 +26,9 @@ interface SettingsFields {
 	 * The username field.
 	 */
 	public const USERNAME_KEY = 'bgg-username';
+
+	/**
+	 * The update with images field.
+	 */
+	public const UPDATE_WITH_IMAGES_KEY = 'bgg-update-with-images';
 }

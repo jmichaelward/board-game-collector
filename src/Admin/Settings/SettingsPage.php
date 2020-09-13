@@ -12,10 +12,6 @@ namespace JMichaelWard\BoardGameCollector\Admin\Settings;
 use JMichaelWard\BoardGameCollector\Admin\Notifier;
 use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
 use WebDevStudios\OopsWP\Utility\FilePathDependent;
-use WebDevStudios\OopsWP\Utility\Hookable;
-use WebDevStudios\OopsWP\Utility\Registerable;
-use WebDevStudios\OopsWP\Utility\Renderable;
-use JMichaelWard\OopsWPPlus\Utility\Hydratable;
 use function JMichaelWard\BoardGameCollector\delete_user_transients;
 
 /**
@@ -25,7 +21,7 @@ use function JMichaelWard\BoardGameCollector\delete_user_transients;
  * @since   2019-05-01
  * @package JMichaelWard\BoardGameCollector\Admin\Settings
  */
-class SettingsPage implements SettingsFields, Hookable, Hydratable, Registerable, Renderable {
+class SettingsPage implements SettingsInterface {
 	use FilePathDependent;
 
 	private const VERIFIED_USERNAME_KEY = 'verified-username';
@@ -71,6 +67,17 @@ class SettingsPage implements SettingsFields, Hookable, Hydratable, Registerable
 		add_action( 'admin_init', [ $this, 'notify_invalid_username' ] );
 		add_action( 'admin_notices', [ $this, 'notify_missing_username' ] );
 		add_action( 'update_option_' . self::SETTINGS_KEY, [ $this, 'maybe_clear_transients' ] );
+	}
+
+	/**
+	 * Get the page data.
+	 *
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
+	 * @since  2020-09-13
+	 * @return array
+	 */
+	public function get_data() : array {
+		return $this->data;
 	}
 
 	/**
@@ -139,7 +146,8 @@ class SettingsPage implements SettingsFields, Hookable, Hydratable, Registerable
 	private function init_fields() : array {
 		if ( empty( $this->fields ) ) {
 			$this->fields = [
-				self::USERNAME_KEY => __( 'BoardGameGeek Username', 'bgc' ),
+				new TextField( $this, self::USERNAME_KEY, 'BoardGameGeek username', 'text' ),
+				new CheckboxField( $this, self::UPDATE_WITH_IMAGES_KEY, 'Include images with update?', 'checkbox' ),
 			];
 		}
 
@@ -177,29 +185,18 @@ class SettingsPage implements SettingsFields, Hookable, Hydratable, Registerable
 	 * Register settings fields.
 	 */
 	public function add_fields() {
-		foreach ( $this->fields as $id => $name ) {
+		foreach ( $this->fields as $field ) {
 			add_settings_field(
-				$id,
-				$name,
-				[ $this, 'render_text_input' ],
+				$field->get_key(),
+				$field->get_label(),
+				[ $field, 'render' ],
 				self::SETTINGS_KEY,
 				self::SETTINGS_KEY,
 				[
-					'id' => $id,
+					'id' => $field->get_key(),
 				]
 			);
 		}
-	}
-
-	/**
-	 * Render a text input field.
-	 *
-	 * @param array $args Fields.
-	 */
-	public function render_text_input( $args ) {
-		echo '<input type="text" id="' . esc_attr( $args['id'] )
-			. '" name="bgc-settings[' . esc_attr( $args['id'] ) . ']" value="'
-			. esc_attr( $this->data[ $args['id'] ] ) . '" />';
 	}
 
 	/**
