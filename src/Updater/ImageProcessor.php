@@ -140,8 +140,6 @@ class ImageProcessor extends Service {
 	/**
 	 * Sideloads the game's image into the WordPress media library.
 	 *
-	 * @TODO Extract this logic into a separate class.
-	 *
 	 * @param int    $id        Post ID to which to attach the image.
 	 * @param string $image_url URL of the image asset.
 	 * @param string $name      Name of the game.
