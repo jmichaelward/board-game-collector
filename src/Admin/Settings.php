@@ -48,14 +48,7 @@ class Settings extends FactoryService implements SettingsFields {
 	private function initialize_settings_pages() {
 		$pages = array_map(
 			function ( $page_classname ) {
-				try {
-					return [
-						'namespace' => $page_classname,
-						'object'    => $this->injector->make( $page_classname ),
-					];
-				} catch ( \Throwable $e ) {
-					return [];
-				}
+				return $this->create( $page_classname );
 			},
 			$this->pages
 		);

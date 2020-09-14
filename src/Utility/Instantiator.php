@@ -8,6 +8,7 @@
 
 namespace JMichaelWard\BoardGameCollector\Utility;
 
+use Auryn\InjectionException;
 use Auryn\Injector;
 
 /**
@@ -35,5 +36,25 @@ trait Instantiator {
 	 */
 	public function set_injector( Injector $injector ) {
 		$this->injector = $injector;
+	}
+
+	/**
+	 * Create an object instance and return it with references to its fully-qualified namespace.
+	 *
+	 * @param string $class_name Class name of the object to create.
+	 *
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
+	 * @since  2020-09-13
+	 * @return array
+	 */
+	protected function create( string $class_name ) : array {
+		try {
+			return [
+				'namespace' => $class_name,
+				'object'    => $this->injector->make( $class_name ),
+			];
+		} catch ( InjectionException $e ) {
+			return [];
+		}
 	}
 }
