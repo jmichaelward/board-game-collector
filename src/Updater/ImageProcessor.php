@@ -40,6 +40,7 @@ class ImageProcessor extends Service {
 	 * @return void
 	 */
 	public function register_hooks() {
+		add_action( 'admin_head', [ $this, 'maybe_sideload_image' ] );
 		add_action( 'wp_head', [ $this, 'maybe_sideload_image' ] );
 	}
 
