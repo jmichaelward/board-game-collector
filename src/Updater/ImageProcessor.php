@@ -9,14 +9,15 @@
 namespace JMichaelWard\BoardGameCollector\Updater;
 
 use JMichaelWard\BoardGameCollector\Model\Games\BggGame;
-use JMichaelWard\BoardGameCollector\Model\Games\GameData;
+use WebDevStudios\OopsWP\Structure\Service;
+use function \get_current_screen;
 
 /**
  * Class ImageProcessor
  *
  * @package JMichaelWard\BoardGameCollector\Updater
  */
-class ImageProcessor {
+class ImageProcessor extends Service {
 	/**
 	 * WordPress post ID for the game.
 	 *
@@ -30,6 +31,51 @@ class ImageProcessor {
 	 * @var BggGame
 	 */
 	private $game_data;
+
+	/**
+	 * Register hooks for image processing.
+	 *
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
+	 * @since  2020-09-13
+	 * @return void
+	 */
+	public function register_hooks() {
+		add_action( 'admin_head', [ $this, 'maybe_sideload_image' ] );
+	}
+
+	/**
+	 * Sideload the game's image if it doesn't already have one.
+	 *
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
+	 * @since  2020-09-13
+	 * @return void
+	 */
+	public function maybe_sideload_image() {
+		global $post;
+
+		if (
+			'bgc_game' !== get_current_screen()->id
+		) {
+			return;
+		}
+
+		$this->game_data = get_post_meta( $post->ID, 'bgc_game_meta', true );
+
+		if ( ! is_a( $this->game_data, BggGame::class ) ) {
+			return;
+		}
+
+		$this->game_id = $post->ID;
+
+		$image_id = $this->get_image_id_from_game_id();
+
+		if ( $image_id ) {
+			$this->set_image_meta( $image_id );
+			return;
+		}
+
+		$this->load_image( $post->ID, $this->game_data->get_image_url(), $this->game_data->get_name() );
+	}
 
 	/**
 	 * Process the game's image and return its ID.
@@ -69,7 +115,7 @@ class ImageProcessor {
 			[
 				'fields'      => 'ids',
 				'post_type'   => 'attachment',
-				'post_status' => 'inherit',
+				'post_status' => 'any',
 				'meta_query'  => [ // @codingStandardsIgnoreLine
 					[
 						'key'   => '_bgc_game_id',
@@ -79,11 +125,15 @@ class ImageProcessor {
 			]
 		);
 
-		$result = $query->get_queried_object_id();
+		$result = $query->get_posts();
 
 		wp_reset_postdata();
 
-		return $result;
+		if ( ! empty( $result ) ) {
+			return $result[0];
+		}
+
+		return 0;
 	}
 
 	/**

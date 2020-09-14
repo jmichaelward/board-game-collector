@@ -3,6 +3,7 @@ namespace JMichaelWard\BoardGameCollector;
 
 use Auryn\ConfigException;
 use Auryn\Injector;
+use JMichaelWard\BoardGameCollector\Updater\ImageProcessor;
 use JMichaelWard\BoardGameCollector\Utility\FactoryService;
 use JMichaelWard\OopsWPPlus\Utility\Hydratable;
 use WebDevStudios\OopsWP\Structure\Plugin\Plugin;
@@ -38,6 +39,7 @@ final class BoardGameCollector extends Plugin {
 		ApiService::class,
 		CliService::class,
 		CronService::class,
+		ImageProcessor::class,
 	];
 
 	/**
