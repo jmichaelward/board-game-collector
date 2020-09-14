@@ -4,7 +4,7 @@ namespace JMichaelWard\BoardGameCollector;
 use Auryn\ConfigException;
 use Auryn\Injector;
 use JMichaelWard\BoardGameCollector\Updater\ImageProcessor;
-use JMichaelWard\BoardGameCollector\Utility\FactoryService;
+use JMichaelWard\BoardGameCollector\Utility\InstantiatorInterface;
 use JMichaelWard\OopsWPPlus\Utility\Hydratable;
 use WebDevStudios\OopsWP\Structure\Plugin\Plugin;
 use JMichaelWard\BoardGameCollector\Content\ContentRegistrar;
@@ -128,11 +128,14 @@ final class BoardGameCollector extends Plugin {
 	 * @return void
 	 */
 	private function setup_service( Service $service ) {
-		if ( is_a( $service, FactoryService::class ) ) {
+		$service_class = get_class( $service );
+
+		if ( in_array( InstantiatorInterface::class, class_implements( $service_class ), true ) ) {
+			/* @var InstantiatorInterface $service InstantiatorInterface service. */
 			$service->set_injector( $this->injector );
 		}
 
-		if ( in_array( Hydratable::class, class_implements( get_class( $service ) ), true ) ) {
+		if ( in_array( Hydratable::class, class_implements( $service_class ), true ) ) {
 			/* @var Hydratable $service Hydratable service. */
 			$service->hydrate();
 		}
