@@ -3,6 +3,7 @@ namespace JMichaelWard\BoardGameCollector;
 
 use Auryn\ConfigException;
 use Auryn\Injector;
+use JMichaelWard\BoardGameCollector\Utility\FactoryService;
 use JMichaelWard\OopsWPPlus\Utility\Hydratable;
 use WebDevStudios\OopsWP\Structure\Plugin\Plugin;
 use JMichaelWard\BoardGameCollector\Content\ContentRegistrar;
@@ -37,6 +38,15 @@ final class BoardGameCollector extends Plugin {
 		ApiService::class,
 		CliService::class,
 		CronService::class,
+	];
+
+	/**
+	 * Collection of services which are sharable by the plugin.
+	 *
+	 * @var array
+	 */
+	private $shareable_services = [
+		Settings::class,
 	];
 
 	/**
@@ -87,13 +97,7 @@ final class BoardGameCollector extends Plugin {
 				try {
 					$service = $this->injector->make( $service_classname );
 
-					if ( $this->is_hydratable_service( $service_classname ) ) {
-						$service->hydrate();
-					}
-
-					if ( $this->is_shared_service( $service_classname ) ) {
-						$this->share_service( $service );
-					}
+					$this->setup_service( $service );
 
 					return [
 						'namespace' => $service_classname,
@@ -112,6 +116,31 @@ final class BoardGameCollector extends Plugin {
 	}
 
 	/**
+	 * Run post-instantiation processes on a given service.
+	 *
+	 * @param Service $service Service instance.
+	 *
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
+	 * @since  2020-09-13
+	 * @throws ConfigException If Injector misconfiguration exists.
+	 * @return void
+	 */
+	private function setup_service( Service $service ) {
+		if ( is_a( $service, FactoryService::class ) ) {
+			$service->set_injector( $this->injector );
+		}
+
+		if ( in_array( Hydratable::class, class_implements( get_class( $service ) ), true ) ) {
+			/* @var Hydratable $service Hydratable service. */
+			$service->hydrate();
+		}
+
+		if ( $this->is_shared_service( $service ) ) {
+			$this->share_service( $service );
+		}
+	}
+
+	/**
 	 * Sets up the service for sharing.
 	 *
 	 * @param Service $service Service instance.
@@ -125,28 +154,11 @@ final class BoardGameCollector extends Plugin {
 	/**
 	 * Check whether the service is shared.
 	 *
-	 * @param string $service_classname The fully-qualified class name of the Service.
+	 * @param Service $service Service instance.
 	 *
 	 * @return bool
 	 */
-	private function is_shared_service( $service_classname ) {
-		return in_array(
-			$service_classname,
-			[
-				Settings::class,
-			],
-			true
-		);
-	}
-
-	/**
-	 * Check whether the Service requires hydration before use.
-	 *
-	 * @param string $service_classname The fully-qualified class name of the Service.
-	 *
-	 * @return bool
-	 */
-	private function is_hydratable_service( $service_classname ) {
-		return in_array( Hydratable::class, class_implements( $service_classname ), true );
+	private function is_shared_service( Service $service ) {
+		return in_array( get_class( $service ), $this->shareable_services, true );
 	}
 }

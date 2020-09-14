@@ -1,10 +1,9 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\Admin;
 
-use Auryn\Injector;
 use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsFields;
 use JMichaelWard\BoardGameCollector\Admin\Settings\SettingsPage;
-use WebDevStudios\OopsWP\Structure\Service;
+use JMichaelWard\BoardGameCollector\Utility\FactoryService;
 use WebDevStudios\OopsWP\Utility\FilePathDependent;
 
 /**
@@ -12,20 +11,13 @@ use WebDevStudios\OopsWP\Utility\FilePathDependent;
  *
  * @package JMichaelWard\BoardGameCollector
  */
-class Settings extends Service implements SettingsFields {
+class Settings extends FactoryService implements SettingsFields {
 	use FilePathDependent;
 
 	/**
 	 * WordPress handle for the Settings JavaScript.
 	 */
 	private const JS_SETTINGS_NAME = 'bgc-settings-js';
-
-	/**
-	 * Auryn Injector instance.
-	 *
-	 * @var Injector
-	 */
-	private $injector;
 
 	/**
 	 * The settings menu class.
@@ -36,15 +28,6 @@ class Settings extends Service implements SettingsFields {
 	private $pages = [
 		SettingsPage::class,
 	];
-
-	/**
-	 * Settings constructor.
-	 *
-	 * @param Injector $injector
-	 */
-	public function __construct(Injector $injector) {
-		$this->injector = $injector;
-	}
 
 	/**
 	 * Settings page hooks.
