@@ -40,11 +40,11 @@ class ImageProcessor extends Service {
 	 * @return void
 	 */
 	public function register_hooks() {
-		add_action( 'admin_head', [ $this, 'maybe_sideload_image' ] );
+		add_action( 'wp_head', [ $this, 'maybe_sideload_image' ] );
 	}
 
 	/**
-	 * Sideload the game's image if it doesn't already have one.
+	 * Sideload the game's image on single pages if one doesn't exist.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2020-09-13
@@ -54,7 +54,8 @@ class ImageProcessor extends Service {
 		global $post;
 
 		if (
-			'bgc_game' !== get_current_screen()->id
+			is_admin() && 'bgc_game' !== get_current_screen()->id ||
+			is_single( $post ) && 'bgc_game' !== $post->post_type
 		) {
 			return;
 		}
