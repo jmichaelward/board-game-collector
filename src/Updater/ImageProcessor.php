@@ -9,14 +9,15 @@
 namespace JMichaelWard\BoardGameCollector\Updater;
 
 use JMichaelWard\BoardGameCollector\Model\Games\BggGame;
-use JMichaelWard\BoardGameCollector\Model\Games\GameData;
+use WebDevStudios\OopsWP\Structure\Service;
+use function \get_current_screen;
 
 /**
  * Class ImageProcessor
  *
  * @package JMichaelWard\BoardGameCollector\Updater
  */
-class ImageProcessor {
+class ImageProcessor extends Service {
 	/**
 	 * WordPress post ID for the game.
 	 *
@@ -30,6 +31,43 @@ class ImageProcessor {
 	 * @var BggGame
 	 */
 	private $game_data;
+
+	/**
+	 * Register hooks for image processing.
+	 *
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
+	 * @since  2020-09-13
+	 * @return void
+	 */
+	public function register_hooks() {
+		add_action( 'admin_head', [ $this, 'maybe_sideload_image' ] );
+	}
+
+	/**
+	 * Sideload the game's image if it doesn't already have one.
+	 *
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
+	 * @since  2020-09-13
+	 * @return void
+	 */
+	public function maybe_sideload_image() {
+		global $post;
+
+		if (
+			'bgc_game' !== get_current_screen()->id
+			|| get_post_thumbnail_id( $post )
+		) {
+			return;
+		}
+
+		$this->game_data = get_post_meta( $post->ID, 'bgc_game_meta', true );
+
+		if ( ! is_a( $this->game_data, BggGame::class ) ) {
+			return;
+		}
+
+		$this->load_image( $post->ID, $this->game_data->get_image_url(), $this->game_data->get_name() );
+	}
 
 	/**
 	 * Process the game's image and return its ID.
