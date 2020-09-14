@@ -39,19 +39,26 @@ trait Instantiator {
 	}
 
 	/**
-	 * Create an object instance and return it with references to its fully-qualified namespace.
+	 * Create an object instance.
 	 *
-	 * @param string $class_name Class name of the object to create.
+	 * @param string $class_name         Class name of the object to create.
+	 * @param bool   $contained_in_array Whether to retrieve the object contained in an array.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2020-09-13
-	 * @return array
+	 * @return object|array
 	 */
-	protected function create( string $class_name ) : array {
+	protected function create( string $class_name, bool $contained_in_array = false ) {
 		try {
+			$object = $this->injector->make( $class_name );
+
+			if ( ! $contained_in_array ) {
+				return $object;
+			}
+
 			return [
 				'namespace' => $class_name,
-				'object'    => $this->injector->make( $class_name ),
+				'object'    => $object,
 			];
 		} catch ( InjectionException $e ) {
 			return [];

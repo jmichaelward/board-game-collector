@@ -5,7 +5,8 @@ use Auryn\Injector;
 use JMichaelWard\BoardGameCollector\Model\Games\BggGame;
 use JMichaelWard\BoardGameCollector\UI\Cli\Command\BgcCommand;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
-use WebDevStudios\OopsWP\Structure\Service;
+use JMichaelWard\BoardGameCollector\Utility\FactoryService;
+use JMichaelWard\BoardGameCollector\Utility\Instantiator;
 use WebDevStudios\OopsWP\Utility\Hookable;
 
 /**
@@ -13,14 +14,8 @@ use WebDevStudios\OopsWP\Utility\Hookable;
  *
  * @package JMichaelWard\BoardGameCollector\Service
  */
-class CliService extends Service {
-	/**
-	 * Auryn\Injector instance.
-	 *
-	 * @var Injector
-	 * @since 2019-04-13
-	 */
-	private $injector;
+class CliService extends FactoryService {
+	use Instantiator;
 
 	/**
 	 * GamesUpdater instance.
@@ -38,8 +33,7 @@ class CliService extends Service {
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-13
 	 */
-	public function __construct( Injector $injector, GamesUpdater $updater ) {
-		$this->injector = $injector;
+	public function __construct( GamesUpdater $updater ) {
 		$this->updater  = $updater;
 	}
 
@@ -84,7 +78,7 @@ class CliService extends Service {
 	public function register_commands() {
 		foreach ( $this->commands as $command_name => $command_class ) {
 			try {
-				$command = $this->injector->make( $command_class );
+				$command = $this->create( $command_class );
 
 				if ( in_array( Hookable::class, class_implements( $command_class ), true ) ) {
 					$command->register_hooks();
