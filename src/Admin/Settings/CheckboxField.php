@@ -25,7 +25,7 @@ class CheckboxField extends Field {
 	 * @return void
 	 */
 	public function render() {
-		$checked = $this->settings->get_data()[ $this->key ] ? 'checked ' : '';
+		$checked = isset( $this->settings->get_data()[ $this->key ] ) ? 'checked ' : '';
 
 		echo '<input type="checkbox" '
 			. 'id="' . esc_attr( $this->key ) . '" '
