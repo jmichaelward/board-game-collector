@@ -84,7 +84,7 @@ class Settings extends FactoryService implements SettingsFields {
 			return;
 		}
 
-		$script_path = 'app/dist/settings.js';
+		$script_path = 'app/dist/js/settings.js';
 		$js          = plugins_url( $script_path, $this->file_path . 'board-game-collector.php' );
 
 		wp_enqueue_script(
