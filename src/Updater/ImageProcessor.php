@@ -52,33 +52,35 @@ class ImageProcessor extends Service {
 	 * @return void
 	 */
 	public function maybe_sideload_image() {
-		global $post;
+		global $wp_query;
 
 		if (
-			! $post instanceof \WP_Post
-			|| is_admin() && 'bgc_game' !== get_current_screen()->id
-			|| is_single( $post ) && 'bgc_game' !== $post->post_type
+			is_admin() && 'bgc_game' !== get_current_screen()->id
+			|| is_single() && ! is_singular( 'bgc_game' )
+			|| is_archive() && ! is_post_type_archive( 'bgc_game' )
 		) {
 			return;
 		}
 
-		$this->game_data = get_post_meta( $post->ID, 'bgc_game_meta', true );
+		foreach ( $wp_query->get_posts() as $post ) {
+			$this->game_data = get_post_meta( $post->ID, 'bgc_game_meta', true );
 
-		if ( ! is_a( $this->game_data, BggGame::class ) ) {
-			return;
+			if ( ! is_a( $this->game_data, BggGame::class ) ) {
+				return;
+			}
+
+			$this->game_id = $post->ID;
+
+			$image_id = $this->get_image_id_from_game_id();
+
+			if ( $image_id ) {
+				$this->set_image_meta( $image_id );
+
+				continue;
+			}
+
+			$this->load_image( $post->ID, $this->game_data->get_image_url(), $this->game_data->get_name() );
 		}
-
-		$this->game_id = $post->ID;
-
-		$image_id = $this->get_image_id_from_game_id();
-
-		if ( $image_id ) {
-			$this->set_image_meta( $image_id );
-
-			return;
-		}
-
-		$this->load_image( $post->ID, $this->game_data->get_image_url(), $this->game_data->get_name() );
 	}
 
 	/**
