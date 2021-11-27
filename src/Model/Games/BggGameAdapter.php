@@ -108,15 +108,15 @@ class BggGameAdapter {
 	 * @return void
 	 */
 	private function hydrate() {
-		$vars = array_filter(
+		$vars = array_keys( array_filter(
 			get_object_vars( $this ),
 			function ( $key ) {
 				return 'data' !== $key;
 			},
 			ARRAY_FILTER_USE_KEY
-		);
+		) );
 
-		array_walk( array_keys( $vars ), [ $this, 'set' ] );
+		array_walk( $vars, [ $this, 'set' ] );
 	}
 
 	/**
