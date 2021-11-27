@@ -55,8 +55,9 @@ class ImageProcessor extends Service {
 		global $post;
 
 		if (
-			is_admin() && 'bgc_game' !== get_current_screen()->id ||
-			is_single( $post ) && 'bgc_game' !== $post->post_type
+			! $post instanceof \WP_Post
+			|| is_admin() && 'bgc_game' !== get_current_screen()->id
+			|| is_single( $post ) && 'bgc_game' !== $post->post_type
 		) {
 			return;
 		}
