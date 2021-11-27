@@ -11,6 +11,7 @@ namespace JMichaelWard\BoardGameCollector\Cron;
 
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
 use WebDevStudios\OopsWP\Structure\Service;
+use WP_CLI;
 
 /**
  * Establishes a cron task for periodically hitting the BGG API.
@@ -54,7 +55,7 @@ class CronService extends Service {
 	/**
 	 * Cron hooks.
 	 */
-	public function register_hooks() {
+	public function register_hooks(): void {
 		// Setup the cron interval and the callback task.
 		add_filter( 'cron_schedules', [ $this, 'add_interval' ] ); // @codingStandardsIgnoreLine
 		add_action( 'bgc_collection_update', [ $this, 'update_collection' ], 10, 1 );
@@ -67,7 +68,7 @@ class CronService extends Service {
 	 *
 	 * @return array
 	 */
-	public function add_interval( $schedules ) {
+	public function add_interval( array $schedules ): array {
 		$schedules[ self::INTERVAL_NAME ] = [
 			'interval' => self::INTERVAL_VALUE,
 			'display'  => sprintf( // Translators: $1%s is the interval description.
@@ -81,8 +82,10 @@ class CronService extends Service {
 
 	/**
 	 * Check to see if we need to update the games collection locally.
+	 *
+	 * @return void
 	 */
-	public static function maybe_schedule_cron() {
+	public static function maybe_schedule_cron(): void {
 		if ( ! wp_next_scheduled( 'bgc_collection_update' ) ) {
 			wp_schedule_event( time(), self::INTERVAL_NAME, 'bgc_collection_update' );
 		}
@@ -92,8 +95,9 @@ class CronService extends Service {
 	 * Process game updates.
 	 *
 	 * @throws \Exception
+	 * @return void
 	 */
-	public function update_collection() {
+	public function update_collection(): void {
 		// Load required WordPress functionality.
 		include_once ABSPATH . WPINC . '/pluggable.php';
 
@@ -102,7 +106,7 @@ class CronService extends Service {
 			wp_set_auth_cookie( 1 );
 		}
 
-		if ( ! WP_CLI && ! current_user_can( 'edit_posts' ) ) {
+		if ( ! defined( 'WP_CLI' ) || ( WP_CLI && ! current_user_can( 'edit_posts' ) ) ) {
 			return;
 		}
 
