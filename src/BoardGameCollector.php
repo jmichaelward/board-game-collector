@@ -78,7 +78,7 @@ final class BoardGameCollector extends Plugin {
 	 *
 	 * @since 1.0.0
 	 */
-	public function run() {
+	public function run(): void {
 		parent::run();
 
 		// Check to see if it's time to run cron processes.
@@ -92,8 +92,10 @@ final class BoardGameCollector extends Plugin {
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-02-21
+	 *
+	 * @return array
 	 */
-	protected function init_services() {
+	protected function init_services(): array {
 		$objects = array_map(
 			function ( $service_classname ) {
 				try {
@@ -127,7 +129,7 @@ final class BoardGameCollector extends Plugin {
 	 * @throws ConfigException If Injector misconfiguration exists.
 	 * @return void
 	 */
-	private function setup_service( Service $service ) {
+	private function setup_service( Service $service ): void {
 		$service_class = get_class( $service );
 
 		if ( in_array( InstantiatorInterface::class, class_implements( $service_class ), true ) ) {
@@ -152,7 +154,7 @@ final class BoardGameCollector extends Plugin {
 	 *
 	 * @throws ConfigException If there's a problem finding the Service within Auryn.
 	 */
-	private function share_service( Service $service ) {
+	private function share_service( Service $service ): void {
 		$this->injector->share( $service );
 	}
 
@@ -163,7 +165,7 @@ final class BoardGameCollector extends Plugin {
 	 *
 	 * @return bool
 	 */
-	private function is_shared_service( Service $service ) {
+	private function is_shared_service( Service $service ): bool {
 		return in_array( get_class( $service ), $this->shareable_services, true );
 	}
 }
