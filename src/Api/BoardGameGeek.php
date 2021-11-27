@@ -103,8 +103,6 @@ class BoardGameGeek {
 			);
 		}
 
-		$request = new Request( "{$this->base_path}/collection?username={$username}&stats=1" );
-
-		return $request->make();
+		return ( new Request( "{$this->base_path}/collection?username={$username}&stats=1" ) )->make();
 	}
 }

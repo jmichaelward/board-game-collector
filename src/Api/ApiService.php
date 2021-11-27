@@ -33,8 +33,10 @@ class ApiService extends FactoryService {
 
 	/**
 	 * Register WordPress hooks.
+	 *
+	 * @return void
 	 */
-	public function register_hooks() {
+	public function register_hooks(): void {
 		add_action( 'rest_api_init', [ $this, 'register_extended_api_fields' ] );
 	}
 
@@ -45,7 +47,7 @@ class ApiService extends FactoryService {
 	 * @since  2019-05-01
 	 * @return void
 	 */
-	public function register_extended_api_fields() {
+	public function register_extended_api_fields(): void {
 		foreach ( $this->routes as $route_class ) {
 			$this->create( $route_class )->register();
 		}

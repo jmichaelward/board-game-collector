@@ -79,11 +79,11 @@ class Request {
 	/**
 	 * Check whether the data has errors.
 	 *
-	 * @param \WP_Error $data Error data.
+	 * @param WP_Error $data Error data.
 	 *
 	 * @return bool
 	 */
-	private function has_errors( $data ) {
+	private function has_errors( $data ): bool {
 		return is_wp_error( $data ) || ! is_array( $data );
 	}
 
@@ -94,7 +94,7 @@ class Request {
 	 *
 	 * @return Response
 	 */
-	private function get_error_response( $data ) {
+	private function get_error_response( $data ): Response {
 		switch ( $data ) {
 			case is_wp_error( $data ):
 				/* @var WP_Error $data A WP_Error instance. */

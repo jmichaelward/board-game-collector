@@ -26,7 +26,7 @@ abstract class RestRoute extends \WP_REST_Controller implements Registerable {
 	 * @since  2019-09-02
 	 * @return void
 	 */
-	public function register() {
+	public function register(): void {
 		$this->register_routes();
 	}
 }

@@ -17,6 +17,7 @@
 namespace JMichaelWard\BoardGameCollector\Api\Routes;
 
 use WebDevStudios\OopsWP\Utility\Registerable;
+use WP_REST_Request;
 
 /**
  * Class CustomRestRoute
@@ -41,18 +42,18 @@ abstract class CustomRestRoute extends \WP_REST_Controller implements Registerab
 	 * @since  2020-04-02
 	 * @return void
 	 */
-	public function register() {
+	public function register(): void {
 		$this->register_routes();
 	}
 
 	/**
 	 * Basic nonce-based permission callback.
 	 *
-	 * @param \WP_REST_Request $request
+	 * @param WP_REST_Request $request Class instance.
 	 *
 	 * @return bool|int
 	 */
-	public function permission_callback_verify_nonce( \WP_REST_Request $request ) {
+	public function permission_callback_verify_nonce( WP_REST_Request $request ) {
 		return wp_verify_nonce( $request->get_header( 'x_wp_nonce' ), 'wp_rest' );
 	}
 }
