@@ -70,7 +70,7 @@ abstract class Field implements FieldInterface {
 	 * @since  2020-09-13
 	 * @return string
 	 */
-	public function get_key() : string {
+	public function get_key(): string {
 		return $this->key;
 	}
 
@@ -81,7 +81,7 @@ abstract class Field implements FieldInterface {
 	 * @since  2020-09-13
 	 * @return string
 	 */
-	public function get_label() : string {
+	public function get_label(): string {
 		return $this->label;
 	}
 
@@ -92,7 +92,7 @@ abstract class Field implements FieldInterface {
 	 * @since  2020-09-13
 	 * @return string
 	 */
-	public function get_type() : string {
+	public function get_type(): string {
 		return $this->type;
 	}
 }

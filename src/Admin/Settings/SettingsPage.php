@@ -78,10 +78,10 @@ class SettingsPage implements SettingsInterface {
 	 */
 	public function get_data(): array {
 		return array_merge( [
-                'bgg-username' => '',
-            ],
-            $this->data ?: []
-        );
+			                    'bgg-username' => '',
+		                    ],
+		                    $this->data ?: []
+		);
 	}
 
 	/**
@@ -236,7 +236,7 @@ class SettingsPage implements SettingsInterface {
 	 *
 	 * @return bool
 	 */
-	private function username_verified() : bool {
+	private function username_verified(): bool {
 		if ( filter_input( INPUT_GET, 'settings-updated', FILTER_VALIDATE_BOOLEAN ) ) {
 			return false;
 		}
@@ -249,7 +249,7 @@ class SettingsPage implements SettingsInterface {
 	 *
 	 * @return bool
 	 */
-	private function is_settings_page() : bool {
+	private function is_settings_page(): bool {
 		return self::SETTINGS_KEY === filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
 	}
 
