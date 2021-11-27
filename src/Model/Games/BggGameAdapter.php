@@ -190,7 +190,7 @@ class BggGameAdapter {
 		$rankings = [];
 
 		foreach ( $this->data['stats']['rating']['ranks']['rank'] as $ranking ) {
-			$rankings[] = $ranking['@attributes'];
+			$rankings[] = $ranking['@attributes'] ?? [];
 		}
 
 		return $rankings;

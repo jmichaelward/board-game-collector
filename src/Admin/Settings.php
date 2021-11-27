@@ -84,7 +84,7 @@ class Settings extends FactoryService implements SettingsFields {
 			return;
 		}
 
-		$script_path = 'app/dist/js/settings.js';
+		$script_path = "{$this->get_js_path()}/settings.js";
 		$js          = plugins_url( $script_path, $this->file_path . 'board-game-collector.php' );
 
 		wp_enqueue_script(
@@ -104,4 +104,10 @@ class Settings extends FactoryService implements SettingsFields {
 			]
 		);
 	}
+
+    private function get_js_path(): string {
+        return is_readable( plugin_dir_path( $this->file_path ) . 'app/dist/js' )
+            ? 'app/dist/js/'
+            : 'app/src/js/';
+    }
 }
