@@ -77,7 +77,11 @@ class SettingsPage implements SettingsInterface {
 	 * @return array
 	 */
 	public function get_data() : array {
-		return $this->data;
+		return array_merge( [
+                'bgg-username' => '',
+            ],
+            $this->data ?: []
+        );
 	}
 
 	/**
