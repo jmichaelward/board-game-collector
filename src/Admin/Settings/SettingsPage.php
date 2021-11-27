@@ -63,7 +63,7 @@ class SettingsPage implements SettingsInterface {
 	/**
 	 * Register hooks for this settings page.
 	 */
-	public function register_hooks() {
+	public function register_hooks(): void {
 		add_action( 'admin_init', [ $this, 'notify_invalid_username' ] );
 		add_action( 'admin_notices', [ $this, 'notify_missing_username' ] );
 		add_action( 'update_option_' . self::SETTINGS_KEY, [ $this, 'maybe_clear_transients' ] );
@@ -76,7 +76,7 @@ class SettingsPage implements SettingsInterface {
 	 * @since  2020-09-13
 	 * @return array
 	 */
-	public function get_data() : array {
+	public function get_data(): array {
 		return array_merge( [
                 'bgg-username' => '',
             ],
@@ -91,7 +91,7 @@ class SettingsPage implements SettingsInterface {
 	 * @since  2020-09-12
 	 * @return void
 	 */
-	public function maybe_clear_transients( $settings ) {
+	public function maybe_clear_transients( $settings ): void {
 		$old_settings = get_option( self::SETTINGS_KEY );
 
 		if ( $old_settings['bgg-username'] === $settings['bgg-username'] ) {
@@ -108,7 +108,7 @@ class SettingsPage implements SettingsInterface {
 	 * @since  2019-05-01
 	 * @return void
 	 */
-	public function register() {
+	public function register(): void {
 		$this->setup();
 		$this->register_hooks();
 
@@ -127,7 +127,7 @@ class SettingsPage implements SettingsInterface {
 	/**
 	 * Hydrate this object with its settings data.
 	 */
-	public function hydrate() {
+	public function hydrate(): void {
 		$this->data = get_option( self::SETTINGS_KEY, [] );
 	}
 
@@ -138,7 +138,7 @@ class SettingsPage implements SettingsInterface {
 	 * @since  2019-05-01
 	 * @return void
 	 */
-	public function render() {
+	public function render(): void {
 		include $this->file_path . '/views/settings.php';
 	}
 
@@ -147,7 +147,7 @@ class SettingsPage implements SettingsInterface {
 	 *
 	 * @return array
 	 */
-	private function init_fields() : array {
+	private function init_fields(): array {
 		if ( empty( $this->fields ) ) {
 			$this->fields = [
 				new TextField( $this, self::USERNAME_KEY, 'BoardGameGeek username', 'text' ),
@@ -165,7 +165,7 @@ class SettingsPage implements SettingsInterface {
 	 * @since  2019-05-01
 	 * @return void
 	 */
-	private function setup() {
+	private function setup(): void {
 		$this->init_fields();
 		$this->add_section();
 		$this->add_fields();
@@ -176,7 +176,7 @@ class SettingsPage implements SettingsInterface {
 	/**
 	 * Register the settings section.
 	 */
-	public function add_section() {
+	public function add_section(): void {
 		add_settings_section(
 			self::SETTINGS_KEY,
 			__( 'BoardGameGeek API Settings', 'bgc' ),
@@ -188,7 +188,7 @@ class SettingsPage implements SettingsInterface {
 	/**
 	 * Register settings fields.
 	 */
-	public function add_fields() {
+	public function add_fields(): void {
 		foreach ( $this->fields as $field ) {
 			add_settings_field(
 				$field->get_key(),
@@ -206,7 +206,7 @@ class SettingsPage implements SettingsInterface {
 	/**
 	 * Validate whether the username saved to the settings page is registered with BoardGameGeek.
 	 */
-	public function notify_invalid_username() {
+	public function notify_invalid_username(): void {
 		if ( $this->username_verified() || ! $this->is_settings_page() ) {
 			return;
 		}
@@ -258,7 +258,7 @@ class SettingsPage implements SettingsInterface {
 	 *
 	 * @return string
 	 */
-	public function get_username() {
+	public function get_username(): string {
 		if ( empty( $this->data ) ) {
 			$this->hydrate();
 		}
@@ -270,7 +270,7 @@ class SettingsPage implements SettingsInterface {
 	/**
 	 * Render an admin notice only on the bgc_game screen if a BGG Username is not entered.
 	 */
-	public function notify_missing_username() {
+	public function notify_missing_username(): void {
 		$screen = get_current_screen();
 
 		if ( 'bgc_game' !== $screen->post_type || $this->has_username() ) {
@@ -287,7 +287,7 @@ class SettingsPage implements SettingsInterface {
 	 * @since  2019-09-02
 	 * @return bool
 	 */
-	private function has_username() {
+	private function has_username(): bool {
 		return isset( $this->data[ self::USERNAME_KEY ] ) && ! empty( $this->data[ self::USERNAME_KEY ] );
 	}
 }
