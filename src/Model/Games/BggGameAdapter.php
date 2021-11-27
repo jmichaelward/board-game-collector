@@ -107,14 +107,16 @@ class BggGameAdapter {
 	 * @since  2019-04-13
 	 * @return void
 	 */
-	private function hydrate() {
-		$vars = array_keys( array_filter(
-			                    get_object_vars( $this ),
-			                    function ( $key ) {
-				                    return 'data' !== $key;
-			                    },
-			                    ARRAY_FILTER_USE_KEY
-		                    ) );
+	private function hydrate(): void {
+		$vars = array_keys(
+			array_filter(
+				get_object_vars( $this ),
+				function ( $key ) {
+					return 'data' !== $key;
+				},
+				ARRAY_FILTER_USE_KEY
+			)
+		);
 
 		array_walk( $vars, [ $this, 'set' ] );
 	}
@@ -128,7 +130,7 @@ class BggGameAdapter {
 	 * @since  2019-04-13
 	 * @return BggGameAdapter
 	 */
-	private function set( string $property ) {
+	private function set( string $property ): BggGameAdapter {
 		$callback          = "parse_{$property}";
 		$this->{$property} = $this->$callback();
 
@@ -142,7 +144,7 @@ class BggGameAdapter {
 	 * @since  2019-04-13
 	 * @return int
 	 */
-	private function parse_id(): ?int {
+	private function parse_id(): int {
 		return $this->data['@attributes']['objectid'] ?? 0;
 	}
 
@@ -153,7 +155,7 @@ class BggGameAdapter {
 	 * @since  2019-04-13
 	 * @return string
 	 */
-	private function parse_name(): ?string {
+	private function parse_name(): string {
 		return $this->data['name'] ?? '';
 	}
 
@@ -164,7 +166,7 @@ class BggGameAdapter {
 	 * @since  2019-04-13
 	 * @return string
 	 */
-	private function parse_year_published(): ?string {
+	private function parse_year_published(): string {
 		return $this->data['yearpublished'] ?? '';
 	}
 
@@ -175,7 +177,7 @@ class BggGameAdapter {
 	 * @since  2019-04-13
 	 * @return array
 	 */
-	private function parse_play_attributes(): ?array {
+	private function parse_play_attributes(): array {
 		return $this->data['stats']['@attributes'] ?? [];
 	}
 
