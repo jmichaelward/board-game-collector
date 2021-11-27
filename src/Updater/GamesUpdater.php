@@ -153,7 +153,7 @@ class GamesUpdater {
 
 		do_action( 'bgc_setup_progress_bar', count( $this->games ) );
 
-		$unprocessed = array_filter( $this->games, function( $game ) {
+		$unprocessed = array_filter( $this->games, function ( $game ) {
 			do_action( 'bgc_tick_progress_bar' );
 
 			return ! $this->save_game_data( $game );
@@ -193,11 +193,11 @@ class GamesUpdater {
 	 *
 	 * @return \WP_Query
 	 */
-	private function get_wp_query_all_games() : \WP_Query {
+	private function get_wp_query_all_games(): \WP_Query {
 		return new \WP_Query(
 			[
 				'post_type'      => 'bgc_game',
-				'posts_per_page' => -1,
+				'posts_per_page' => - 1,
 			]
 		);
 	}
@@ -213,7 +213,7 @@ class GamesUpdater {
 
 		$data = array_filter(
 			array_map(
-				function( $game_data ) {
+				function ( $game_data ) {
 					$game = $game_data instanceof BggGame ? $game_data : $this->adapter->get_game( $game_data );
 					$id   = $this->games_index[ $game->get_bgg_id() ]['post_id'] ?? 0;
 
@@ -363,7 +363,7 @@ class GamesUpdater {
 	 *
 	 * @return array
 	 */
-	private function get_games_index() : array {
+	private function get_games_index(): array {
 		return get_option( self::GAMES_INDEX_OPTION_KEY, [] );
 	}
 
@@ -372,10 +372,11 @@ class GamesUpdater {
 	 *
 	 * These updates are saved to memory only. save_index_updates gets called at the end of the process.
 	 *
+	 * @param int $bgg_id       The ID of the game on BoardGameGeek.
+	 * @param int $wordpress_id The ID of the game in WordPress.
+	 *
 	 * @see GamesUpdater::save_index_updates()
 	 *
-	 * @param int $bgg_id The ID of the game on BoardGameGeek.
-	 * @param int $wordpress_id The ID of the game in WordPress.
 	 */
 	private function add_game_to_index( $bgg_id, $wordpress_id ) {
 		$this->games_index[ $bgg_id ]['post_id'] = $wordpress_id;
@@ -404,7 +405,7 @@ class GamesUpdater {
 	 * @since  2020-09-12
 	 * @return int
 	 */
-	public function get_request_retry_length_in_seconds() : int {
+	public function get_request_retry_length_in_seconds(): int {
 		return self::REQUEST_RETRY_MILLISECOND_WAIT / 1000000;
 	}
 }

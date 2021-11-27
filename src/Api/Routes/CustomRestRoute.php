@@ -7,10 +7,10 @@
  * RestRoute is used for modified extensions of native WordPress routes, e.g.,
  * for post types and taxonomies.
  *
- * @see \JMichaelWard\BoardGameCollector\Api\Routes\RestRoute
- *
  * @author  Jeremy Ward <jeremy@jmichaelward.com>
  * @since   2019-09-02
+ * @see     \JMichaelWard\BoardGameCollector\Api\Routes\RestRoute
+ *
  * @package JMichaelWard\BoardGameCollector\Api\Routes
  */
 

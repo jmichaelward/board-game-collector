@@ -104,7 +104,7 @@ class BggGame implements GameData {
 	 * @since  2019-05-01
 	 * @return array
 	 */
-	public function get_data() : array {
+	public function get_data(): array {
 		return get_object_vars( $this );
 	}
 
@@ -170,7 +170,7 @@ class BggGame implements GameData {
 	public function get_statuses() {
 		$statuses = array_filter(
 			$this->status,
-			function( $status, $key ) {
+			function ( $status, $key ) {
 				if ( in_array( $key, [ 'own', 'preordered', 'wanttoplay' ], true ) && '1' === $status ) {
 					return true;
 				}
@@ -194,7 +194,7 @@ class BggGame implements GameData {
 	 * @since  2019-04-13
 	 * @return array
 	 */
-	public function get_unique_identifiers() : array {
+	public function get_unique_identifiers(): array {
 		return [
 			'name'       => sanitize_title( $this->name ),
 			'post_title' => $this->name,

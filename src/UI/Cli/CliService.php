@@ -34,7 +34,7 @@ class CliService extends FactoryService {
 	 * @since  2019-04-13
 	 */
 	public function __construct( GamesUpdater $updater ) {
-		$this->updater  = $updater;
+		$this->updater = $updater;
 	}
 
 	/**
@@ -116,7 +116,7 @@ class CliService extends FactoryService {
 	public function notify_collection_processing() {
 		\WP_CLI::success(
 			__(
-				// @codingStandardsIgnoreLine - integer value.
+			// @codingStandardsIgnoreLine - integer value.
 				"Request received. Large collections take longer to process -- trying again in {$this->updater->get_request_retry_length_in_seconds()} seconds.",
 				'bgcollector'
 			)

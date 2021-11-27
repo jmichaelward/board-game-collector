@@ -2,7 +2,7 @@
 /**
  * Handles download and management of game images from BoardGameGeek.
  *
- * @author Jeremy Ward <jeremy@jmichaelward.com>
+ * @author  Jeremy Ward <jeremy@jmichaelward.com>
  * @package JMichaelWard\BoardGameCollector\Updater
  */
 
@@ -74,6 +74,7 @@ class ImageProcessor extends Service {
 
 		if ( $image_id ) {
 			$this->set_image_meta( $image_id );
+
 			return;
 		}
 
@@ -100,7 +101,8 @@ class ImageProcessor extends Service {
 		$image_id        = $this->get_featured_image_id();
 
 		if ( ! $image_id ) {
-			$image_id = $this->load_image( $this->game_id, $this->game_data->get_image_url(), $this->game_data->get_name() );
+			$image_id = $this->load_image( $this->game_id, $this->game_data->get_image_url(),
+			                               $this->game_data->get_name() );
 		}
 
 		return $image_id;
@@ -203,7 +205,7 @@ class ImageProcessor extends Service {
 	 *
 	 * @param int $image_id WordPress post ID for a game image.
 	 */
-	private function set_image_meta( int $image_id ) : void {
+	private function set_image_meta( int $image_id ): void {
 		if ( ! $image_id ) {
 			return;
 		}

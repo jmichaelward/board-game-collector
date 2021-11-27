@@ -61,7 +61,7 @@ class Response {
 	 *
 	 * @return string
 	 */
-	public function get_error() : string {
+	public function get_error(): string {
 		return $this->data['error'] ?? '';
 	}
 
@@ -72,7 +72,7 @@ class Response {
 	 *
 	 * @return array
 	 */
-	private function convert_xml_to_json( string $data ) : array {
+	private function convert_xml_to_json( string $data ): array {
 		if ( ! $data ) {
 			return [];
 		}

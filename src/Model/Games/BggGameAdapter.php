@@ -85,7 +85,7 @@ class BggGameAdapter {
 	 * @since  2019-04-13
 	 * @return BggGame
 	 */
-	public function get_game( array $data ) : BggGame {
+	public function get_game( array $data ): BggGame {
 		$this->data = $data;
 		$this->hydrate();
 
@@ -109,12 +109,12 @@ class BggGameAdapter {
 	 */
 	private function hydrate() {
 		$vars = array_keys( array_filter(
-			get_object_vars( $this ),
-			function ( $key ) {
-				return 'data' !== $key;
-			},
-			ARRAY_FILTER_USE_KEY
-		) );
+			                    get_object_vars( $this ),
+			                    function ( $key ) {
+				                    return 'data' !== $key;
+			                    },
+			                    ARRAY_FILTER_USE_KEY
+		                    ) );
 
 		array_walk( $vars, [ $this, 'set' ] );
 	}
@@ -142,7 +142,7 @@ class BggGameAdapter {
 	 * @since  2019-04-13
 	 * @return int
 	 */
-	private function parse_id() : ?int {
+	private function parse_id(): ?int {
 		return $this->data['@attributes']['objectid'] ?? 0;
 	}
 
@@ -153,7 +153,7 @@ class BggGameAdapter {
 	 * @since  2019-04-13
 	 * @return string
 	 */
-	private function parse_name() : ?string {
+	private function parse_name(): ?string {
 		return $this->data['name'] ?? '';
 	}
 
@@ -164,7 +164,7 @@ class BggGameAdapter {
 	 * @since  2019-04-13
 	 * @return string
 	 */
-	private function parse_year_published() : ?string {
+	private function parse_year_published(): ?string {
 		return $this->data['yearpublished'] ?? '';
 	}
 
@@ -175,7 +175,7 @@ class BggGameAdapter {
 	 * @since  2019-04-13
 	 * @return array
 	 */
-	private function parse_play_attributes() : ?array {
+	private function parse_play_attributes(): ?array {
 		return $this->data['stats']['@attributes'] ?? [];
 	}
 
@@ -186,7 +186,7 @@ class BggGameAdapter {
 	 * @since  2019-04-13
 	 * @return array
 	 */
-	private function parse_rankings() : array {
+	private function parse_rankings(): array {
 		$rankings = [];
 
 		foreach ( $this->data['stats']['rating']['ranks']['rank'] as $ranking ) {
@@ -203,7 +203,7 @@ class BggGameAdapter {
 	 * @since  2019-04-13
 	 * @return array
 	 */
-	private function parse_status() : array {
+	private function parse_status(): array {
 		return $this->data['status']['@attributes'] ?? [];
 	}
 
@@ -214,7 +214,7 @@ class BggGameAdapter {
 	 * @since  2019-04-13
 	 * @return string
 	 */
-	private function parse_image_url() : string {
+	private function parse_image_url(): string {
 		$image_url = $this->data['image'] ?? '';
 
 		return is_string( $image_url ) ? $image_url : '';

@@ -35,7 +35,7 @@ class GameStatus extends Taxonomy {
 	 *
 	 * @return array
 	 */
-	public function get_labels() : array {
+	public function get_labels(): array {
 		return [
 			'name'          => _x( 'Ownership', 'Game status label', 'bgc' ),
 			'singular_name' => _x( 'Ownership', 'Game status singular label', 'bgc' ),
@@ -47,7 +47,7 @@ class GameStatus extends Taxonomy {
 	 *
 	 * @return array
 	 */
-	public function get_args() : array {
+	public function get_args(): array {
 		return [
 			'hierarchical'          => true,
 			'label'                 => _x( 'Statuses', 'Game status label', 'bgc' ),

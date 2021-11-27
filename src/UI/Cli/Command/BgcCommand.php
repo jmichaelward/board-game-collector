@@ -2,9 +2,9 @@
 /**
  * Main command for the plugin.
  *
- * @author Jeremy Ward <jeremy@jmichaelward.com>
+ * @author  Jeremy Ward <jeremy@jmichaelward.com>
+ * @since   2019-05-01
  * @package JMichaelWard\BoardGameCollector\UI\Cli\Command
- * @since 2019-05-01
  */
 
 namespace JMichaelWard\BoardGameCollector\UI\Cli\Command;
@@ -82,13 +82,14 @@ class BgcCommand {
 			$attempts = 0;
 
 			while (
-				array_key_exists( 'processing', $this->updater->update_collection() )
+			array_key_exists( 'processing', $this->updater->update_collection() )
 			) {
 				if ( self::MAX_UPDATE_ATTEMPTS === $attempts ) {
-					WP_CLI::log( __( 'Looks like this is a pretty large collection. Try again later.', 'bgcollector' ) );
+					WP_CLI::log( __( 'Looks like this is a pretty large collection. Try again later.',
+					                 'bgcollector' ) );
 				}
 
-				$attempts++;
+				$attempts ++;
 				usleep( $this->updater::REQUEST_RETRY_MILLISECOND_WAIT );
 			}
 

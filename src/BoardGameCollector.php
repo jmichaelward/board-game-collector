@@ -30,8 +30,8 @@ final class BoardGameCollector extends Plugin {
 	 * with data from the WordPress settings panel. This will ensure that values such as a person's username
 	 * for BoardGameGeek will get included in API requests.
 	 *
-	 * @see BoardGameCollector::init_services()
 	 * @var array
+	 * @see BoardGameCollector::init_services()
 	 */
 	protected $services = [
 		Settings::class,

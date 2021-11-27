@@ -2,7 +2,7 @@
 /**
  * Cron service to update games periodically.
  *
- * @TODO Set this as an option under Settings.
+ * @TODO    Set this as an option under Settings.
  *
  * @package JMichaelWard\BoardGameCollector\Cron
  */

@@ -2,7 +2,7 @@
 /**
  * Model for the BoardGameGeek API.
  *
- * @TODO Consider whether this is the right location for this class.
+ * @TODO    Consider whether this is the right location for this class.
  *
  * @package JMichaelWard\BoardGameCollector\Api
  */
@@ -38,8 +38,8 @@ class BoardGameGeek {
 	 *
 	 * @return Response
 	 */
-	private function request_username( string $username ) : Response {
-		return ( new Request( "{$this->base_path}/user?name={$username}") )->make();
+	private function request_username( string $username ): Response {
+		return ( new Request( "{$this->base_path}/user?name={$username}" ) )->make();
 	}
 
 	/**
@@ -52,7 +52,7 @@ class BoardGameGeek {
 	 *
 	 * @return bool
 	 */
-	public function is_username_valid( $username ) : bool {
+	public function is_username_valid( $username ): bool {
 		$response     = $this->request_username( $username );
 		$bgg_username = $response->get_body()['@attributes']['id'] ?? '';
 
@@ -63,11 +63,12 @@ class BoardGameGeek {
 	 * Attempt to retrieve a user's game collection from the API.
 	 *
 	 * @param string $username The user collection to retrieve.
+	 *
 	 * @throws Exception|InvalidArgumentException If API error response or missing username.
 	 *
 	 * @return Response
 	 */
-	public function request_user_collection( string $username ) : Response {
+	public function request_user_collection( string $username ): Response {
 		$cached = get_transient( self::COLLECTION_TRANSIENT_KEY );
 
 		if ( $cached ) {
@@ -88,14 +89,14 @@ class BoardGameGeek {
 	 *
 	 * @param string $username The username to query against.
 	 *
+	 * @author Jeremy Ward <jeremy@jmichaelward.com>
+	 * @since  2019-04-12
 	 * @throws Exception If API error response.
 	 * @throws InvalidArgumentException If missing username.
 	 *
-	 * @author Jeremy Ward <jeremy@jmichaelward.com>
-	 * @since  2019-04-12
 	 * @return Response
 	 */
-	private function request_games_by_username( string $username ) : Response {
+	private function request_games_by_username( string $username ): Response {
 		if ( ! $username ) {
 			throw new InvalidArgumentException(
 				__( 'No username set in BGC Settings. Refusing to make request.', 'bgcollector' )

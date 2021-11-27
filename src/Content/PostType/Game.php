@@ -45,7 +45,7 @@ class Game extends PostType {
 	 *
 	 * @return array
 	 */
-	public function get_labels() : array {
+	public function get_labels(): array {
 		return [
 			'name'               => _x( 'Games', 'post type general name', 'bgc' ),
 			'singular_name'      => _x( 'Game', 'post type singular name', 'bgc' ),
@@ -69,7 +69,7 @@ class Game extends PostType {
 	 *
 	 * @return array
 	 */
-	public function get_args() : array {
+	public function get_args(): array {
 		$args = [
 			'label'                 => _x( 'Games', 'post type label', 'bgc' ),
 			'description'           => __( 'A post type for a board games collection', 'bgc' ),
