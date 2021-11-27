@@ -18,8 +18,10 @@ use JMichaelWard\BoardGameCollector\Api\Routes\RestRoute;
 class Games extends RestRoute implements Registerable {
 	/**
 	 * Register data fields to return in the standard Games response.
+	 *
+	 * @return void
 	 */
-	public function register() {
+	public function register(): void {
 		$this->add_meta_to_response();
 	}
 
@@ -28,8 +30,9 @@ class Games extends RestRoute implements Registerable {
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-05-01
+	 * @return void
 	 */
-	private function add_meta_to_response() {
+	private function add_meta_to_response(): void {
 		register_rest_field(
 			'bgc_game',
 			'metadata',
