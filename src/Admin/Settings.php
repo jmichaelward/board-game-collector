@@ -32,7 +32,7 @@ class Settings extends FactoryService implements SettingsFields {
 	/**
 	 * Settings page hooks.
 	 */
-	public function register_hooks() {
+	public function register_hooks(): void {
 		add_action( 'admin_menu', [ $this, 'register_settings_pages' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
 	}
@@ -45,7 +45,7 @@ class Settings extends FactoryService implements SettingsFields {
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-09-02
 	 */
-	private function initialize_settings_pages() {
+	private function initialize_settings_pages(): void {
 		$pages = array_map(
 			function ( $page_classname ) {
 				return $this->create( $page_classname, true );
@@ -63,7 +63,7 @@ class Settings extends FactoryService implements SettingsFields {
 	 * @since  2019-09-02
 	 * @return void
 	 */
-	public function register_settings_pages() {
+	public function register_settings_pages(): void {
 		$this->initialize_settings_pages();
 
 		foreach ( $this->pages as $page ) {
@@ -75,11 +75,13 @@ class Settings extends FactoryService implements SettingsFields {
 	/**
 	 * Enqueue the plugin assets.
 	 *
+	 * @param string $hook The current hook being called.
+	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-08-30
 	 * @return void
 	 */
-	public function enqueue_assets( $hook ) {
+	public function enqueue_assets( $hook ): void {
 		if ( 'bgc_game_page_bgc-settings' !== $hook ) {
 			return;
 		}
@@ -105,6 +107,13 @@ class Settings extends FactoryService implements SettingsFields {
 		);
 	}
 
+	/**
+	 * Get the path to the JS file directory.
+	 *
+	 * Defaults to src if distributable files have not been generated.
+	 *
+	 * @return string
+	 */
     private function get_js_path(): string {
         return is_readable( plugin_dir_path( $this->file_path ) . 'app/dist/js' )
             ? 'app/dist/js/'
