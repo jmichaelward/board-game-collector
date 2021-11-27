@@ -14,6 +14,9 @@ use JMichaelWard\BoardGameCollector\Api\BoardGameGeek;
 use JMichaelWard\BoardGameCollector\Api\Response;
 use JMichaelWard\BoardGameCollector\Api\Routes\CustomRestRoute;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
+use WP_Query;
+use WP_REST_Request;
+use WP_REST_Response;
 
 /**
  * Class Collection
@@ -75,8 +78,9 @@ class Collection extends CustomRestRoute {
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-09-01
+	 * @return void
 	 */
-	public function register_routes() {
+	public function register_routes(): void {
 		if ( ! is_user_logged_in() ) {
 			return;
 		}
@@ -93,7 +97,7 @@ class Collection extends CustomRestRoute {
 						'validate_callback' => [ $this, 'validate_username' ],
 					],
 				],
-				'permission_callback' => [ $this, 'permission_callback_verify_nonce' ]
+				'permission_callback' => [ $this, 'permission_callback_verify_nonce' ],
 			]
 		);
 
@@ -101,9 +105,9 @@ class Collection extends CustomRestRoute {
 			$this->namespace,
 			"{$this->rest_base}/images",
 			[
-				'methods' => \WP_REST_Server::CREATABLE,
-				'callback' => [ $this, 'update_images' ],
-				'permission_callback' => [ $this, 'permission_callback_verify_nonce' ]
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => [ $this, 'update_images' ],
+				'permission_callback' => [ $this, 'permission_callback_verify_nonce' ],
 			]
 		);
 	}
@@ -115,7 +119,7 @@ class Collection extends CustomRestRoute {
 	 * @since  2019-10-04
 	 * @return bool
 	 */
-	public function validate_username( $username ) {
+	public function validate_username( $username ): bool {
 		return ! empty( $username ) && strtolower( $username ) === strtolower( $this->settings->get_username() );
 	}
 
@@ -125,42 +129,45 @@ class Collection extends CustomRestRoute {
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-09-01
 	 */
-	public function update_items() {
+	public function update_items(): WP_REST_Response {
 		$unprocessed = get_transient( self::REMAINING_GAMES_TRANSIENT_KEY );
 
 		if ( false === $unprocessed || $unprocessed instanceof Response ) {
 			$response = $this->bgg_api->request_user_collection( $this->settings->get_username() );
 
 			if ( 202 === $response->get_status_code() ) {
-				return new \WP_REST_Response( [ 'games' => [], 'status' => 202 ], 202 );
+				return new WP_REST_Response( [ 'games' => [], 'status' => 202 ], 202 );
 			}
 
 			$unprocessed = $response->get_body()['item'] ?? [];
 
 			set_transient( self::REMAINING_GAMES_TRANSIENT_KEY, $unprocessed, 1 * DAY_IN_SECONDS );
 
-			return new \WP_REST_Response( [ 'games' => $unprocessed, 'status' => 200 ], 200 );
+			return new WP_REST_Response( [ 'games' => $unprocessed, 'status' => 200 ], 200 );
 		}
 
-		return new \WP_REST_Response( [ 'games' => $this->process_remaining_games( $unprocessed ), 'status' => 200 ], 200 );
+		return new WP_REST_Response( [ 'games' => $this->process_remaining_games( $unprocessed ), 'status' => 200 ],
+		                             200 );
 	}
 
 	/**
 	 * Route callback to download images and set them as featured on a game.
 	 *
-	 * @param \WP_REST_Request $request
+	 * @param WP_REST_Request $request Class instance.
+	 *
+	 * @return array
 	 */
-	public function update_images( \WP_REST_Request $request ) {
+	public function update_images( WP_REST_Request $request ): array {
 		// Get all games that don't have featured images.
-		$query = new \WP_Query(
+		$query = new WP_Query(
 			[
-				'post_type' => 'bgc_game',
+				'post_type'  => 'bgc_game',
 				'meta_query' => [
 					[
-						'key' => '_thumbnail_id',
+						'key'     => '_thumbnail_id',
 						'compare' => 'NOT EXISTS',
-					]
-				]
+					],
+				],
 			]
 		);
 
@@ -170,7 +177,7 @@ class Collection extends CustomRestRoute {
 			return [];
 		}
 
-		$games_data = array_map( function( $game ) {
+		$games_data = array_map( function ( $game ) {
 			return get_post_meta( $game->ID, 'bgc_game_meta', true );
 		}, $games );
 
@@ -199,7 +206,7 @@ class Collection extends CustomRestRoute {
 	 * @since  2019-10-04
 	 * @return array Games from BoardGameGeek which are not yet in WordPress.
 	 */
-	private function process_remaining_games( array $games ) {
+	private function process_remaining_games( array $games ): array {
 		if ( ! $games ) {
 			return [];
 		}
@@ -227,7 +234,7 @@ class Collection extends CustomRestRoute {
 	 * @since  2019-10-04
 	 * @return array
 	 */
-	private function get_games_to_process( array $games ) {
+	private function get_games_to_process( array $games ): array {
 		return array_splice( $games, 0, ( count( $games ) <= 10 ?: 10 ) );
 	}
 }
