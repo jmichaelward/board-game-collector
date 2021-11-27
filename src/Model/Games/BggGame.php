@@ -113,7 +113,7 @@ class BggGame implements GameData {
 	 *
 	 * @return int
 	 */
-	public function get_bgg_id() {
+	public function get_bgg_id(): int {
 		return absint( $this->bgg_id );
 	}
 
@@ -122,7 +122,7 @@ class BggGame implements GameData {
 	 *
 	 * @return string
 	 */
-	public function get_name() {
+	public function get_name(): string {
 		return $this->name;
 	}
 
@@ -131,7 +131,7 @@ class BggGame implements GameData {
 	 *
 	 * @return string
 	 */
-	public function get_image_url() {
+	public function get_image_url(): string {
 		return $this->image_url;
 	}
 
@@ -140,7 +140,7 @@ class BggGame implements GameData {
 	 *
 	 * @return int
 	 */
-	public function get_min_players() {
+	public function get_min_players(): int {
 		return absint( $this->play_attributes['minplayers'] );
 	}
 
@@ -149,7 +149,7 @@ class BggGame implements GameData {
 	 *
 	 * @return int
 	 */
-	public function get_max_players() {
+	public function get_max_players(): int {
 		return absint( $this->play_attributes['maxplayers'] );
 	}
 
@@ -158,7 +158,7 @@ class BggGame implements GameData {
 	 *
 	 * @return bool
 	 */
-	public function is_owned() {
+	public function is_owned(): bool {
 		return 1 === absint( $this->status['own'] );
 	}
 
@@ -167,7 +167,7 @@ class BggGame implements GameData {
 	 *
 	 * @return array
 	 */
-	public function get_statuses() {
+	public function get_statuses(): array {
 		$statuses = array_filter(
 			$this->status,
 			function ( $status, $key ) {
