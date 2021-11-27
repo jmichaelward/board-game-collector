@@ -22,7 +22,7 @@ class Notifier {
 	 * @since  2019-07-20
 	 * @return void
 	 */
-	public function do_error_notice( string $message ) {
+	public function do_error_notice( string $message ): void {
 		add_action( 'bgc_error_notify', [ $this, 'display_error_notice' ], 10, 1 );
 
 		add_action(
@@ -42,7 +42,7 @@ class Notifier {
 	 * @since  2019-07-20
 	 * @return void
 	 */
-	public function display_error_notice( string $message ) { ?>
+	public function display_error_notice( string $message ): void { ?>
 		<div class="notice notice-error is-dismissible">
 			<p><?php echo esc_html( $message ); ?></p>
 		</div>
@@ -52,7 +52,7 @@ class Notifier {
 	/**
 	 * Notify admin that they have not yet configured the plugin settings.
 	 */
-	public function do_warning_settings_not_configured() {
+	public function do_warning_settings_not_configured(): void {
 		$message = 'A BoardGameGeek username has not yet been saved on the BGG Settings page. Your games collection '
 					. 'will not download until a valid username is entered.';
 		?>
