@@ -21,7 +21,7 @@ use function JMichaelWard\BoardGameCollector\delete_user_transients;
  * ## EXAMPLES
  *
  *     # Update Games in the WordPress database.
- *     $ wp bgg update
+ *     $ wp bgc update
  *     Success: Games posts created in WordPress.
  *
  * @when after_wp_config_load
