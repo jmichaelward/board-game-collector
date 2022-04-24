@@ -25,8 +25,12 @@ function maybe_install_dependencies( string $plugin_filepath, string $plugin_cla
 		$composer_path = "{$plugin_dir}/bin/extractedComposer";
 		$composer_phar = "{$plugin_dir}/bin/composer.phar";
 
-		if ( ! is_readable( $composer_path ) && ! is_readable( $composer_phar ) ) {
+		if ( ! is_readable( $composer_path ) && is_executable( $composer_phar ) ) {
 			( new \Phar( $composer_phar ) )->extractTo( $composer_path );
+		}
+
+		if ( ! file_exists( "{$composer_path}/vendor/autoload.php" ) ) {
+			return;
 		}
 
 		require_once "{$composer_path}/vendor/autoload.php";
