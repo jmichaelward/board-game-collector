@@ -39,5 +39,10 @@
         "files": [
             "src/common.php"
         ]
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
     }
 }
