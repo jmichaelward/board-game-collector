@@ -4,6 +4,10 @@ BoardGameGeek API. It retrieves information about a user's game collection,
 creates or updates a related custom post type in the database, saves its
 metadata, and attaches the box art as a featured image.
 
+### Important!
+This plugin currently under irregular development and is still in beta. It is
+not intended for use in production environments. Use at your own risk.
+
 ### Contributing
 Please see [CONTRIBUTING.md](CONTRIBUTING.md) for information about contributing
 to this plugin, including steps for setting up your development environment,
