@@ -21,8 +21,6 @@
     "@wordpress/env": "^4.8.0",
     "babel-loader": "^8.1.0",
     "clean-webpack-plugin": "^3.0.0",
-    "npx": "^10.2.2",
-    "parcel-bundler": "^1.12.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "webpack": "^4.43.0",
