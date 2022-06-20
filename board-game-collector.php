@@ -17,8 +17,6 @@ use JMichaelWard\BoardGameCollector\Admin\Notifier;
 
 require_once __DIR__ . '/src/functions.php';
 
-$plugin_class = 'JMichaelWard\\BoardGameCollector\\BoardGameCollector';
-
 try {
 	maybe_autoload();
 
