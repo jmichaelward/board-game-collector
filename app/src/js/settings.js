@@ -111,9 +111,9 @@ const App = ( props ) => {
    * Render the component.
    */
   return (
-    <div>
-      <Button onClick={ updateCollection } disabled={props.usernameVerified}>Update Collection</Button>
-    </div>
+    <>
+      <Button className="button button-secondary" onClick={ updateCollection } disabled={props.usernameVerified}>Update Collection</Button>
+    </>
   )
 };
 
