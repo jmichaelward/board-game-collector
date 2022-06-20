@@ -15,9 +15,9 @@ namespace JMichaelWard\BoardGameCollector;
 use Auryn\Injector;
 use JMichaelWard\BoardGameCollector\Admin\Notifier;
 
-require_once __DIR__ . '/src/functions.php';
-
 try {
+	require_once __DIR__ . '/src/functions.php';
+
 	maybe_autoload();
 
 	add_action( 'plugins_loaded', [ new BoardGameCollector( __FILE__, new Injector() ), 'run' ] );
