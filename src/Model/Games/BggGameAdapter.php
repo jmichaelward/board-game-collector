@@ -16,7 +16,7 @@ class BggGameAdapter {
 	 * @var array
 	 * @since 2019-04-13
 	 */
-	private array $data;
+	private array $data = [];
 
 	/**
 	 * The BoardGameGeek object ID.
@@ -24,7 +24,7 @@ class BggGameAdapter {
 	 * @var int
 	 * @since 2019-04-13
 	 */
-	private int $id;
+	private int $id = 0;
 
 	/**
 	 * Name of the game.
@@ -32,7 +32,7 @@ class BggGameAdapter {
 	 * @var string
 	 * @since 2019-04-13
 	 */
-	private string $name;
+	private string $name = '';
 
 	/**
 	 * Year the game was published.
@@ -40,7 +40,7 @@ class BggGameAdapter {
 	 * @var string
 	 * @since 2019-04-13
 	 */
-	private string $year_published;
+	private string $year_published = '';
 
 	/**
 	 * The game's play attributes.
@@ -50,7 +50,7 @@ class BggGameAdapter {
 	 * @var array
 	 * @since 2019-04-13
 	 */
-	private array $play_attributes;
+	private array $play_attributes = [];
 
 	/**
 	 * The game's ranking data on BGG.
@@ -58,7 +58,7 @@ class BggGameAdapter {
 	 * @var array
 	 * @since 2019-04-13
 	 */
-	private array $rankings;
+	private array $rankings = [];
 
 	/**
 	 * The player's statuses set on the game.
@@ -66,7 +66,7 @@ class BggGameAdapter {
 	 * @var array
 	 * @since 2019-04-13
 	 */
-	private array $status;
+	private array $status = [];
 
 	/**
 	 * The game's image URL.
@@ -74,7 +74,7 @@ class BggGameAdapter {
 	 * @var string
 	 * @since 2019-04-13
 	 */
-	private string $image_url;
+	private string $image_url = '';
 
 	/**
 	 * Get a BGGGame object from the raw data.
