@@ -60,15 +60,19 @@ class Notifier {
 			],
 			admin_url( 'edit.php' )
 		);
-
-		$message = sprintf(
-			'Your games collection will not update until a valid username is entered into the <a href="%s">Board Game Collector settings page</a>.',
-			esc_url( $settings_url ),
-		);
-
 		?>
+
 		<div class="notice notice-warning is-dismissible">
-			<p><?php echo wp_kses_post( $message ); ?></p>
+			<p>
+				<?php
+				echo wp_kses_post(
+					sprintf(
+						'Your games collection will not update until a valid username is entered into the <a href="%s">Board Game Collector settings page</a>.',
+						esc_url( $settings_url ),
+					)
+				);
+				?>
+			</p>
 		</div>
 		<?php
 	}
