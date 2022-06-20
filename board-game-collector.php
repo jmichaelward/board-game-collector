@@ -19,16 +19,15 @@ require_once __DIR__ . '/src/functions.php';
 
 $plugin_class = 'JMichaelWard\\BoardGameCollector\\BoardGameCollector';
 
-maybe_autoload();
+try {
+	maybe_autoload();
 
-if ( ! class_exists( $plugin_class ) ) {
+	add_action( 'plugins_loaded', [ new BoardGameCollector( __FILE__, new Injector() ), 'run' ] );
+} catch ( \Throwable $e ) {
 	require_once __DIR__ . '/src/Admin/Notifier.php';
 
 	( new Notifier() )->do_error_notice(
 		__( 'Could not locate BoardGameCollector class. Did you remember to run composer install?', 'bgcollector' )
 	);
-
-	return;
 }
 
-add_action( 'plugins_loaded', [ new BoardGameCollector( __FILE__, new Injector() ), 'run' ] );
