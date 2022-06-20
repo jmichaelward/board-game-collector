@@ -19,17 +19,6 @@ require_once __DIR__ . '/src/functions.php';
 
 $plugin_class = 'JMichaelWard\\BoardGameCollector\\BoardGameCollector';
 
-
-/**
- * Install plugin dependencies on activation.
- */
-register_activation_hook(
-	__FILE__,
-	function() use ( $plugin_class ) {
-		maybe_install_dependencies( __FILE__, $plugin_class );
-	}
-);
-
 maybe_autoload();
 
 if ( ! class_exists( $plugin_class ) ) {
