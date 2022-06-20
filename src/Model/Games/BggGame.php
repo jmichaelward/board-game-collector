@@ -18,14 +18,14 @@ class BggGame implements GameData {
 	 *
 	 * @var int
 	 */
-	private $bgg_id;
+	private int $bgg_id;
 
 	/**
 	 * Box title of the game.
 	 *
 	 * @var string
 	 */
-	private $name;
+	private string $name;
 
 	/**
 	 * Year the game was published.
@@ -33,21 +33,21 @@ class BggGame implements GameData {
 	 * @var string
 	 * @since 2019-04-13
 	 */
-	private $year_published;
+	private string $year_published;
 
 	/**
 	 * URL to an image of the box art.
 	 *
 	 * @var string
 	 */
-	private $image_url;
+	private string $image_url;
 
 	/**
 	 * Ownership attributes.
 	 *
 	 * @var array
 	 */
-	private $status;
+	private array $status;
 
 	/**
 	 * Game's player information.
@@ -56,14 +56,14 @@ class BggGame implements GameData {
 	 *
 	 * @var array
 	 */
-	private $play_attributes;
+	private array $play_attributes;
 
 	/**
 	 * Game rankings.
 	 *
 	 * @var array
 	 */
-	private $rankings;
+	private array $rankings;
 
 	/**
 	 * BGGGame constructor.
