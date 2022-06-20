@@ -16,9 +16,11 @@ use Auryn\Injector;
 use JMichaelWard\BoardGameCollector\Admin\Notifier;
 
 try {
-	require_once __DIR__ . '/src/functions.php';
+	$autoload = __DIR__ . '/vendor/autoload.php';
 
-	maybe_autoload();
+	if ( is_readable( $autoload ) ) {
+		require_once $autoload;
+	}
 
 	add_action( 'plugins_loaded', [ new BoardGameCollector( __FILE__, new Injector() ), 'run' ] );
 } catch ( \Throwable $e ) {
