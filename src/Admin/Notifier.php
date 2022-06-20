@@ -53,11 +53,22 @@ class Notifier {
 	 * Notify admin that they have not yet configured the plugin settings.
 	 */
 	public function do_warning_settings_not_configured(): void {
-		$message = 'A BoardGameGeek username has not yet been saved on the BGG Settings page. Your games collection '
-					. 'will not download until a valid username is entered.';
+		$settings_url = add_query_arg(
+			[
+				'post_type' => 'bgc_game',
+				'page' => 'bgc-settings',
+			],
+			admin_url( 'edit.php' )
+		);
+
+		$message = sprintf(
+			'Your games collection will not update until a valid username is entered into the <a href="%s">Board Game Collector settings page</a>.',
+			esc_url( $settings_url ),
+		);
+
 		?>
 		<div class="notice notice-warning is-dismissible">
-			<p><?php echo esc_html( $message ); ?></p>
+			<p><?php echo wp_kses_post( $message ); ?></p>
 		</div>
 		<?php
 	}
