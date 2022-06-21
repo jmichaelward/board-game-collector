@@ -25,7 +25,8 @@
         "wp-cli/entity-command": "^2",
         "wp-cli/media-command": "^2",
         "10up/wp_mock": "^0.4.2",
-        "jmichaelward/wpcs-modified": "^0.1.0"
+        "jmichaelward/wpcs-modified": "^0.1.0",
+        "johnpbloch/wordpress-core": "^6.0"
     },
     "scripts": {
         "post-install-cmd": [
