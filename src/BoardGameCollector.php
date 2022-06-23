@@ -1,8 +1,7 @@
 <?php
 namespace JMichaelWard\BoardGameCollector;
 
-use Auryn\ConfigException;
-use Auryn\Injector;
+use DI\Container;
 use JMichaelWard\BoardGameCollector\Updater\ImageProcessor;
 use JMichaelWard\BoardGameCollector\Utility\InstantiatorInterface;
 use JMichaelWard\OopsWPPlus\Utility\Hydratable;
@@ -52,23 +51,22 @@ final class BoardGameCollector extends Plugin {
 	];
 
 	/**
-	 * Auryn\Injector instance.
+	 * Container instance.
 	 *
-	 * @var Injector
-	 * @since 2019-04-12
+	 * @var Container
 	 */
-	private $injector;
+	private Container $injector;
 
 	/**
 	 * BoardGameCollector constructor.
 	 *
 	 * @param string   $file     Plugin bootstrap file.
-	 * @param Injector $injector Auryn\Injector instance.
+	 * @param Container $injector Container instance.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-12
 	 */
-	public function __construct( string $file, Injector $injector ) {
+	public function __construct( string $file, Container $injector ) {
 		$this->file_path = $file;
 		$this->injector  = $injector;
 	}
@@ -99,7 +97,7 @@ final class BoardGameCollector extends Plugin {
 		$objects = array_map(
 			function ( $service_classname ) {
 				try {
-					$service = $this->injector->make( $service_classname );
+					$service = $this->injector->get( $service_classname );
 
 					$this->setup_service( $service );
 
@@ -126,7 +124,6 @@ final class BoardGameCollector extends Plugin {
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2020-09-13
-	 * @throws ConfigException If Injector misconfiguration exists.
 	 * @return void
 	 */
 	private function setup_service( Service $service ): void {
@@ -141,31 +138,5 @@ final class BoardGameCollector extends Plugin {
 			/* @var Hydratable $service Hydratable service. */
 			$service->hydrate();
 		}
-
-		if ( $this->is_shared_service( $service ) ) {
-			$this->share_service( $service );
-		}
-	}
-
-	/**
-	 * Sets up the service for sharing.
-	 *
-	 * @param Service $service Service instance.
-	 *
-	 * @throws ConfigException If there's a problem finding the Service within Auryn.
-	 */
-	private function share_service( Service $service ): void {
-		$this->injector->share( $service );
-	}
-
-	/**
-	 * Check whether the service is shared.
-	 *
-	 * @param Service $service Service instance.
-	 *
-	 * @return bool
-	 */
-	private function is_shared_service( Service $service ): bool {
-		return in_array( get_class( $service ), $this->shareable_services, true );
 	}
 }

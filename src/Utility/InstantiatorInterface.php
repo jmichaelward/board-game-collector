@@ -8,16 +8,16 @@
 
 namespace JMichaelWard\BoardGameCollector\Utility;
 
-use Auryn\Injector;
+use DI\Container;
 
 interface InstantiatorInterface {
 	/**
-	 * Sets the Injector instance on an object.
+	 * Sets the Container instance on an object.
 	 *
-	 * @param Injector $injector Injector instance.
+	 * @param Container $injector Container instance.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2020-09-13
 	 */
-	public function set_injector( Injector $injector );
+	public function set_injector( Container $injector );
 }

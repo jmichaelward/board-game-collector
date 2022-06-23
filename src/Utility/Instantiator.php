@@ -10,6 +10,7 @@ namespace JMichaelWard\BoardGameCollector\Utility;
 
 use Auryn\InjectionException;
 use Auryn\Injector;
+use DI\Container;
 
 /**
  * Trait Instantiator
@@ -22,19 +23,19 @@ trait Instantiator {
 	/**
 	 * Instance of the Auryn\Injector object.
 	 *
-	 * @var Injector
+	 * @var Container
 	 */
-	protected $injector;
+	protected Container $injector;
 
 	/**
 	 * Set the Auryn\Injector instance on an object.
 	 *
-	 * @param Injector $injector Injector instance.
+	 * @param Container $injector Injector instance.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2020-09-13
 	 */
-	public function set_injector( Injector $injector ) {
+	public function set_injector( Container $injector ) {
 		$this->injector = $injector;
 	}
 
@@ -50,7 +51,7 @@ trait Instantiator {
 	 */
 	protected function create( string $class_name, bool $contained_in_array = false ) {
 		try {
-			$object = $this->injector->make( $class_name );
+			$object = $this->injector->get( $class_name );
 
 			if ( ! $contained_in_array ) {
 				return $object;

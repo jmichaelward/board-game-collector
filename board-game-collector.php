@@ -13,6 +13,7 @@
 namespace JMichaelWard\BoardGameCollector;
 
 use Auryn\Injector;
+use DI\Container;
 use JMichaelWard\BoardGameCollector\Admin\Notifier;
 
 try {
@@ -22,7 +23,7 @@ try {
 		require_once $autoload;
 	}
 
-	add_action( 'plugins_loaded', [ new BoardGameCollector( __FILE__, new Injector() ), 'run' ] );
+	add_action( 'plugins_loaded', [ new BoardGameCollector( __FILE__, new Container() ), 'run' ] );
 } catch ( \Throwable $e ) {
 	require_once __DIR__ . '/src/Admin/Notifier.php';
 

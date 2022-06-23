@@ -55,7 +55,7 @@ class CliService extends FactoryService {
 	 */
 	public function run() {
 		parent::run();
-		$this->injector->share( $this->updater );
+		// $this->injector->share( $this->updater );
 	}
 
 	/**
