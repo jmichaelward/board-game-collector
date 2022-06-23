@@ -16,7 +16,6 @@
         "ext-libxml": "*",
         "ext-json": "*",
         "composer/installers": "^1.9",
-        "rdlowrey/auryn": "^1.4",
         "jmichaelward/oops-wp-plus": "^0.1.0",
         "php-di/php-di": "^6.4"
     },
