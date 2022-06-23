@@ -14,10 +14,10 @@ interface InstantiatorInterface {
 	/**
 	 * Sets the Container instance on an object.
 	 *
-	 * @param Container $injector Container instance.
+	 * @param Container $container Container instance.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2020-09-13
 	 */
-	public function set_injector( Container $injector );
+	public function set_container( Container $container );
 }

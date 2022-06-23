@@ -23,18 +23,18 @@ trait Instantiator {
 	 *
 	 * @var Container
 	 */
-	protected Container $injector;
+	protected Container $container;
 
 	/**
 	 * Set the Container instance on an object.
 	 *
-	 * @param Container $injector Container instance.
+	 * @param Container $container Container instance.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2020-09-13
 	 */
-	public function set_injector( Container $injector ) {
-		$this->injector = $injector;
+	public function set_container( Container $container ) {
+		$this->container = $container;
 	}
 
 	/**
@@ -49,7 +49,7 @@ trait Instantiator {
 	 */
 	protected function create( string $class_name, bool $contained_in_array = false ) {
 		try {
-			$object = $this->injector->get( $class_name );
+			$object = $this->container->get( $class_name );
 
 			if ( ! $contained_in_array ) {
 				return $object;
@@ -59,7 +59,7 @@ trait Instantiator {
 				'namespace' => $class_name,
 				'object'    => $object,
 			];
-		} catch ( InjectionException $e ) {
+		} catch ( \Exception $e ) {
 			return [];
 		}
 	}

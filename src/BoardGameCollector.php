@@ -55,20 +55,20 @@ final class BoardGameCollector extends Plugin {
 	 *
 	 * @var Container
 	 */
-	private Container $injector;
+	private Container $container;
 
 	/**
 	 * BoardGameCollector constructor.
 	 *
-	 * @param string   $file     Plugin bootstrap file.
-	 * @param Container $injector Container instance.
+	 * @param string    $file      Plugin bootstrap file.
+	 * @param Container $container Container instance.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2019-04-12
 	 */
-	public function __construct( string $file, Container $injector ) {
+	public function __construct( string $file, Container $container ) {
 		$this->file_path = $file;
-		$this->injector  = $injector;
+		$this->container = $container;
 	}
 
 	/**
@@ -97,7 +97,7 @@ final class BoardGameCollector extends Plugin {
 		$objects = array_map(
 			function ( $service_classname ) {
 				try {
-					$service = $this->injector->get( $service_classname );
+					$service = $this->container->get( $service_classname );
 
 					$this->setup_service( $service );
 
@@ -131,7 +131,7 @@ final class BoardGameCollector extends Plugin {
 
 		if ( in_array( InstantiatorInterface::class, class_implements( $service_class ), true ) ) {
 			/* @var InstantiatorInterface $service InstantiatorInterface service. */
-			$service->set_injector( $this->injector );
+			$service->set_container( $this->container );
 		}
 
 		if ( in_array( Hydratable::class, class_implements( $service_class ), true ) ) {
