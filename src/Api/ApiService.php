@@ -7,7 +7,6 @@
 
 namespace JMichaelWard\BoardGameCollector\Api;
 
-use Auryn\Injector;
 use JMichaelWard\BoardGameCollector\Admin\Settings;
 use JMichaelWard\BoardGameCollector\Model\Games\BggGameAdapter;
 use JMichaelWard\BoardGameCollector\Utility\FactoryService;

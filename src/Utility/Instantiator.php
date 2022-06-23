@@ -8,8 +8,6 @@
 
 namespace JMichaelWard\BoardGameCollector\Utility;
 
-use Auryn\InjectionException;
-use Auryn\Injector;
 use DI\Container;
 
 /**
@@ -21,16 +19,16 @@ use DI\Container;
  */
 trait Instantiator {
 	/**
-	 * Instance of the Auryn\Injector object.
+	 * Container instance.
 	 *
 	 * @var Container
 	 */
 	protected Container $injector;
 
 	/**
-	 * Set the Auryn\Injector instance on an object.
+	 * Set the Container instance on an object.
 	 *
-	 * @param Container $injector Injector instance.
+	 * @param Container $injector Container instance.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
 	 * @since  2020-09-13

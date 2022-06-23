@@ -12,7 +12,6 @@
 
 namespace JMichaelWard\BoardGameCollector;
 
-use Auryn\Injector;
 use DI\Container;
 use JMichaelWard\BoardGameCollector\Admin\Notifier;
 

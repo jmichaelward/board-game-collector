@@ -1,7 +1,6 @@
 <?php
 namespace JMichaelWard\BoardGameCollector\UI\Cli;
 
-use Auryn\Injector;
 use JMichaelWard\BoardGameCollector\Model\Games\BggGame;
 use JMichaelWard\BoardGameCollector\UI\Cli\Command\BgcCommand;
 use JMichaelWard\BoardGameCollector\Updater\GamesUpdater;
@@ -27,7 +26,6 @@ class CliService extends FactoryService {
 	/**
 	 * CliService constructor.
 	 *
-	 * @param Injector     $injector Auryn\Injector instance.
 	 * @param GamesUpdater $updater  GamesUpdater instance.
 	 *
 	 * @author Jeremy Ward <jeremy@jmichaelward.com>
@@ -50,8 +48,6 @@ class CliService extends FactoryService {
 	 * Run the CliService.
 	 *
 	 * It's necessary to share the GamesUpdater here so that it can be accessed by the CLI commands.
-	 *
-	 * @throws \Auryn\ConfigException If Auyrn is misconfigured.
 	 */
 	public function run() {
 		parent::run();
